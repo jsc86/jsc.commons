@@ -1,0 +1,173 @@
+﻿// Licensed under the MIT license.
+// See LICENSE file in the project root directory for full information.
+// Copyright (c) 2018 Jacob Schlesinger
+// File authors (in chronological order):
+//  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
+
+using System.Collections.Generic;
+using System.Linq;
+
+using jsc.commons.rc.generic.rules;
+using jsc.commons.rc.interfaces;
+using jsc.commons.rc.listsubject.actions;
+using jsc.commons.rc.listsubject.rules;
+
+using NUnit.Framework;
+
+namespace jsc.commons.rc.tests {
+
+   [TestFixture]
+   public class RcTests {
+
+      private void AssertAndViolation( IViolation<IList<string>> violation ) {
+         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
+         Assert.AreEqual( 1, violation.Solutions.Count( ) );
+         Assert.AreEqual( 2, violation.Solutions.First( ).Actions.Count( ) );
+         Add<string> addA =
+               violation.Solutions.First( )
+                           .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "hello" ) as
+                     Add<string>;
+         Assert.NotNull( addA );
+         Add<string> addB =
+               violation.Solutions.First( )
+                           .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "world" ) as
+                     Add<string>;
+         Assert.NotNull( addB );
+      }
+
+      [Test]
+      public void And( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( new And<IList<string>>( new Contains<string>( "hello" ), new Contains<string>( "world" ) ) );
+         IList<string> list = new List<string>( );
+
+         IViolation<IList<string>> violation = rc.Check( list );
+         AssertAndViolation( violation );
+
+         list.Add( "hello" );
+         violation = rc.Check( list );
+         AssertAndViolation( violation );
+
+         list.Remove( "hello" );
+         list.Add( "world" );
+         violation = rc.Check( list );
+         AssertAndViolation( violation );
+
+         list.Add( "hello" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      [Test]
+      public void ContainsNoViolation( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( new Contains<string>( "hello" ) );
+         IList<string> list = new List<string> {
+               "hello"
+         };
+         Assert.AreEqual( rc.Check( list ), NonViolation<IList<string>>.Instance );
+      }
+
+      [Test]
+      public void ContainsViolation( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( new Contains<string>( "hello" ) );
+         IList<string> list = new List<string>( );
+         IViolation<IList<string>> violation = rc.Check( list );
+
+         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
+         Assert.AreEqual( 1, violation.Solutions.Count( ) );
+         Assert.AreEqual( 1, violation.Solutions.First( ).Actions.Count( ) );
+         Assert.IsInstanceOf<Add<string>>( violation.Solutions.First( ).Actions.First( ) );
+         Assert.AreEqual( "hello", ( violation.Solutions.First( ).Actions.First( ) as Add<string> )?.Target );
+      }
+
+      [Test]
+      public void ImpliesNoViolation( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add(
+               new Implies<IList<string>>(
+                     new Contains<string>( "hello" ),
+                     new Contains<string>( "world" ) ) );
+         IList<string> list = new List<string>( );
+         IViolation<IList<string>> violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+
+         list.Add( "world" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+
+         list.Add( "hello" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      [Test]
+      public void ImpliesViolation( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add(
+               new Implies<IList<string>>(
+                     new Contains<string>( "hello" ),
+                     new Contains<string>( "world" ) ) );
+         IList<string> list = new List<string> {
+               "hello"
+         };
+         IViolation<IList<string>> violation = rc.Check( list );
+
+         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
+         Assert.AreEqual( 2, violation.Solutions.Count( ) );
+
+         ISolution<IList<string>> solRemA =
+               violation.Solutions.FirstOrDefault( s => s.Actions.FirstOrDefault( ) is Remove<string> );
+         Assert.NotNull( solRemA );
+         Assert.AreEqual( 1, solRemA.Actions.Count( ) );
+         Assert.AreEqual( "hello", ( solRemA.Actions.FirstOrDefault( ) as Remove<string> )?.Target );
+
+         ISolution<IList<string>> solAddB =
+               violation.Solutions.FirstOrDefault( s => s.Actions.FirstOrDefault( ) is Add<string> );
+         Assert.NotNull( solAddB );
+         Assert.AreEqual( 1, solAddB.Actions.Count( ) );
+         Assert.AreEqual( "world", ( solAddB.Actions.FirstOrDefault( ) as Add<string> )?.Target );
+
+         Assert.AreEqual( solAddB, violation.Solutions.FirstOrDefault( ) );
+      }
+
+      [Test]
+      public void Or( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( new Or<IList<string>>( new Contains<string>( "hello" ), new Contains<string>( "world" ) ) );
+         IList<string> list = new List<string>( );
+
+         IViolation<IList<string>> violation = rc.Check( list );
+         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
+         Assert.AreEqual( 2, violation.Solutions.Count( ) );
+         ISolution<IList<string>> solAddA = violation.Solutions
+               .FirstOrDefault(
+                     s => s.Actions.FirstOrDefault( ) is Add<string>&&
+                           ( s.Actions.FirstOrDefault( ) as Add<string> )?.Target == "hello" );
+         Assert.IsNotNull( solAddA );
+         Assert.AreEqual( 1, solAddA.Actions.Count( ) );
+         ISolution<IList<string>> solAddB = violation.Solutions
+               .FirstOrDefault(
+                     s => s.Actions.FirstOrDefault( ) is Add<string>&&
+                           ( s.Actions.FirstOrDefault( ) as Add<string> )?.Target == "world" );
+         Assert.IsNotNull( solAddB );
+         Assert.AreEqual( 1, solAddB.Actions.Count( ) );
+
+         list.Add( "hello" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+
+         list.Remove( "hello" );
+         list.Add( "world" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+
+         list.Add( "hello" );
+         violation = rc.Check( list );
+         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+   }
+
+}
