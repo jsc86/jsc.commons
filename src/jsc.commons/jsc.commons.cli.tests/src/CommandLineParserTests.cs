@@ -20,7 +20,7 @@ namespace jsc.commons.cli.tests {
             bool arg1ShouldBeSet,
             bool arg2ShouldBeSet,
             bool optShouldBeSet,
-            bool flagShoudlBeSet,
+            bool flagShouldBeSet,
             string arg1ShouldBe = null,
             string arg2ShouldBe = null ) {
          IArgument arg1 = new Argument<string>( "Argument 1" );
@@ -45,7 +45,7 @@ namespace jsc.commons.cli.tests {
          Assert.AreEqual( arg1ShouldBeSet, pr.IsSet( arg1 ) );
          Assert.AreEqual( arg2ShouldBeSet, pr.IsSet( arg2 ) );
          Assert.AreEqual( optShouldBeSet, pr.IsSet( opt ) );
-         Assert.AreEqual( flagShoudlBeSet, pr.IsSet( flag ) );
+         Assert.AreEqual( flagShouldBeSet, pr.IsSet( flag ) );
          if( arg1ShouldBe != null )
             Assert.AreEqual( arg1ShouldBe, pr.GetValue( arg1 ) );
          if( arg2ShouldBe != null )
