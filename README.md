@@ -11,7 +11,11 @@ to a set of instances which generally know how to behave
 ## [jsc.commons.config](src/jsc.commons/jsc.commons.config/)
 
 ## [jsc.commons.misc](src/jsc.commons/jsc.commons.misc/)
-
+This is the place for the misfits.
+A misfit is
+ - needed by more than one project
+ - too small to get its own project
+ 
 ## [jsc.commons.naming](src/jsc.commons/jsc.commons.naming/)
 
 ## [jsc.commons.rc](src/jsc.commons/jsc.commons.rc/)
