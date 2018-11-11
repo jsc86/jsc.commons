@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsc.commons.cli.tests", "js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsc.commons.behaving.tests", "jsc.commons.behaving.tests\jsc.commons.behaving.tests.csproj", "{7762CF05-56FE-4811-A47F-F50082A251B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jsc.commons.playground", "jsc.commons.playground\jsc.commons.playground.csproj", "{C707DD87-738E-4A9C-8367-EB733D0A1629}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{7762CF05-56FE-4811-A47F-F50082A251B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7762CF05-56FE-4811-A47F-F50082A251B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7762CF05-56FE-4811-A47F-F50082A251B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C707DD87-738E-4A9C-8367-EB733D0A1629}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C707DD87-738E-4A9C-8367-EB733D0A1629}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C707DD87-738E-4A9C-8367-EB733D0A1629}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C707DD87-738E-4A9C-8367-EB733D0A1629}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
