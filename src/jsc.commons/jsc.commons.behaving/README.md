@@ -1,3 +1,5 @@
+<img align="right" src="../../../img/logo/jsc.commons.logo_128.png"/>
+
 # jsc.commons.behaving
 
 *Behaving* is a codified pattern to add common behaviors

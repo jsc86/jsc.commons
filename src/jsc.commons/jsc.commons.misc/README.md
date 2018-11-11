@@ -1,3 +1,5 @@
+<img align="right" src="../../../img/logo/jsc.commons.logo_128.png"/>
+
 # jsc.commons.misc
 
 This is the place for the misfits.

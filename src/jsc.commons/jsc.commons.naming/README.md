@@ -1,3 +1,5 @@
+<img align="right" src="../../../img/logo/jsc.commons.logo_128.png"/>
+
 # jsc.commons.naming
 What does JSC_COMMONS_NAMING do? JscCommonsNaming
 does what jsc-commons-naming does: It provides a way
