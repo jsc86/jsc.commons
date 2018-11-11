@@ -19,7 +19,7 @@ class MyClass {
 
 ## Lazy
 What can *jsc.commons.Lazy\<T\>* do that
-[System.Lazy<T>](https://docs.microsoft.com/en-us/dotnet/api/system.lazy-1?view=netframework-4.7.2)
+[System.Lazy\<T\>](https://docs.microsoft.com/en-us/dotnet/api/system.lazy-1?view=netframework-4.7.2)
 can't? Absolutely nothing! And that's its charm; It's
 boiled down to the essentials: No bloat/overhead for
 serialization, marshalling or the likes. It's thread

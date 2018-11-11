@@ -17,6 +17,10 @@ A misfit is
  - too small to get its own project
  
 ## [jsc.commons.naming](src/jsc.commons/jsc.commons.naming/)
+What does JSC_COMMONS_NAMING do? JscCommonsNaming
+does what jsc-commons-naming does: It provides a way
+to define names in a unified way and format and parse
+them to and from different formats.
 
 ## [jsc.commons.rc](src/jsc.commons/jsc.commons.rc/)
 
