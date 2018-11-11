@@ -1,4 +1,5 @@
-![jsc.commons logo](img/logo/jsc.commons.logo_128.png "jsc.commons logo") 
+<img align="right" src="img/logo/jsc.commons.logo_128.png"/>
+
 # jsc.commons
 
 ## [jsc.commons.behaving](src/jsc.commons/jsc.commons.behaving/)
