@@ -21,7 +21,7 @@ Console.WriteLine( grc.Subject.Aggregate( ( a, b ) => $"{a}, {b}" ) );
 Core elements:
  - a set of rules (in the example X ⇒ Y)
  - a subject which needs to be cloneable (in the example *CList*)
- - a *IRuleChecker* implementation (in the example *RuleCheckerBase*,
+ - an *IRuleChecker* implementation (in the example *RuleCheckerBase*,
    encapsulated by *GenericRuleChecker*)
 
 Each rule (*IRule* implementation) has a *Check* method.
@@ -32,7 +32,7 @@ A violation can have zero up to arbitrary many solutions
 more actions (implementing *IAction*). An action has
 an *Apply* which can modify a given subject.
 
-A *IRuleChecker* has two modes for checking rules:
+An *IRuleChecker* has two modes for checking rules:
  1. Check the subject with all rules until the first
     violation occurs and return it. If no rule is violated
     *NonViolation.Instance* is returned.
@@ -41,10 +41,10 @@ A *IRuleChecker* has two modes for checking rules:
     This method returns true if there were no violations,
     otherwise false.
 
-Rules can be interactive (requiring user input).
-Interactive rules can not be used for automatic solving
+Actions can be interactive (requiring user input).
+Interactive actions can not be used for automatic solving
 of violations.
 
 The Rule Checker is written in a rather generic and
 easily extensible way; It is for example one of the
-core components for [jsc.commons.cli](src/jsc.commons/jsc.commons.cli/).
+core components for [jsc.commons.cli](../jsc.commons.cli/).
