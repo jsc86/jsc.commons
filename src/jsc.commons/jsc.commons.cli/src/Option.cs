@@ -22,13 +22,20 @@ namespace jsc.commons.cli {
             UnifiedName name,
             bool optional = true,
             char? flagAlias = null,
-            IEnumerable<IArgument> args = null ) : this( name, optional, flagAlias, args?.ToArray( ) ) { }
+            IArgument dynamicArgument = null,
+            IEnumerable<IArgument> args = null ) : this(
+            name,
+            optional,
+            flagAlias,
+            dynamicArgument,
+            args?.ToArray( ) ) { }
 
       public Option(
             UnifiedName name,
             bool optional = true,
             char? flagAlias = null,
-            params IArgument[] args ) : base( optional, args ) {
+            IArgument dynamicArgument = null,
+            params IArgument[] args ) : base( optional, dynamicArgument, args ) {
          if( name == null )
             throw new NullReferenceException( $"{nameof( name )} must not be null" );
 

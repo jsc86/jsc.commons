@@ -21,7 +21,7 @@ namespace jsc.commons.cli.interfaces {
 
       T GetValue<T>( IArgument<T> argument );
 
-      IEnumerable<string> GetDynamicArgumentList( IItem item );
+      IEnumerable<T> GetDynamicValues<T>( IArgument<T> dynamicArgument );
 
    }
 

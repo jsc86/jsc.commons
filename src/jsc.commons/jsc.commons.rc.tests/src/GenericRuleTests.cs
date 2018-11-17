@@ -22,15 +22,15 @@ namespace jsc.commons.rc.tests {
       }
 
       [Test]
-      public void AndTrueFalse( ) {
-         And<object> and = new And<object>( True<object>.Instance, False<object>.Instance );
+      public void AndFalseTrue( ) {
+         And<object> and = new And<object>( False<object>.Instance, True<object>.Instance );
          IViolation<object> violation = and.Check( null );
          Assert.AreNotEqual( NonViolation<object>.Instance, violation );
       }
 
       [Test]
-      public void AndFalseTrue( ) {
-         And<object> and = new And<object>( False<object>.Instance, True<object>.Instance );
+      public void AndTrueFalse( ) {
+         And<object> and = new And<object>( True<object>.Instance, False<object>.Instance );
          IViolation<object> violation = and.Check( null );
          Assert.AreNotEqual( NonViolation<object>.Instance, violation );
       }
@@ -39,34 +39,6 @@ namespace jsc.commons.rc.tests {
       public void AndTrueTrue( ) {
          And<object> and = new And<object>( True<object>.Instance, True<object>.Instance );
          IViolation<object> violation = and.Check( null );
-         Assert.AreEqual( NonViolation<object>.Instance, violation );
-      }
-
-      [Test]
-      public void OrFalseFalse( ) {
-         Or<object> or = new Or<object>( False<object>.Instance, False<object>.Instance );
-         IViolation<object> violation = or.Check( null );
-         Assert.AreNotEqual( NonViolation<object>.Instance, violation );
-      }
-
-      [Test]
-      public void OrTrueFalse( ) {
-         Or<object> or = new Or<object>( True<object>.Instance, False<object>.Instance );
-         IViolation<object> violation = or.Check( null );
-         Assert.AreEqual( NonViolation<object>.Instance, violation );
-      }
-
-      [Test]
-      public void OrFalseTrue( ) {
-         Or<object> or = new Or<object>( False<object>.Instance, True<object>.Instance );
-         IViolation<object> violation = or.Check( null );
-         Assert.AreEqual( NonViolation<object>.Instance, violation );
-      }
-
-      [Test]
-      public void OrTrueTrue( ) {
-         Or<object> or = new Or<object>( True<object>.Instance, True<object>.Instance );
-         IViolation<object> violation = or.Check( null );
          Assert.AreEqual( NonViolation<object>.Instance, violation );
       }
 
@@ -110,6 +82,34 @@ namespace jsc.commons.rc.tests {
          Not<object> not = new Not<object>( True<object>.Instance );
          IViolation<object> violation = not.Check( null );
          Assert.AreNotEqual( NonViolation<object>.Instance, violation );
+      }
+
+      [Test]
+      public void OrFalseFalse( ) {
+         Or<object> or = new Or<object>( False<object>.Instance, False<object>.Instance );
+         IViolation<object> violation = or.Check( null );
+         Assert.AreNotEqual( NonViolation<object>.Instance, violation );
+      }
+
+      [Test]
+      public void OrFalseTrue( ) {
+         Or<object> or = new Or<object>( False<object>.Instance, True<object>.Instance );
+         IViolation<object> violation = or.Check( null );
+         Assert.AreEqual( NonViolation<object>.Instance, violation );
+      }
+
+      [Test]
+      public void OrTrueFalse( ) {
+         Or<object> or = new Or<object>( True<object>.Instance, False<object>.Instance );
+         IViolation<object> violation = or.Check( null );
+         Assert.AreEqual( NonViolation<object>.Instance, violation );
+      }
+
+      [Test]
+      public void OrTrueTrue( ) {
+         Or<object> or = new Or<object>( True<object>.Instance, True<object>.Instance );
+         IViolation<object> violation = or.Check( null );
+         Assert.AreEqual( NonViolation<object>.Instance, violation );
       }
 
    }

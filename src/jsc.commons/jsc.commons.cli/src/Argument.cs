@@ -54,6 +54,8 @@ namespace jsc.commons.cli {
 
       public abstract Type ValueType { get; }
 
+      public bool IsDynamicArgument { get; internal set; }
+
       public object Parse( string value, bool throwException = false ) {
          try {
             return ParseInternal( value );

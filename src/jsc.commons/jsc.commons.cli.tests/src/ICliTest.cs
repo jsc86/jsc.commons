@@ -4,6 +4,8 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System.Collections.Generic;
+
 using jsc.commons.cli.ispec.attrib;
 using jsc.commons.config.interfaces;
 
@@ -14,6 +16,9 @@ namespace jsc.commons.cli.tests {
 
       [Option( Flag = 'o', Description = "a very fine string option" )]
       string StringOptionOne { get; set; }
+
+      [Argument( Of = nameof( StringOptionOne ), Dynamic = true, Description = "a dynamic int arg" )]
+      IEnumerable<int> StringOptionOneDynIntArg { get; set; }
 
       [Option( Flag = 't', Description = "another fine string option" )]
       string StringOptionTwo { get; set; }

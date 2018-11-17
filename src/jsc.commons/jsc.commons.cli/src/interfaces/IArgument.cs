@@ -18,6 +18,8 @@ namespace jsc.commons.cli.interfaces {
 
       Type ValueType { get; }
 
+      bool IsDynamicArgument { get; }
+
       object Parse( string value, bool throwException = false );
 
    }

@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -54,7 +55,19 @@ namespace jsc.commons.cli.ispec {
       }
 
       public IArgument Map( ArgumentAttribute argAttrib, PropertyInfo pi, ICliConfig config, string parent ) {
-         Func<ICliConfig, string, bool, Argument> map = GetMap( pi.PropertyType );
+         Type argType = pi.PropertyType;
+         if( argAttrib.Dynamic ) {
+            if( !typeof( IEnumerable ).IsAssignableFrom( argType ) )
+               throw new ArgumentException(
+                     string.Format(
+                           "dynamic property type must be assignable to {0} but was {1} for {2}",
+                           typeof( IEnumerable<> ),
+                           argType,
+                           pi.Name ) );
+            argType = argType.GenericTypeArguments[ 0 ];
+         }
+
+         Func<ICliConfig, string, bool, Argument> map = GetMap( argType );
 
          Argument arg = map(
                config,

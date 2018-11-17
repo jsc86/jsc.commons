@@ -30,16 +30,17 @@ namespace jsc.commons.config.backend {
       public void Read( IConfiguration config ) {
          BeforeRead( );
          try {
-            Dictionary<string, object> read = new Dictionary<string, object>( );
+            Dictionary<string, Tuple<object, Type>> read =
+                  new Dictionary<string, Tuple<object, Type>>( );
             foreach( string key in config.Keys ) {
                Tuple<object, Type> configProp = config.GetConfigProperty( key );
                object value;
                if( Read( key, configProp.Item2, out value ) )
-                  read[ key ] = value;
+                  read[ key ] = new Tuple<object, Type>( value, configProp.Item2 );
             }
 
-            foreach( KeyValuePair<string, object> kvp in read )
-               config[ kvp.Key ] = kvp.Value;
+            foreach( KeyValuePair<string, Tuple<object, Type>> kvp in read )
+               config[ kvp.Key, kvp.Value.Item2 ] = kvp.Value.Item1;
          } catch( Exception exc ) {
             OnReadException( exc );
          } finally {

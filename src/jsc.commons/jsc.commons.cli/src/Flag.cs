@@ -13,12 +13,21 @@ namespace jsc.commons.cli {
 
    public class Flag : ItemBase, IFlag {
 
-      public Flag( char name, bool optional = true, IEnumerable<IArgument> args = null ) : this(
+      public Flag(
+            char name,
+            bool optional = true,
+            IArgument dynamicArgument = null,
+            IEnumerable<IArgument> args = null ) : this(
             name,
             optional,
+            dynamicArgument,
             args?.ToArray( ) ) { }
 
-      public Flag( char name, bool optional = true, params IArgument[] args ) : base( optional, args ) {
+      public Flag(
+            char name,
+            bool optional = true,
+            IArgument dynamicArgument = null,
+            params IArgument[] args ) : base( optional, dynamicArgument, args ) {
          Name = name;
       }
 

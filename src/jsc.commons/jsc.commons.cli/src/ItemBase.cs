@@ -23,6 +23,8 @@ namespace jsc.commons.cli {
 
       private string _description;
 
+      private IArgument _dynamicArgument;
+
       static ItemBase( ) {
          RuleDeriver.Instance.AddItemRuleDeriver(
                typeof( ItemBase ),
@@ -36,10 +38,15 @@ namespace jsc.commons.cli {
                } );
       }
 
-      protected ItemBase( bool optional, IEnumerable<IArgument> args ) : this( optional, args.ToArray( ) ) { }
+      protected ItemBase( bool optional, IArgument dynamicArgument, IEnumerable<IArgument> args ) : this(
+            optional,
+            dynamicArgument,
+            args.ToArray( ) ) { }
 
-      protected ItemBase( bool optional, params IArgument[] args ) {
+      protected ItemBase( bool optional, IArgument dynamicArgument, params IArgument[] args ) {
          Optional = optional;
+
+         DynamicArgument = dynamicArgument;
 
          if( args == null )
             return;
@@ -57,7 +64,23 @@ namespace jsc.commons.cli {
             ? new EnumerableWrapper<IArgument>( _lazyArguments.Instance )
             : Enumerable.Empty<IArgument>( );
 
-      public bool HasDynamicArgumentList { get; protected set; }
+      public IArgument DynamicArgument {
+         get => _dynamicArgument;
+         internal set {
+            if( value != null
+                  &&!( value is Argument ) )
+               throw new ArgumentException(
+                     $"{nameof( value )} must derive from {nameof( Argument )}",
+                     nameof( value ) );
+
+            if( _dynamicArgument != null )
+               ( (Argument)_dynamicArgument ).IsDynamicArgument = false;
+
+            if( value != null )
+               ( (Argument)value ).IsDynamicArgument = true;
+            _dynamicArgument = value;
+         }
+      }
 
       public bool Optional { get; }
 

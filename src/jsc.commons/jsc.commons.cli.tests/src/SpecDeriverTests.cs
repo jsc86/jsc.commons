@@ -5,7 +5,9 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 using jsc.commons.cli.ispec;
 using jsc.commons.cli.ispec.attrib;
@@ -39,6 +41,14 @@ namespace jsc.commons.cli.tests {
 
          [Argument]
          float Arg { get; set; }
+
+      }
+
+      [CliDefinition]
+      public interface ICliDynArg : IConfiguration {
+
+         [Argument( Dynamic = true )]
+         IEnumerable<int> Arg { get; set; }
 
       }
 
@@ -135,11 +145,45 @@ namespace jsc.commons.cli.tests {
       }
 
       [Test]
+      public void DynArg( ) {
+         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
+               new[] {
+                     1.ToString( ),
+                     2.ToString( ),
+                     3.ToString( )
+               } ).CliConfigObject;
+
+         Assert.IsNotNull( cli.Arg );
+
+         List<int> argValues = cli.Arg.ToList( );
+
+         Assert.AreEqual( 3, argValues.Count );
+         Assert.AreEqual( 1, argValues[ 0 ] );
+         Assert.AreEqual( 2, argValues[ 1 ] );
+         Assert.AreEqual( 3, argValues[ 2 ] );
+      }
+
+      [Test]
+      public void DynArg_Empty( ) {
+         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
+               new string[0] ).CliConfigObject;
+
+         Assert.IsNotNull( cli.Arg );
+
+         List<int> argValues = cli.Arg.ToList( );
+
+         Assert.AreEqual( 0, argValues.Count );
+      }
+
+      [Test]
       public void MonsterTest( ) {
          ICliTest cli = new InterfaceSpecBoilerPlateHelper<ICliTest>(
                new[] {
                      "--string-option-one",
                      "a string",
+                     "1",
+                     "2",
+                     "3",
                      "-t",
                      "another string",
                      "42",
@@ -150,6 +194,9 @@ namespace jsc.commons.cli.tests {
          Assert.AreEqual( "another string", cli.StringOptionTwo );
          Assert.AreEqual( 42, cli.StringOptionTwoCount );
          Assert.AreEqual( true, cli.MyFlag );
+         Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Count( ) );
+         Assert.AreEqual( 1, cli.StringOptionOneDynIntArg.First( ) );
+         Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Last( ) );
       }
 
    }

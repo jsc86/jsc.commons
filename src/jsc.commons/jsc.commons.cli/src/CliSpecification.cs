@@ -15,11 +15,18 @@ namespace jsc.commons.cli {
 
    public class CliSpecification : ItemBase, ICliSpecification {
 
-      public CliSpecification( ICliConfig config = null, IEnumerable<IArgument> args = null ) : this(
+      public CliSpecification(
+            ICliConfig config = null,
+            IArgument dynamicArgument = null,
+            IEnumerable<IArgument> args = null ) : this(
             config,
+            dynamicArgument,
             args?.ToArray( ) ) { }
 
-      public CliSpecification( ICliConfig config = null, params IArgument[] args ) : base( true, args ) {
+      public CliSpecification(
+            ICliConfig config = null,
+            IArgument dynamicArgument = null,
+            params IArgument[] args ) : base( true, dynamicArgument, args ) {
          Config = config??commons.config.Config.New<ICliConfig>( );
       }
 

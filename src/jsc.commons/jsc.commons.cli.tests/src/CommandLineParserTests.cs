@@ -4,6 +4,10 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System.Collections.Generic;
+using System.Linq;
+
+using jsc.commons.cli.arguments;
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.parser;
 using jsc.commons.naming;
@@ -35,6 +39,7 @@ namespace jsc.commons.cli.tests {
                new UnifiedName( "my", "opt" ),
                true,
                'm',
+               null,
                arg2 );
          spec.Options.Add( opt );
 
@@ -50,6 +55,75 @@ namespace jsc.commons.cli.tests {
             Assert.AreEqual( arg1ShouldBe, pr.GetValue( arg1 ) );
          if( arg2ShouldBe != null )
             Assert.AreEqual( arg2ShouldBe, pr.GetValue( arg2 ) );
+      }
+
+      [Test]
+      public void DynamicArgumentTest( ) {
+         IArgument<string> dynStringArg = new StringArg( "dyn arg" );
+         CliSpecification spec =
+               new CliSpecification(
+                     null,
+                     dynStringArg );
+
+         ICommandLineParser clp = new CommandLineParser( spec );
+
+         IParserResult pr =
+               clp.Parse(
+                     new[] {
+                           "arg1",
+                           "arg2",
+                           "arg3"
+                     } );
+
+         List<string> dynArgValues = pr.GetDynamicValues( dynStringArg ).ToList( );
+
+         Assert.AreEqual( 3, dynArgValues.Count );
+         Assert.AreEqual( "arg1", dynArgValues[ 0 ] );
+         Assert.AreEqual( "arg2", dynArgValues[ 1 ] );
+         Assert.AreEqual( "arg3", dynArgValues[ 2 ] );
+      }
+
+      [Test]
+      public void DynamicArgumentTest2( ) {
+         IArgument<string> dynStringArg = new StringArg( "dyn arg" );
+         CliSpecification spec =
+               new CliSpecification(
+                     null,
+                     dynStringArg );
+
+         IArgument<int> dynIntArg = new Argument<int>( "dyn int arg" );
+
+         IOption myOpt = new Option(
+               new UnifiedName( "my", "opt" ),
+               false,
+               null,
+               dynIntArg );
+
+         spec.Options.Add( myOpt );
+
+         ICommandLineParser clp = new CommandLineParser( spec );
+
+         IParserResult pr =
+               clp.Parse(
+                     new[] {
+                           "arg1",
+                           "arg2",
+                           "--my-opt",
+                           "23",
+                           "42"
+                     } );
+
+         List<string> dynArgValues = pr.GetDynamicValues( dynStringArg ).ToList( );
+
+         Assert.AreEqual( 2, dynArgValues.Count );
+         Assert.AreEqual( "arg1", dynArgValues[ 0 ] );
+         Assert.AreEqual( "arg2", dynArgValues[ 1 ] );
+
+         List<int> dynIntArgValues = pr.GetDynamicValues( dynIntArg ).ToList( );
+
+         Assert.AreEqual( 2, dynIntArgValues.Count );
+         Assert.AreEqual( 23, dynIntArgValues[ 0 ] );
+         Assert.AreEqual( 42, dynIntArgValues[ 1 ] );
       }
 
       [Test]

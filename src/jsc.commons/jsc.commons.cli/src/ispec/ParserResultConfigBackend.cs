@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -125,12 +126,40 @@ namespace jsc.commons.cli.ispec {
                   _specDeriverConfig.PropertyNamingStyle.ToString( opt.Name ),
                   string.Empty );
 
-         IArgument arg = ( opt?.Arguments??_spec.Arguments ).FirstOrDefault( a => a.Name == argName );
+         IArgument arg = ( opt?.Arguments??_spec.Arguments ).FirstOrDefault( a => a.Name == argName )
+               ??( _spec.DynamicArgument != null&&_spec.DynamicArgument.Name == argName
+                     ? _spec.DynamicArgument
+                     : _spec.Options.FirstOrDefault( o => o.DynamicArgument != null&&o.DynamicArgument.Name == argName )
+                           ?.DynamicArgument );
+
          if( arg == null )
             throw new Exception( $"spec does not contain an {nameof( IArgument )} with name {argName}" );
 
-         value = GetValueForArgument( arg, type );
+         value = arg.IsDynamicArgument? GetValueForDynamicArgument( arg, type ) : GetValueForArgument( arg, type );
          return true;
+      }
+
+      private object GetValueForDynamicArgument( IArgument argument, Type targetType ) {
+         MethodInfo mi = GetType( )
+               .GetMethod(
+                     nameof( GetValueForDynamicArgumentGeneric ),
+                     BindingFlags.Instance|BindingFlags.NonPublic )
+               ?.MakeGenericMethod(
+                     argument.ValueType,
+                     // targetType is IEnumerable<?>: we're in interested in the ?
+                     targetType.GenericTypeArguments[ 0 ] );
+
+         return mi.Invoke( this, new object[] {argument} );
+      }
+
+      private IEnumerable GetValueForDynamicArgumentGeneric<T1, T2>( IArgument argument ) {
+         if( typeof( T1 ) == typeof( T2 ) )
+            return _pr.GetDynamicValues( (IArgument<T1>)argument );
+
+         return _pr.GetDynamicValues( (IArgument<T1>)argument )
+               .Select(
+                     value => (T2)Convert.ChangeType( value, typeof( T2 ) ) )
+               .ToList( );
       }
 
       private object GetValueForArgument( IArgument arg, Type targetType ) {

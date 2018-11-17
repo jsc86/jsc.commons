@@ -14,7 +14,7 @@ namespace jsc.commons.cli.interfaces {
 
       IEnumerable<IArgument> Arguments { get; }
 
-      bool HasDynamicArgumentList { get; }
+      IArgument DynamicArgument { get; }
 
       bool Optional { get; }
 

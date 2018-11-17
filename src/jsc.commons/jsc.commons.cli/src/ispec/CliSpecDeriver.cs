@@ -54,7 +54,8 @@ namespace jsc.commons.cli.ispec {
 
          AddArguments( spec, t );
 
-         if( spec.Options.Count+spec.Flags.Count+spec.Arguments.Count( ) == 0 )
+         if( spec.Options.Count+spec.Flags.Count+spec.Arguments.Count( ) == 0
+               &&spec.DynamicArgument == null )
             throw new ArgumentException( $"{t.Name} does not define options, flags or arguments" );
 
          return spec;
@@ -67,12 +68,20 @@ namespace jsc.commons.cli.ispec {
                continue;
             if( !string.IsNullOrEmpty( argAttrib.Of ) )
                continue;
-            spec.AddArgument(
-                  _argTypeMapper.Map(
-                        argAttrib,
-                        pi,
-                        _config.CliConfig,
-                        string.Empty ) );
+            if( argAttrib.Dynamic )
+               spec.DynamicArgument =
+                     _argTypeMapper.Map(
+                           argAttrib,
+                           pi,
+                           _config.CliConfig,
+                           string.Empty );
+            else
+               spec.AddArgument(
+                     _argTypeMapper.Map(
+                           argAttrib,
+                           pi,
+                           _config.CliConfig,
+                           string.Empty ) );
          }
       }
 
@@ -94,6 +103,7 @@ namespace jsc.commons.cli.ispec {
                _config.PropertyNamingStyle.FromString( optionAttrib.Name??pi.Name ),
                optionAttrib.Optional,
                optionAttrib.Flag == 0? (char?)null : optionAttrib.Flag,
+               GetDynamicArgument( spec, t, pi.Name ),
                ( pi.PropertyType.IsAssignableFrom( typeof( bool ) )
                      ? Enumerable.Empty<IArgument>( )
                      : new[] {
@@ -124,9 +134,31 @@ namespace jsc.commons.cli.ispec {
          Flag flag = new Flag(
                flagAttrib.Name,
                flagAttrib.Optional,
+               GetDynamicArgument( spec, t, pi.Name ),
                GetArguments( spec, t, pi.Name ) );
          flag.Description = flagAttrib.Description;
          spec.Flags.Add( flag );
+      }
+
+      private IArgument GetDynamicArgument( CliSpecification spec, Type t, string parent ) {
+         foreach( PropertyInfo pi in t.GetProperties( ) ) {
+            ArgumentAttribute argAttrib = pi.GetCustomAttribute<ArgumentAttribute>( );
+            if( argAttrib == null )
+               continue;
+            if( string.Compare( parent, argAttrib.Of, StringComparison.InvariantCulture ) != 0
+                  ||t.Name.Contains( parent ) )
+               continue;
+            if( !argAttrib.Dynamic )
+               continue;
+
+            return _argTypeMapper.Map(
+                  argAttrib,
+                  pi,
+                  _config.CliConfig,
+                  parent );
+         }
+
+         return null;
       }
 
       private IEnumerable<IArgument> GetArguments( CliSpecification spec, Type t, string parent ) {
@@ -137,6 +169,8 @@ namespace jsc.commons.cli.ispec {
                continue;
             if( string.Compare( parent, argAttrib.Of, StringComparison.InvariantCulture ) != 0
                   ||t.Name.Contains( parent ) )
+               continue;
+            if( argAttrib.Dynamic )
                continue;
             args = args??new List<IArgument>( );
             AddArgument( args, argAttrib, pi, parent );

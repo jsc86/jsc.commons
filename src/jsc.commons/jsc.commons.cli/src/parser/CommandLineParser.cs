@@ -28,7 +28,7 @@ namespace jsc.commons.cli.parser {
 
       public IParserResult Parse( string[] args ) {
          ParserResult pr = new ParserResult( _spec );
-         IArgument expectedArg = _spec.Arguments.FirstOrDefault( );
+         IArgument expectedArg = _spec.Arguments.FirstOrDefault( )??_spec.DynamicArgument;
          IItem expectedArgItem = null;
          foreach( string s in args )
             Parse( s, pr, ref expectedArg, ref expectedArgItem );
@@ -77,7 +77,10 @@ namespace jsc.commons.cli.parser {
             ParserResult pr,
             ref IArgument expectedArg,
             ref IItem expectedArgItem ) {
-         pr.SetArgument( expectedArg, pMatch.Done( ) );
+         if( expectedArg.IsDynamicArgument )
+            pr.AddDynamicArgument( expectedArg, pMatch.Done( ) );
+         else
+            pr.SetArgument( expectedArg, pMatch.Done( ) );
          SetNextExpectedArg( null, pr, ref expectedArg, ref expectedArgItem );
       }
 
@@ -121,7 +124,9 @@ namespace jsc.commons.cli.parser {
          while( true ) {
             if( argList.Count == 0 ) {
                if( expectedArgItem != null ) {
-                  expectedArg = expectedArgItem?.Arguments.FirstOrDefault( a => !pr.IsSet( a ) );
+                  expectedArg = expectedArgItem?.Arguments.FirstOrDefault( a => !pr.IsSet( a ) )
+                        ??expectedArgItem?.DynamicArgument;
+
                   if( expectedArg == null )
                      expectedArgItem = null;
                }

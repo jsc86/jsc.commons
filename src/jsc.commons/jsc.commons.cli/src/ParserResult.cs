@@ -15,7 +15,7 @@ namespace jsc.commons.cli {
    public class ParserResult : IParserResult {
 
       private readonly Dictionary<IArgument, string> _arguments;
-      private readonly Dictionary<IItem, IList<string>> _dynamicArguments;
+      private readonly Dictionary<IArgument, List<string>> _dynamicArguments;
       private readonly List<IFlag> _flags;
 
       private readonly List<IOption> _options;
@@ -25,7 +25,7 @@ namespace jsc.commons.cli {
          _options = new List<IOption>( );
          _flags = new List<IFlag>( );
          _arguments = new Dictionary<IArgument, string>( );
-         _dynamicArguments = new Dictionary<IItem, IList<string>>( );
+         _dynamicArguments = new Dictionary<IArgument, List<string>>( );
       }
 
       private ParserResult(
@@ -33,7 +33,7 @@ namespace jsc.commons.cli {
             List<IOption> options,
             List<IFlag> flags,
             Dictionary<IArgument, string> arguments,
-            Dictionary<IItem, IList<string>> dynamicArguments ) {
+            Dictionary<IArgument, List<string>> dynamicArguments ) {
          CliSpecification = cliSpecification;
          _options = options;
          _flags = flags;
@@ -58,9 +58,10 @@ namespace jsc.commons.cli {
          return (T)argument.Parse( _arguments[ argument ] );
       }
 
-      public IEnumerable<string> GetDynamicArgumentList( IItem item ) {
-         // todo: interface definition does not work as intended -> redesign
-         throw new NotImplementedException( );
+      public IEnumerable<T> GetDynamicValues<T>( IArgument<T> dynamicArgument ) {
+         return !_dynamicArguments.TryGetValue( dynamicArgument, out List<string> dal )
+               ? Enumerable.Empty<T>( )
+               : dal.ConvertAll( s => Convert<T>( s, dynamicArgument ) );
       }
 
       public ICliSpecification CliSpecification { get; }
@@ -71,7 +72,14 @@ namespace jsc.commons.cli {
                new List<IOption>( _options ),
                new List<IFlag>( _flags ),
                new Dictionary<IArgument, string>( _arguments ),
-               new Dictionary<IItem, IList<string>>( _dynamicArguments ) );
+               new Dictionary<IArgument, List<string>>( _dynamicArguments ) );
+      }
+
+      private T Convert<T>( string str, IArgument arg ) {
+         object o = arg.Parse( str, true );
+         if( o is T value )
+            return value;
+         return (T)System.Convert.ChangeType( o, typeof( T ) );
       }
 
       internal void Set( IOption option ) {
@@ -83,12 +91,16 @@ namespace jsc.commons.cli {
       }
 
       internal void Set( IItem item ) {
-         if( item is IOption )
-            Set( (IOption)item );
-         else if( item is IFlag )
-            Set( (IFlag)item );
-         else
-            throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );
+         switch( item ) {
+            case IOption _:
+               Set( (IOption)item );
+               break;
+            case IFlag _:
+               Set( (IFlag)item );
+               break;
+            default:
+               throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );
+         }
       }
 
       internal void Unset( IOption option ) {
@@ -100,30 +112,30 @@ namespace jsc.commons.cli {
       }
 
       internal void Unset( IItem item ) {
-         if( item is IOption )
-            Unset( (IOption)item );
-         else if( item is IFlag )
-            Unset( (IFlag)item );
-         else
-            throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );
+         switch( item ) {
+            case IOption _:
+               Unset( (IOption)item );
+               break;
+            case IFlag _:
+               Unset( (IFlag)item );
+               break;
+            default:
+               throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );
+         }
       }
 
       internal void SetArgument( IArgument argument, string value ) {
          _arguments[ argument ] = value;
       }
 
-//      internal void SetArgument( IArgument argument, object value ){
-//         _arguments[argument] = value;
-//      }
-
       internal void RemoveArgument( IArgument argument ) {
          _arguments.Remove( argument );
       }
 
-      internal void AddDynamicArgument( IItem item, string value ) {
-         IList<string> dal;
-         if( !_dynamicArguments.TryGetValue( item, out dal ) )
-            _dynamicArguments[ item ] = dal = new List<string>( );
+      internal void AddDynamicArgument( IArgument argument, string value ) {
+         if( !_dynamicArguments.TryGetValue( argument, out List<string> dal ) )
+            _dynamicArguments[ argument ] = dal = new List<string>( );
+
          dal.Add( value );
       }
 

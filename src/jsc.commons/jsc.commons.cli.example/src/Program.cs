@@ -33,18 +33,21 @@ namespace jsc.commons.cli.example {
                new UnifiedName( "opt", "one" ),
                false,
                'a',
+               null,
                arg1 );
 
          IOption opt2 = new Option(
                new UnifiedName( "opt", "two" ),
                true,
                'b',
+               null,
                arg2 );
 
          IOption opt3 = new Option(
                new UnifiedName( "opt", "three" ),
                true,
                'c',
+               null,
                arg3 );
 
          CliSpecification spec = new CliSpecification( conf );

@@ -11,11 +11,11 @@ namespace jsc.commons.rc.generic.rules {
 
    public class True<T> : RuleBase<T> where T : class {
 
+      public static True<T> Instance { get; } = new True<T>( );
+
       public override IViolation<T> Check( T subject, IBehaviors context = null ) {
          return NonViolation<T>.Instance;
       }
-
-      public static True<T> Instance { get; } = new True<T>( );
 
    }
 

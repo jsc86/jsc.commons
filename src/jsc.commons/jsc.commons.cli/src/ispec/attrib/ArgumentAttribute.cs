@@ -23,6 +23,8 @@ namespace jsc.commons.cli.ispec.attrib {
 
       public string Description { get; set; }
 
+      public bool Dynamic { get; set; }
+
    }
 
 }
