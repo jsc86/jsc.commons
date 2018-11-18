@@ -10,6 +10,14 @@ to a set of instances which generally know how to behave
 ## [jsc.commons.cli](src/jsc.commons/jsc.commons.cli/)
 
 ## [jsc.commons.config](src/jsc.commons/jsc.commons.config/)
+A recurring task in software development is writing code for
+configuration objects, which alter the way a software behaves.
+Often this will be technology specific code, for example using
+the app.config or a specific db schema. This library provides
+a way to define technology independent configuration objects
+with the IO abstracted away. Write the configuration object
+code once, replace the IO source/destination late without
+changing the configuration object code.
 
 ## [jsc.commons.misc](src/jsc.commons/jsc.commons.misc/)
 This is the place for the misfits.

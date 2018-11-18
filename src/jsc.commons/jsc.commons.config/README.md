@@ -1,7 +1,22 @@
 <img align="right" src="../../../img/logo/jsc.commons.logo_128.png"/>
 
 # jsc.commons.config
+A recurring task in software development is writing code for
+configuration objects, which alter the way a software behaves.
+Often this will be technology specific code, for example using
+the app.config or a specific db schema. This library provides
+a way to define technology independent configuration objects
+with the IO abstracted away. Write the configuration object
+code once, replace the IO source/destination late without
+changing the configuration object code.
 
+The following snippet illustrates how to define a configuration
+object. Write an interface extending IConfiguration. Each property
+translates to a configuration setting. Configurations can be
+annotated with the Config and ConfigValue attributes. The ConfigValue
+attribute is mandatory to tell the generic configuration implementation
+that a property is a configuration setting. It also allows to
+define a default value.
 ```cs
 [Config( DefaultsProvider = typeof( MyConfDefaultsProvider ) )]
 public interface IMyConf : IConfiguration {
@@ -18,18 +33,28 @@ public interface IMyConf : IConfiguration {
 }
 ```
 
+Default values defined with the ConfigValue attribute have to be constant.
+Everything you can define as a constant in C# can be used here.
+If you need to set something as a default value which can not be
+defined as a constant, you need to specify and write a defaults provider.
+A default provider maps the name of a configuration property to
+a function returning an instance as a default value.
 ```cs
 public class MyConfDefaultsProvider : DefaultsProviderBase {
 
    public MyConfDefaultsProvider( ) : base(
          new[] {
-               new Tuple<string, object>(
+               new Tuple<string, Func<object>>(
                      nameof( IMyConf.MyListProp ),
-                     new List<string> {"a", "b", "c"} ),
-         } ) { }
+                     ( ) => new List<string> {"a", "b", "c"} )
+         } ) { }  
 }
 ```
 
+Getting an instance of a configuration object is as simple as
+calling Config.New\<T\>() where T is the interface definition of the
+configuration object. The returned instance will be pre-filled with
+the defined default values.
 ```cs
 IMyConf conf = Config.New<IMyConf>( );
 Console.WriteLine( conf.MyStringProperty );
@@ -41,6 +66,11 @@ Console.WriteLine( conf.MyListProp.Aggregate( ( a, b ) => $"{a}, {b}" ) );
 // a, b, c
 ```
 
+
+Writing a configuration back-end can be achieved by implementing
+the IConfigurationBackend interface. It is advised though, to
+extend the ConfigBackendBase class, which provides some basic
+error handling and a template for common IO operations.
 ```cs
 public class MyPseudoBackEnd : ConfigBackendBase {
 
