@@ -62,13 +62,20 @@ namespace jsc.commons.config {
             Dictionary<string, Tuple<object, Type>> defaults = null ) {
          defaults = defaults??__defaults[ t.FullName ];
          Dictionary<string, Tuple<object, Type>> copy = new Dictionary<string, Tuple<object, Type>>( defaults.Count );
-         foreach( KeyValuePair<string, Tuple<object, Type>> kvp in defaults )
+         foreach( KeyValuePair<string, Tuple<object, Type>> kvp in defaults ) {
+            object value =
+                  kvp.Value.Item1 is ICloneable cloneable
+                        ? cloneable.Clone( )
+                        : kvp.Value.Item1;
+
+            if( value is Func<object> )
+               value = ( (Func<object>)value )( );
+
             copy[ kvp.Key ] =
                   new Tuple<object, Type>(
-                        kvp.Value.Item1 is ICloneable
-                              ? ( (ICloneable)kvp.Value.Item1 )?.Clone( )
-                              : kvp.Value.Item1,
+                        value,
                         kvp.Value.Item2 );
+         }
 
          return copy;
       }

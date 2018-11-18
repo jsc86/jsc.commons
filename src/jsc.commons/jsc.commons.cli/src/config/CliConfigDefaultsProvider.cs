@@ -23,22 +23,30 @@ namespace jsc.commons.cli.config {
 
       public CliConfigDefaultsProvider( ) : base(
             new[] {
-                  new Tuple<string, object>( nameof( ICliConfig.Culture ), CultureInfo.InvariantCulture ),
-                  new Tuple<string, object>( nameof( ICliConfig.OptionNamingStyle ), new DelimitedCaseBase( '-' ) ),
-                  new Tuple<string, object>(
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.Culture ),
+                        ( ) => CultureInfo.InvariantCulture ),
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.OptionNamingStyle ),
+                        ( ) => new DelimitedCaseBase( '-' ) ),
+                  new Tuple<string, Func<object>>(
                         nameof( ICliConfig.PathSeparator ),
-                        Path.PathSeparator ),
-                  new Tuple<string, object>( nameof( ICliConfig.FlagPrefix ), (Func<string>)( ( ) => "-" ) ),
-                  new Tuple<string, object>( nameof( ICliConfig.OptionPrefix ), (Func<string>)( ( ) => "--" ) ),
-                  new Tuple<string, object>(
+                        ( ) => Path.PathSeparator ),
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.FlagPrefix ),
+                        ( ) => (Func<string>)( ( ) => "-" ) ),
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.OptionPrefix ),
+                        ( ) => (Func<string>)( ( ) => "--" ) ),
+                  new Tuple<string, Func<object>>(
                         nameof( ICliConfig.Policies ),
-                        new ReadOnlyCollection<IRule<ICliSpecification>>(
+                        ( ) => new ReadOnlyCollection<IRule<ICliSpecification>>(
                               new List<IRule<ICliSpecification>> {
                                     new UniqueNames( )
                               } ) ),
-                  new Tuple<string, object>(
+                  new Tuple<string, Func<object>>(
                         nameof( ICliConfig.Prompt ),
-                        (Func<IParserResult, IArgument, string>)Default.Prompt )
+                        ( ) => (Func<IParserResult, IArgument, string>)Default.Prompt )
             } ) { }
 
    }

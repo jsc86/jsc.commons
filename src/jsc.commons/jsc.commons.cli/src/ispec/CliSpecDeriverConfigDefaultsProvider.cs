@@ -16,12 +16,12 @@ namespace jsc.commons.cli.ispec {
 
       public CliSpecDeriverConfigDefaultsProvider( ) : base(
             new[] {
-                  new Tuple<string, object>(
+                  new Tuple<string, Func<object>>(
                         nameof( ICliSpecDeriverConfig.PropertyNamingStyle ),
-                        NamingStyles.PascalCase ),
-                  new Tuple<string, object>(
+                        ( ) => NamingStyles.PascalCase ),
+                  new Tuple<string, Func<object>>(
                         nameof( ICliSpecDeriverConfig.CliConfig ),
-                        Config.New<ICliConfig>( ) )
+                        Config.New<ICliConfig> )
             } ) { }
 
    }

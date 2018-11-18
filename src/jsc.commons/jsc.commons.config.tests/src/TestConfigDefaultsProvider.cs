@@ -13,7 +13,9 @@ namespace jsc.commons.config.tests {
 
       public TestConfigDefaultsProvider( ) : base(
             new[] {
-                  new Tuple<string, object>( nameof( ITestConfig.Culture ), CultureInfo.InvariantCulture )
+                  new Tuple<string, Func<object>>(
+                        nameof( ITestConfig.Culture ),
+                        ( ) => CultureInfo.InvariantCulture )
             } ) { }
 
    }

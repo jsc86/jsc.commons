@@ -4,6 +4,8 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
+
 namespace jsc.commons.config.interfaces {
 
    /// <summary>
@@ -18,14 +20,14 @@ namespace jsc.commons.config.interfaces {
       /// <param name="propName"></param>
       /// <param name="value">true, if a value could be retrieved</param>
       /// <returns></returns>
-      bool TryGetDefault( string propName, out object value );
+      bool TryGetDefault( string propName, out Func<object> value );
 
       /// <summary>
       /// </summary>
       /// <param name="propName"></param>
       /// <param name="throwIfNull">if true, throws an exception when there is no value for propName</param>
       /// <returns></returns>
-      object GetDefault( string propName, bool throwIfNull = false );
+      Func<object> GetDefault( string propName, bool throwIfNull = false );
 
    }
 

@@ -14,21 +14,22 @@ namespace jsc.commons.config {
 
    public class DefaultsProviderBase : IDefaultsProvider {
 
-      private readonly Dictionary<string, object> _defaults;
+      private readonly Dictionary<string, Func<object>> _defaults;
 
-      protected DefaultsProviderBase( IEnumerable<Tuple<string, object>> defaults ) {
-         IEnumerable<Tuple<string, object>> defaultsL = defaults as IList<Tuple<string, object>>??defaults.ToList( );
-         _defaults = new Dictionary<string, object>( defaultsL.Count( ) );
-         foreach( Tuple<string, object> d in defaultsL )
+      protected DefaultsProviderBase( IEnumerable<Tuple<string, Func<object>>> defaults ) {
+         IEnumerable<Tuple<string, Func<object>>> defaultsL =
+               defaults as IList<Tuple<string, Func<object>>>??defaults.ToList( );
+         _defaults = new Dictionary<string, Func<object>>( defaultsL.Count( ) );
+         foreach( Tuple<string, Func<object>> d in defaultsL )
             _defaults[ d.Item1 ] = d.Item2;
       }
 
-      public bool TryGetDefault( string propName, out object value ) {
+      public bool TryGetDefault( string propName, out Func<object> value ) {
          return _defaults.TryGetValue( propName, out value );
       }
 
-      public object GetDefault( string propName, bool throwIfNull = false ) {
-         object value;
+      public Func<object> GetDefault( string propName, bool throwIfNull = false ) {
+         Func<object> value;
          if( !TryGetDefault( propName, out value )&&throwIfNull )
             throw new ApplicationException( $"no default for '{propName}'" );
 

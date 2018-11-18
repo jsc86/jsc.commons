@@ -4,8 +4,12 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+
+using jsc.commons.config.interfaces;
 
 using NUnit.Framework;
 
@@ -75,6 +79,39 @@ namespace jsc.commons.config.tests {
       public void ValidInterface( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
          Assert.IsNotNull( conf );
+      }
+
+      public class DefaultsPerInstanceDefaultsProvider : DefaultsProviderBase {
+
+         public DefaultsPerInstanceDefaultsProvider( ) : base(
+               new[] {
+                     new Tuple<string, Func<object>>(
+                           nameof( IDefaultsPerInstanceConf.MyList ),
+                           ( ) => new List<string>( ) )
+               } ) { }
+
+      }
+
+      [Config( DefaultsProvider = typeof( DefaultsPerInstanceDefaultsProvider ) )]
+      public interface IDefaultsPerInstanceConf : IConfiguration {
+
+         [ConfigValue]
+         IList<string> MyList { get; set; }
+
+      }
+
+      [Test]
+      public void DefaultsPerInstance( ) {
+         IDefaultsPerInstanceConf conf1 = Config.New<IDefaultsPerInstanceConf>( );
+         IDefaultsPerInstanceConf conf2 = Config.New<IDefaultsPerInstanceConf>( );
+         conf1.MyList.Add( "asdf" );
+
+         Assert.AreEqual( 1, conf1.MyList.Count );
+         Assert.AreEqual( 0, conf2.MyList.Count );
+
+         IDefaultsPerInstanceConf conf3 = Config.New<IDefaultsPerInstanceConf>( );
+
+         Assert.AreEqual( 0, conf3.MyList.Count );
       }
 
    }
