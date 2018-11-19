@@ -29,7 +29,7 @@ namespace jsc.commons.cli.ispec {
                {typeof( double ), GetDoubleArg},
                {typeof( float ), GetDoubleArg},
                {typeof( long ), GetLongArg},
-               {typeof( int ), GetLongArg}
+               {typeof( int ), GetIntArg}
          };
       }
 
@@ -52,6 +52,10 @@ namespace jsc.commons.cli.ispec {
 
       private static Argument GetLongArg( ICliConfig cliConfig, string name, bool optional ) {
          return new LongArg( name, cliConfig, optional );
+      }
+
+      private static Argument GetIntArg( ICliConfig cliConfig, string name, bool optional ) {
+         return new IntArg( name, cliConfig, optional );
       }
 
       public IArgument Map( ArgumentAttribute argAttrib, PropertyInfo pi, ICliConfig config, string parent ) {
