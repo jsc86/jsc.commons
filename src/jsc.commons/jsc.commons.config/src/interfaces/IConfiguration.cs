@@ -48,7 +48,7 @@ namespace jsc.commons.config.interfaces {
       /// <summary>
       ///    Read all configuration properties from the set Backend.
       /// </summary>
-      void Read( );
+      void Read( bool skipNullValues = false );
 
       Tuple<object, Type> GetConfigProperty( string key );
 

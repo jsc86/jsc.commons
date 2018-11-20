@@ -14,7 +14,7 @@ namespace jsc.commons.config.interfaces {
 
       void Save( IConfiguration config );
 
-      void Read( IConfiguration config );
+      void Read( IConfiguration config, bool skipNullValues = false );
 
       T Read<T>( ) where T : IConfiguration;
 

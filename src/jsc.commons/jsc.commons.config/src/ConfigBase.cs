@@ -19,8 +19,8 @@ namespace jsc.commons.config {
          Backend.Save( this );
       }
 
-      public void Read( ) {
-         Backend.Read( this );
+      public void Read( bool skipNullValues = false ) {
+         Backend.Read( this, skipNullValues );
       }
 
       public IConfigurationBackend Backend { get; set; }

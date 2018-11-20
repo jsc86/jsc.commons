@@ -45,8 +45,8 @@ namespace jsc.commons.config {
          _cb.Save( );
       }
 
-      public void Read( ) {
-         _cb.Read( );
+      public void Read( bool skipNullValues = false ) {
+         _cb.Read( skipNullValues );
       }
 
       public IConfigurationBackend Backend {
@@ -70,7 +70,7 @@ namespace jsc.commons.config {
          if( mn.Equals( __save ) )
             Save( );
          else if( mn.Equals( __read ) )
-            Read( );
+            Read( (bool)invocation.Arguments[ 0 ] );
          else if( mn.Equals( __keys ) )
             invocation.ReturnValue = Keys;
          else if( mn.Equals( __backendGet ) )

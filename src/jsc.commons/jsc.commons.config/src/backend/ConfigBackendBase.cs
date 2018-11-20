@@ -27,7 +27,7 @@ namespace jsc.commons.config.backend {
          }
       }
 
-      public void Read( IConfiguration config ) {
+      public void Read( IConfiguration config, bool skipNullValues = false ) {
          BeforeRead( );
          try {
             Dictionary<string, Tuple<object, Type>> read =
@@ -40,7 +40,9 @@ namespace jsc.commons.config.backend {
             }
 
             foreach( KeyValuePair<string, Tuple<object, Type>> kvp in read )
-               config[ kvp.Key, kvp.Value.Item2 ] = kvp.Value.Item1;
+               if( !skipNullValues
+                     ||kvp.Value.Item1 != null )
+                  config[ kvp.Key, kvp.Value.Item2 ] = kvp.Value.Item1;
          } catch( Exception exc ) {
             OnReadException( exc );
          } finally {

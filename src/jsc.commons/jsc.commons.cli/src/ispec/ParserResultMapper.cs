@@ -38,7 +38,7 @@ namespace jsc.commons.cli.ispec {
 
          T config = Config.New<T>( );
          config.Backend = new ParserResultConfigBackend( _specDeriverConfig, _spec, pr, t );
-         config.Read( );
+         config.Read( true );
 
          return config;
       }
