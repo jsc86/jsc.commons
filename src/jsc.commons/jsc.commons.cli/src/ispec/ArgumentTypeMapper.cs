@@ -29,8 +29,8 @@ namespace jsc.commons.cli.ispec {
                {typeof( bool? ), GetBoolArg},
                {typeof( double ), GetDoubleArg},
                {typeof( double? ), GetDoubleArg},
-               {typeof( float ), GetDoubleArg},
-               {typeof( float? ), GetDoubleArg},
+               {typeof( float ), GetFloatArg},
+               {typeof( float? ), GetFloatArg},
                {typeof( long ), GetLongArg},
                {typeof( long? ), GetLongArg},
                {typeof( int ), GetIntArg},
@@ -53,6 +53,10 @@ namespace jsc.commons.cli.ispec {
 
       private static Argument GetDoubleArg( ICliConfig cliConfig, string name, bool optional ) {
          return new DoubleArg( name, cliConfig, optional );
+      }
+
+      private static Argument GetFloatArg( ICliConfig cliConfig, string name, bool optional ) {
+         return new FloatArg( name, cliConfig, optional );
       }
 
       private static Argument GetLongArg( ICliConfig cliConfig, string name, bool optional ) {

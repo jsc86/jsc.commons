@@ -53,12 +53,12 @@ namespace jsc.commons.cli.ispec {
          if( pi == null )
             throw new Exception( $"{_t.Name} has no property {key}" );
 
-         return ReadOption( pi, type, out value )||
+         return ReadOption( pi, out value )||
                ReadFlag( pi, out value )||
                ReadArgument( pi, type, out value );
       }
 
-      private bool ReadOption( PropertyInfo pi, Type type, out object value ) {
+      private bool ReadOption( PropertyInfo pi, out object value ) {
          value = null;
          OptionAttribute oa = pi.GetCustomAttribute<OptionAttribute>( );
          if( oa == null )
@@ -81,7 +81,7 @@ namespace jsc.commons.cli.ispec {
          if( arg == null )
             throw new Exception( $"option {opt} has no argument {argName}" );
 
-         value = GetValueForArgument( arg, type );
+         value = GetValueForArgument( arg );
          return true;
       }
 
@@ -138,17 +138,17 @@ namespace jsc.commons.cli.ispec {
             throw new Exception( $"spec does not contain an {nameof( IArgument )} with name {argName}" );
 
          if( arg.IsDynamicArgument )
-            value = GetValueForDynamicArgument( arg, type );
+            value = GetValueForDynamicArgument( arg );
          else if( type.IsNullableType( ) )
             value = GetValueForNullableArgument( arg, type );
          else
-            value = GetValueForArgument( arg, type );
+            value = GetValueForArgument( arg );
 
          return true;
       }
 
       private object GetValueForNullableArgument( IArgument argument, Type type ) {
-         object value = GetValueForArgument( argument, type, false );
+         object value = GetValueForArgument( argument );
          if( value == null )
             return null;
 
@@ -157,44 +157,28 @@ namespace jsc.commons.cli.ispec {
                value );
       }
 
-      private object GetValueForDynamicArgument( IArgument argument, Type targetType ) {
+      private object GetValueForDynamicArgument( IArgument argument ) {
          MethodInfo mi = GetType( )
                .GetMethod(
                      nameof( GetValueForDynamicArgumentGeneric ),
                      BindingFlags.Instance|BindingFlags.NonPublic )
-               ?.MakeGenericMethod(
-                     argument.ValueType,
-                     // targetType is IEnumerable<?>: we're in interested in the ?
-                     targetType.GenericTypeArguments[ 0 ] );
+               ?.MakeGenericMethod( argument.ValueType );
 
-         return mi.Invoke( this, new object[] {argument} );
+         return mi?.Invoke( this, new object[] {argument} );
       }
 
-      private IEnumerable GetValueForDynamicArgumentGeneric<T1, T2>( IArgument argument ) {
-         if( typeof( T1 ) == typeof( T2 ) )
-            return _pr.GetDynamicValues( (IArgument<T1>)argument );
-
-         return _pr.GetDynamicValues( (IArgument<T1>)argument )
-               .Select(
-                     value => (T2)Convert.ChangeType( value, typeof( T2 ) ) )
-               .ToList( );
+      private IEnumerable GetValueForDynamicArgumentGeneric<T1>( IArgument argument ) {
+         return _pr.GetDynamicValues( (IArgument<T1>)argument );
       }
 
-      private object GetValueForArgument( IArgument arg, Type targetType, bool changeType = true ) {
-         if( !_pr.IsSet( arg ) ) {
-            if( !arg.Optional )
-               throw new Exception( $"non-optional argument {arg} not set in parser result" );
-            return null;
-         }
+      private object GetValueForArgument( IArgument arg ) {
+         if( _pr.IsSet( arg ) )
+            return arg.Parse( _pr.GetValue( arg ), true );
 
-         object value = arg.Parse( _pr.GetValue( arg ), true );
+         if( !arg.Optional )
+            throw new Exception( $"non-optional argument {arg} not set in parser result" );
 
-         if( changeType
-               &&arg.ValueType.IsValueType
-               &&arg.ValueType != targetType )
-            value = Convert.ChangeType( value, targetType );
-
-         return value;
+         return null;
       }
 
       private IOption GetOptionForName( string name ) {
