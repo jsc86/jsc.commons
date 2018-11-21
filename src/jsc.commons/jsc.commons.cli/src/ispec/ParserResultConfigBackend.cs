@@ -9,6 +9,8 @@ using System.Collections;
 using System.Linq;
 using System.Reflection;
 
+using Castle.DynamicProxy.Internal;
+
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.ispec.attrib;
 using jsc.commons.config.backend;
@@ -135,8 +137,24 @@ namespace jsc.commons.cli.ispec {
          if( arg == null )
             throw new Exception( $"spec does not contain an {nameof( IArgument )} with name {argName}" );
 
-         value = arg.IsDynamicArgument? GetValueForDynamicArgument( arg, type ) : GetValueForArgument( arg, type );
+         if( arg.IsDynamicArgument )
+            value = GetValueForDynamicArgument( arg, type );
+         else if( type.IsNullableType( ) )
+            value = GetValueForNullableArgument( arg, type );
+         else
+            value = GetValueForArgument( arg, type );
+
          return true;
+      }
+
+      private object GetValueForNullableArgument( IArgument argument, Type type ) {
+         object value = GetValueForArgument( argument, type, false );
+         if( value == null )
+            return null;
+
+         return Activator.CreateInstance(
+               type,
+               value );
       }
 
       private object GetValueForDynamicArgument( IArgument argument, Type targetType ) {
@@ -162,16 +180,17 @@ namespace jsc.commons.cli.ispec {
                .ToList( );
       }
 
-      private object GetValueForArgument( IArgument arg, Type targetType ) {
+      private object GetValueForArgument( IArgument arg, Type targetType, bool changeType = true ) {
          if( !_pr.IsSet( arg ) ) {
             if( !arg.Optional )
                throw new Exception( $"non-optional argument {arg} not set in parser result" );
-            return arg.ValueType.IsValueType? Activator.CreateInstance( arg.ValueType ) : null;
+            return null;
          }
 
          object value = arg.Parse( _pr.GetValue( arg ), true );
 
-         if( arg.ValueType.IsValueType
+         if( changeType
+               &&arg.ValueType.IsValueType
                &&arg.ValueType != targetType )
             value = Convert.ChangeType( value, targetType );
 

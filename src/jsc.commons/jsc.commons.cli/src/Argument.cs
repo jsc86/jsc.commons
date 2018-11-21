@@ -75,6 +75,8 @@ namespace jsc.commons.cli {
 
    public class Argument<T> : Argument, IArgument<T> {
 
+      private object _defaultValue;
+
       static Argument( ) {
          RuleDeriver.Instance.AddArgumentRuleDeriver(
                typeof( Argument<T> ),
@@ -87,9 +89,12 @@ namespace jsc.commons.cli {
 
       public override Type ValueType => typeof( T );
 
-      public T DefaultValue { get; protected set; }
+      public T DefaultValue {
+         get => (T)_defaultValue;
+         protected set => _defaultValue = value;
+      }
 
-      public bool HasDefaultValue => DefaultValue != null;
+      public bool HasDefaultValue => _defaultValue != null;
 
    }
 

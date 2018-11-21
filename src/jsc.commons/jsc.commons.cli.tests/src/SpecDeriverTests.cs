@@ -52,6 +52,14 @@ namespace jsc.commons.cli.tests {
 
       }
 
+      [CliDefinition]
+      public interface ICliNullableInt : IConfiguration {
+
+         [Argument]
+         int? Arg { get; set; }
+
+      }
+
       [Test]
       public void FloatArg_NegativeValue( ) {
          const float f = -123.456789f;
@@ -112,6 +120,25 @@ namespace jsc.commons.cli.tests {
                } ).CliConfigObject;
 
          Assert.AreEqual( 0, cli.Arg );
+      }
+
+      [Test]
+      public void NullableInt_NotSet( ) {
+         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
+               new string[0] ).CliConfigObject;
+
+         Assert.IsFalse( cli.Arg.HasValue );
+      }
+
+      [Test]
+      public void NullableInt_Set( ) {
+         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
+               new[] {
+                     42.ToString( )
+               } ).CliConfigObject;
+
+         Assert.IsTrue( cli.Arg.HasValue );
+         Assert.AreEqual( 42, cli.Arg );
       }
 
       [Test]

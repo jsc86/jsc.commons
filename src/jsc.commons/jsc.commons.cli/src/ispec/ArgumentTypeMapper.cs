@@ -26,10 +26,15 @@ namespace jsc.commons.cli.ispec {
          _mapping = new Dictionary<Type, Func<ICliConfig, string, bool, Argument>> {
                {typeof( string ), GetStringArg},
                {typeof( bool ), GetBoolArg},
+               {typeof( bool? ), GetBoolArg},
                {typeof( double ), GetDoubleArg},
+               {typeof( double? ), GetDoubleArg},
                {typeof( float ), GetDoubleArg},
+               {typeof( float? ), GetDoubleArg},
                {typeof( long ), GetLongArg},
-               {typeof( int ), GetIntArg}
+               {typeof( long? ), GetLongArg},
+               {typeof( int ), GetIntArg},
+               {typeof( int? ), GetIntArg}
          };
       }
 
