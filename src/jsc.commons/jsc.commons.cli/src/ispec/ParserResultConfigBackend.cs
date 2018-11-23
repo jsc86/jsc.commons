@@ -71,17 +71,22 @@ namespace jsc.commons.cli.ispec {
             return true;
          }
 
-         if( !_pr.IsSet( opt ) ) {
-            value = _t.IsValueType? Activator.CreateInstance( _t ) : null;
-            return true;
-         }
+         string argName = pi.GetCustomAttribute<FirstArgumentAttribute>( )?.Name??
+               $"{pi.Name}{CliSpecDeriver.ImplicitFirstArg}";
+         IArgument arg = opt.DynamicArgument != null
+               &&opt.DynamicArgument.Name.Equals( argName )
+                     ? opt.DynamicArgument
+                     : opt.Arguments.FirstOrDefault( a => a.Name == argName );
 
-         string argName = $"{pi.Name}{CliSpecDeriver.ImplicitFirstArg}";
-         IArgument arg = opt.Arguments.FirstOrDefault( a => a.Name == argName );
          if( arg == null )
-            throw new Exception( $"option {opt} has no argument {argName}" );
+            throw new Exception( $"option {opt.Name} has no argument {argName}" );
 
-         value = GetValueForArgument( arg );
+         if( arg.IsDynamicArgument )
+            value = GetValueForDynamicArgument( arg );
+         else if( pi.PropertyType.IsNullableType( ) )
+            value = GetValueForNullableArgument( arg, pi.PropertyType );
+         else
+            value = GetValueForArgument( arg );
          return true;
       }
 
@@ -176,7 +181,7 @@ namespace jsc.commons.cli.ispec {
             return arg.Parse( _pr.GetValue( arg ), true );
 
          if( !arg.Optional )
-            throw new Exception( $"non-optional argument {arg} not set in parser result" );
+            throw new Exception( $"non-optional argument {arg.Name} not set in parser result" );
 
          return null;
       }

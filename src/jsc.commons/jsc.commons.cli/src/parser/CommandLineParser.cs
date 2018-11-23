@@ -77,10 +77,13 @@ namespace jsc.commons.cli.parser {
             ParserResult pr,
             ref IArgument expectedArg,
             ref IItem expectedArgItem ) {
-         if( expectedArg.IsDynamicArgument )
+         if( expectedArg.IsDynamicArgument ) {
             pr.AddDynamicArgument( expectedArg, pMatch.Done( ) );
-         else
+            expectedArgItem = null;
+         } else {
             pr.SetArgument( expectedArg, pMatch.Done( ) );
+         }
+
          SetNextExpectedArg( null, pr, ref expectedArg, ref expectedArgItem );
       }
 
@@ -94,6 +97,7 @@ namespace jsc.commons.cli.parser {
             pr.Set( item );
 
          expectedArgItem = items.Last( );
+         expectedArg = null;
          SetNextExpectedArg( items.Last( ), pr, ref expectedArg, ref expectedArgItem );
       }
 
@@ -105,6 +109,7 @@ namespace jsc.commons.cli.parser {
          IOption option = pMatch.Done( );
          pr.Set( option );
          expectedArgItem = option;
+         expectedArg = null;
          SetNextExpectedArg( option, pr, ref expectedArg, ref expectedArgItem );
       }
 
@@ -118,6 +123,10 @@ namespace jsc.commons.cli.parser {
                &&expectedArg != null
                &&_spec.Arguments.Contains( expectedArg ) )
             expectedArg = null;
+
+         if( expectedArg != null
+               &&expectedArg.IsDynamicArgument )
+            return;
 
          IArgument arg,
                prevArg = null;

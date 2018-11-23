@@ -53,11 +53,71 @@ namespace jsc.commons.cli.tests {
       }
 
       [CliDefinition]
+      public interface ICliDynArgOption : IConfiguration {
+
+         [Option]
+         [FirstArgument( Name = "int", Dynamic = true )]
+         IEnumerable<int> Arg { get; set; }
+
+      }
+
+      [CliDefinition]
       public interface ICliNullableInt : IConfiguration {
 
          [Argument]
          int? Arg { get; set; }
 
+      }
+
+      [Test]
+      public void DynArg( ) {
+         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
+               new[] {
+                     1.ToString( ),
+                     2.ToString( ),
+                     3.ToString( )
+               } ).CliConfigObject;
+
+         Assert.IsNotNull( cli.Arg );
+
+         List<int> argValues = cli.Arg.ToList( );
+
+         Assert.AreEqual( 3, argValues.Count );
+         Assert.AreEqual( 1, argValues[ 0 ] );
+         Assert.AreEqual( 2, argValues[ 1 ] );
+         Assert.AreEqual( 3, argValues[ 2 ] );
+      }
+
+      [Test]
+      public void DynArg_Empty( ) {
+         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
+               new string[0] ).CliConfigObject;
+
+         Assert.IsNotNull( cli.Arg );
+
+         List<int> argValues = cli.Arg.ToList( );
+
+         Assert.AreEqual( 0, argValues.Count );
+      }
+
+      [Test]
+      public void DynArgOption( ) {
+         ICliDynArgOption cli = new InterfaceSpecBoilerPlateHelper<ICliDynArgOption>(
+               new[] {
+                     "--arg",
+                     1.ToString( ),
+                     2.ToString( ),
+                     3.ToString( )
+               } ).CliConfigObject;
+
+         Assert.IsNotNull( cli.Arg );
+
+         List<int> argValues = cli.Arg.ToList( );
+
+         Assert.AreEqual( 3, argValues.Count );
+         Assert.AreEqual( 1, argValues[ 0 ] );
+         Assert.AreEqual( 2, argValues[ 1 ] );
+         Assert.AreEqual( 3, argValues[ 2 ] );
       }
 
       [Test]
@@ -123,25 +183,6 @@ namespace jsc.commons.cli.tests {
       }
 
       [Test]
-      public void NullableInt_NotSet( ) {
-         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
-               new string[0] ).CliConfigObject;
-
-         Assert.IsFalse( cli.Arg.HasValue );
-      }
-
-      [Test]
-      public void NullableInt_Set( ) {
-         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
-               new[] {
-                     42.ToString( )
-               } ).CliConfigObject;
-
-         Assert.IsTrue( cli.Arg.HasValue );
-         Assert.AreEqual( 42, cli.Arg );
-      }
-
-      [Test]
       public void LongArg_MaxValue( ) {
          ICliLongArg cli = new InterfaceSpecBoilerPlateHelper<ICliLongArg>(
                new[] {
@@ -172,37 +213,6 @@ namespace jsc.commons.cli.tests {
       }
 
       [Test]
-      public void DynArg( ) {
-         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
-               new[] {
-                     1.ToString( ),
-                     2.ToString( ),
-                     3.ToString( )
-               } ).CliConfigObject;
-
-         Assert.IsNotNull( cli.Arg );
-
-         List<int> argValues = cli.Arg.ToList( );
-
-         Assert.AreEqual( 3, argValues.Count );
-         Assert.AreEqual( 1, argValues[ 0 ] );
-         Assert.AreEqual( 2, argValues[ 1 ] );
-         Assert.AreEqual( 3, argValues[ 2 ] );
-      }
-
-      [Test]
-      public void DynArg_Empty( ) {
-         ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
-               new string[0] ).CliConfigObject;
-
-         Assert.IsNotNull( cli.Arg );
-
-         List<int> argValues = cli.Arg.ToList( );
-
-         Assert.AreEqual( 0, argValues.Count );
-      }
-
-      [Test]
       public void MonsterTest( ) {
          ICliTest cli = new InterfaceSpecBoilerPlateHelper<ICliTest>(
                new[] {
@@ -224,6 +234,25 @@ namespace jsc.commons.cli.tests {
          Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Count( ) );
          Assert.AreEqual( 1, cli.StringOptionOneDynIntArg.First( ) );
          Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Last( ) );
+      }
+
+      [Test]
+      public void NullableInt_NotSet( ) {
+         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
+               new string[0] ).CliConfigObject;
+
+         Assert.IsFalse( cli.Arg.HasValue );
+      }
+
+      [Test]
+      public void NullableInt_Set( ) {
+         ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
+               new[] {
+                     42.ToString( )
+               } ).CliConfigObject;
+
+         Assert.IsTrue( cli.Arg.HasValue );
+         Assert.AreEqual( 42, cli.Arg );
       }
 
    }

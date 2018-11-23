@@ -4,12 +4,13 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace jsc.commons.naming {
 
-   public class UnifiedName {
+   public class UnifiedName : IComparable<UnifiedName> {
 
       private readonly string[] _parts;
 
@@ -38,6 +39,28 @@ namespace jsc.commons.naming {
                return false;
 
          return true;
+      }
+
+      public int CompareTo( UnifiedName other ) {
+         int i = 0;
+         while( true ) {
+            if( _parts.Length == i
+                  &&other._parts.Length == i )
+               return 0;
+            if( _parts.Length == i )
+               return -1;
+            if( other._parts.Length == i )
+               return 1;
+
+            string part = _parts[ i ];
+            string otherPart = other._parts[ i ];
+            int r = string.Compare( part, otherPart, StringComparison.Ordinal );
+
+            if( r != 0 )
+               return r;
+
+            i++;
+         }
       }
 
    }

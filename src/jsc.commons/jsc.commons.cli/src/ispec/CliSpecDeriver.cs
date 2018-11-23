@@ -106,12 +106,15 @@ namespace jsc.commons.cli.ispec {
                GetDynamicArgument( spec, t, pi.Name ),
                ( pi.PropertyType.IsAssignableFrom( typeof( bool ) )
                      ? Enumerable.Empty<IArgument>( )
-                     : new[] {
-                           _argTypeMapper.Map(
-                                 $"{pi.Name}{ImplicitFirstArg}",
-                                 pi.PropertyType,
-                                 spec.Config )
-                     } ).Union(
+                     : pi.GetCustomAttribute<FirstArgumentAttribute>( )?.Dynamic??false
+                           ? Enumerable.Empty<IArgument>( )
+                           : new[] {
+                                 _argTypeMapper.Map(
+                                       pi.GetCustomAttribute<FirstArgumentAttribute>( ),
+                                       $"{pi.Name}{ImplicitFirstArg}",
+                                       pi.PropertyType,
+                                       spec.Config )
+                           } ).Union(
                      GetArguments( spec, t, pi.Name ) ) );
          opt.Description = optionAttrib.Description;
          spec.Options.Add( opt );
@@ -143,19 +146,32 @@ namespace jsc.commons.cli.ispec {
       private IArgument GetDynamicArgument( CliSpecification spec, Type t, string parent ) {
          foreach( PropertyInfo pi in t.GetProperties( ) ) {
             ArgumentAttribute argAttrib = pi.GetCustomAttribute<ArgumentAttribute>( );
-            if( argAttrib == null )
+            FirstArgumentAttribute firstArgAttrib = pi.GetCustomAttribute<FirstArgumentAttribute>( );
+            if( argAttrib == null
+                  &&firstArgAttrib == null )
                continue;
-            if( string.Compare( parent, argAttrib.Of, StringComparison.InvariantCulture ) != 0
-                  ||t.Name.Contains( parent ) )
+            if( argAttrib != null
+                  &&( string.Compare( parent, argAttrib.Of, StringComparison.InvariantCulture ) != 0
+                        ||t.Name.Contains( parent ) ) )
                continue;
-            if( !argAttrib.Dynamic )
+            if( firstArgAttrib != null
+                  &&string.Compare( parent, pi.Name, StringComparison.InvariantCulture ) != 0 )
+               continue;
+            if( !argAttrib?.Dynamic??!firstArgAttrib.Dynamic )
                continue;
 
+            if( argAttrib != null )
+               return _argTypeMapper.Map(
+                     argAttrib,
+                     pi,
+                     _config.CliConfig,
+                     parent );
+
             return _argTypeMapper.Map(
-                  argAttrib,
-                  pi,
-                  _config.CliConfig,
-                  parent );
+                  firstArgAttrib,
+                  $"{pi.Name}{ImplicitFirstArg}",
+                  pi.PropertyType,
+                  spec.Config );
          }
 
          return null;

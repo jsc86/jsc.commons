@@ -92,13 +92,26 @@ namespace jsc.commons.cli.ispec {
          return arg;
       }
 
-      public IArgument Map( string name, Type t, ICliConfig config ) {
+      public IArgument Map( FirstArgumentAttribute argAttrib, string name, Type t, ICliConfig config ) {
+         if( argAttrib?.Dynamic??false ) {
+            if( !typeof( IEnumerable ).IsAssignableFrom( t ) )
+               throw new ArgumentException(
+                     string.Format(
+                           "dynamic property type must be assignable to {0} but was {1} for {2}",
+                           typeof( IEnumerable<> ),
+                           t,
+                           name ) );
+            t = t.GenericTypeArguments[ 0 ];
+         }
+
          Func<ICliConfig, string, bool, Argument> map = GetMap( t );
 
          Argument arg = map(
                config,
-               name,
-               false );
+               argAttrib?.Name??name,
+               true );
+
+         arg.Description = argAttrib?.Description;
 
          return arg;
       }

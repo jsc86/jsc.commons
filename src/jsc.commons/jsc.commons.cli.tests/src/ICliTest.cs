@@ -14,19 +14,21 @@ namespace jsc.commons.cli.tests {
    [CliDefinition( Description = "A great description of this CLI test interface." )]
    public interface ICliTest : IConfiguration {
 
-      [Option( Flag = 'o', Description = "a very fine string option" )]
+      [Option( Flag = 'o', Description = "A very fine string option." )]
+      [FirstArgument( Name = "stringArg", Description = "A nice string arg." )]
       string StringOptionOne { get; set; }
 
-      [Argument( Of = nameof( StringOptionOne ), Dynamic = true, Description = "a dynamic int arg" )]
+      [Argument( Of = nameof( StringOptionOne ), Dynamic = true, Description = "A dynamic int arg." )]
       IEnumerable<int> StringOptionOneDynIntArg { get; set; }
 
       [Option( Flag = 't', Description = "another fine string option" )]
+      [FirstArgument( Name = "stringArg", Description = "A very nice string arg." )]
       string StringOptionTwo { get; set; }
 
-      [Argument( Of = nameof( StringOptionTwo ), Description = "some count argument", Order = 2 )]
+      [Argument( Of = nameof( StringOptionTwo ), Description = "Some count argument.", Order = 2 )]
       int StringOptionTwoCount { get; set; }
 
-      [Flag( Name = 'm', Description = "a fine flag" )]
+      [Flag( Name = 'm', Description = "A fine flag." )]
       bool MyFlag { get; set; }
 
    }
