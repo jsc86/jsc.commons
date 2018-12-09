@@ -40,6 +40,9 @@ namespace jsc.commons.cli.config {
       [ConfigValue]
       Func<IParserResult, IArgument, string> Prompt { get; set; }
 
+      [ConfigValue( Default = true )]
+      bool AutoAddHelpOption { get; set; }
+
    }
 
 }

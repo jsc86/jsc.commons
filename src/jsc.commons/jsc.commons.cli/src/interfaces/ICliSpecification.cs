@@ -21,6 +21,8 @@ namespace jsc.commons.cli.interfaces {
 
       IList<IRule<IParserResult>> Rules { get; }
 
+      HelpOption HelpOption { get; }
+
    }
 
 }

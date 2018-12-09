@@ -44,6 +44,10 @@ namespace jsc.commons.cli.ispec {
       public ICliSpecification DeriveSpecification<T>( ) where T : IConfiguration {
          CliSpecInterfaceCheck<T>( out Type t, out CliDefinitionAttribute cliDefAttrib );
 
+         if( typeof( T ).GetProperties( ).Any( p => p.GetCustomAttribute<HelpAttribute>( ) != null )
+               &&_config.CliConfig.AutoAddHelpOption == false )
+            _config.CliConfig.AutoAddHelpOption = true;
+
          CliSpecification spec = new CliSpecification( _config.CliConfig ) {
                Description = cliDefAttrib.Description
          };

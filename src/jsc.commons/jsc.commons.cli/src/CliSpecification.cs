@@ -28,6 +28,8 @@ namespace jsc.commons.cli {
             IArgument dynamicArgument = null,
             params IArgument[] args ) : base( true, dynamicArgument, args ) {
          Config = config??commons.config.Config.New<ICliConfig>( );
+         if( Config.AutoAddHelpOption )
+            Options.Add( HelpOption = new HelpOption( Config ) );
       }
 
       public IList<IFlag> Flags { get; } = new List<IFlag>( );
@@ -37,6 +39,8 @@ namespace jsc.commons.cli {
       public ICliConfig Config { get; }
 
       public IList<IRule<IParserResult>> Rules { get; } = new List<IRule<IParserResult>>( );
+
+      public HelpOption HelpOption { get; }
 
    }
 

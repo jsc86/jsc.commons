@@ -55,7 +55,18 @@ namespace jsc.commons.cli.ispec {
 
          return ReadOption( pi, out value )||
                ReadFlag( pi, out value )||
-               ReadArgument( pi, type, out value );
+               ReadArgument( pi, type, out value )||
+               ReadHelp( pi, out value );
+      }
+
+      private bool ReadHelp( PropertyInfo pi, out object value ) {
+         value = null;
+         HelpAttribute ha = pi.GetCustomAttribute<HelpAttribute>( );
+         if( ha == null )
+            return false;
+
+         value = _pr.IsSet( _pr.CliSpecification.HelpOption );
+         return true;
       }
 
       private bool ReadOption( PropertyInfo pi, out object value ) {
