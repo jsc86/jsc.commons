@@ -8,6 +8,10 @@ to a set of instances which generally know how to behave
 (pun intended).
 
 ## [jsc.commons.cli](src/jsc.commons/jsc.commons.cli/)
+jsc.commons.cli is a framework for implementing Command Line Interfaces (cli).
+Why a framework? Because it is more than just a command line parser.
+It supports constraints (i.e. if option A is set, option B must not be set),
+provides interactive correction of invalid command lines, help printing ...
 
 ## [jsc.commons.config](src/jsc.commons/jsc.commons.config/)
 A recurring task in software development is writing code for

@@ -191,8 +191,8 @@ namespace jsc.commons.cli.ispec {
          if( _pr.IsSet( arg ) )
             return arg.Parse( _pr.GetValue( arg ), true );
 
-         if( !arg.Optional )
-            throw new Exception( $"non-optional argument {arg.Name} not set in parser result" );
+//         if( !arg.Optional )
+//            throw new Exception( $"non-optional argument {arg.Name} not set in parser result" );
 
          return null;
       }
