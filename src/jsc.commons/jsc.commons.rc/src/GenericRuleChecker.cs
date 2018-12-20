@@ -75,7 +75,7 @@ namespace jsc.commons.rc {
          ApplicationResult<T> applicationResult = null;
          PropertyObject<bool> cancellationToken = new PropertyObject<bool>( false );
 
-         // TODO: proper clone handling
+         // TODO: proper clone handling (https://github.com/jsc86/jsc.commons/issues/10)
          T subjectClone = (T)( Subject as ICloneable )?.Clone( );
          foreach( IAction<T> action in actions )
             action.Apply( subjectClone, _context );
@@ -120,7 +120,7 @@ namespace jsc.commons.rc {
                         a => ( _interactive||!a.IsInteractive )&&appliedActions.Any( a.Contradicts ) ) )
                      continue;
 
-                  // TODO: proper clone handling
+                  // TODO: proper clone handling (https://github.com/jsc86/jsc.commons/issues/10)
                   T subjectClone = (T)( subject as ICloneable )?.Clone( );
                   List<IAction<T>> appliedActionsClone = new List<IAction<T>>( appliedActions );
                   foreach( IAction<T> action in solution.Actions.Where( a => _interactive||!a.IsInteractive ) ) {
@@ -147,7 +147,7 @@ namespace jsc.commons.rc {
                               new ReadOnlyCollection<IAction<T>>( appliedActions ),
                               ( ) => { } ) );
                } else {
-                  // TODO: proper clone handling
+                  // TODO: proper clone handling (https://github.com/jsc86/jsc.commons/issues/10)
                   T subjectClone = (T)( subject as ICloneable )?.Clone( );
                   List<IAction<T>> appliedActionsClone = new List<IAction<T>>( appliedActions );
                   foreach( IAction<T> action in solution.Actions ) {

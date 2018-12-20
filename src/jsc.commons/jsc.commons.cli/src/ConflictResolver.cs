@@ -73,7 +73,7 @@ namespace jsc.commons.cli {
          IViolation<IParserResult> violation;
          prOut = (IParserResult)prIn.Clone( );
          while( ( violation = rc.Check( prOut, context ) ) != NonViolation<IParserResult>.Instance ) {
-            // TODO: replace Console.WriteLine with a more abstract/generic output method
+            // TODO: replace Console.WriteLine with a more abstract/generic output method (https://github.com/jsc86/jsc.commons/issues/8)
             Console.WriteLine( );
             Console.WriteLine( prOut );
             Console.WriteLine( $"> {violation.Description}" );

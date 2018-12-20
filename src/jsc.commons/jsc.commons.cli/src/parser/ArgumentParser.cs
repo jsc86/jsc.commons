@@ -27,7 +27,7 @@ namespace jsc.commons.cli.parser {
       }
 
       public string Done( ) {
-         // TODO: implement type check (not necessarily here)
+         // TODO: implement type check (not necessarily here) (https://github.com/jsc86/jsc.commons/issues/11)
          return _sb.ToString( );
       }
 

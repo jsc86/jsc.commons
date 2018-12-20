@@ -140,7 +140,7 @@ namespace jsc.commons.cli {
       }
 
       public override string ToString( ) {
-         // TODO: this is fuggly, make it better
+         // TODO: this is fuggly, make it better (https://github.com/jsc86/jsc.commons/issues/7)
          return string.Format(
                "{0} {1} {2}",
                string.Join(

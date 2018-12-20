@@ -12,7 +12,7 @@ namespace jsc.commons.rc.listsubject.rules {
 
    public class NotContains<T> : Not<IList<T>> where T : class {
 
-      // todo: consider complete removal of this class
+      // TODO: consider complete removal of this class (https://github.com/jsc86/jsc.commons/issues/9)
 
       private string _description;
 
