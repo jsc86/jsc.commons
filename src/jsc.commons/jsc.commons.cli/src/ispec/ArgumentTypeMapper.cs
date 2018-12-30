@@ -44,27 +44,27 @@ namespace jsc.commons.cli.ispec {
       }
 
       private static Argument GetStringArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new StringArg( name, optional );
+         return new StringArg( name, null, optional );
       }
 
       private static Argument GetBoolArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new BoolArg( name, optional );
+         return new BoolArg( name, null, optional );
       }
 
       private static Argument GetDoubleArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new DoubleArg( name, cliConfig, optional );
+         return new DoubleArg( name, null, cliConfig, optional );
       }
 
       private static Argument GetFloatArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new FloatArg( name, cliConfig, optional );
+         return new FloatArg( name, null, cliConfig, optional );
       }
 
       private static Argument GetLongArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new LongArg( name, cliConfig, optional );
+         return new LongArg( name, null, cliConfig, optional );
       }
 
       private static Argument GetIntArg( ICliConfig cliConfig, string name, bool optional ) {
-         return new IntArg( name, cliConfig, optional );
+         return new IntArg( name, null, cliConfig, optional );
       }
 
       public IArgument Map( ArgumentAttribute argAttrib, PropertyInfo pi, ICliConfig config, string parent ) {

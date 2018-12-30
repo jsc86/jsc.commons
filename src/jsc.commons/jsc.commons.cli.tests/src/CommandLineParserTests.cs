@@ -27,8 +27,8 @@ namespace jsc.commons.cli.tests {
             bool flagShouldBeSet,
             string arg1ShouldBe = null,
             string arg2ShouldBe = null ) {
-         IArgument arg1 = new Argument<string>( "Argument 1" );
-         IArgument arg2 = new Argument<string>( "Argument 2" );
+         IArgument arg1 = new Argument<string>( "Argument 1", null );
+         IArgument arg2 = new Argument<string>( "Argument 2", null );
          CliSpecification spec = new CliSpecification(
                args: new[] {
                      arg1
@@ -59,7 +59,7 @@ namespace jsc.commons.cli.tests {
 
       [Test]
       public void DynamicArgumentTest( ) {
-         IArgument<string> dynStringArg = new StringArg( "dyn arg" );
+         IArgument<string> dynStringArg = new StringArg( "dyn arg", null );
          CliSpecification spec =
                new CliSpecification(
                      null,
@@ -85,13 +85,13 @@ namespace jsc.commons.cli.tests {
 
       [Test]
       public void DynamicArgumentTest2( ) {
-         IArgument<string> dynStringArg = new StringArg( "dyn arg" );
+         IArgument<string> dynStringArg = new StringArg( "dyn arg", null );
          CliSpecification spec =
                new CliSpecification(
                      null,
                      dynStringArg );
 
-         IArgument<int> dynIntArg = new Argument<int>( "dyn int arg" );
+         IArgument<int> dynIntArg = new Argument<int>( "dyn int arg", null );
 
          IOption myOpt = new Option(
                new UnifiedName( "my", "opt" ),

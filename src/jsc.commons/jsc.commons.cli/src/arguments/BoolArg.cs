@@ -8,7 +8,8 @@ namespace jsc.commons.cli.arguments {
 
    public class BoolArg : Argument<bool> {
 
-      public BoolArg( string name, bool optional = true ) : base( name, optional ) { }
+      public BoolArg( string name, string description, bool optional = true ) :
+            base( name, description, optional ) { }
 
       protected override object ParseInternal( string value ) {
          if( value == null )

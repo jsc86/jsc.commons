@@ -32,19 +32,37 @@ namespace jsc.commons.cli.arguments {
                } );
       }
 
-      public FloatArg( string name, ICliConfig config, bool optional = true ) : base( name, optional ) {
+      public FloatArg(
+            string name,
+            string description,
+            ICliConfig config,
+            bool optional = true ) :
+            base( name, description, optional ) {
          _config = config;
       }
 
-      public FloatArg( string name, ICliConfig config, float minValue, bool optional = true ) : this(
+      public FloatArg(
+            string name,
+            string description,
+            ICliConfig config,
+            float minValue,
+            bool optional = true ) : this(
             name,
+            description,
             config,
             optional ) {
          MinValue = minValue;
       }
 
-      public FloatArg( string name, ICliConfig config, float minValue, float maxValue, bool optional = true ) : this(
+      public FloatArg(
+            string name,
+            string description,
+            ICliConfig config,
+            float minValue,
+            float maxValue,
+            bool optional = true ) : this(
             name,
+            description,
             config,
             minValue,
             optional ) {

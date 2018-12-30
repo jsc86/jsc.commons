@@ -36,8 +36,9 @@ namespace jsc.commons.cli {
                } );
       }
 
-      protected Argument( string name, bool optional = true ) {
+      protected Argument( string name, string description, bool optional = true ) {
          Name = name??string.Empty;
+         Description = description;
          Optional = optional;
       }
 
@@ -85,7 +86,8 @@ namespace jsc.commons.cli {
                } );
       }
 
-      public Argument( string name, bool optional = true ) : base( name, optional ) { }
+      public Argument( string name, string description, bool optional = true ) :
+            base( name, description, optional ) { }
 
       public override Type ValueType => typeof( T );
 

@@ -32,19 +32,37 @@ namespace jsc.commons.cli.arguments {
                } );
       }
 
-      public LongArg( string name, ICliConfig config, bool optional = true ) : base( name, optional ) {
+      public LongArg(
+            string name,
+            string description,
+            ICliConfig config,
+            bool optional = true ) :
+            base( name, description, optional ) {
          _config = config;
       }
 
-      public LongArg( string name, ICliConfig config, long minValue, bool optional = true ) : this(
+      public LongArg(
+            string name,
+            string description,
+            ICliConfig config,
+            long minValue,
+            bool optional = true ) : this(
             name,
+            description,
             config,
             optional ) {
          MinValue = minValue;
       }
 
-      public LongArg( string name, ICliConfig config, long minValue, long maxValue, bool optional = true ) : this(
+      public LongArg(
+            string name,
+            string description,
+            ICliConfig config,
+            long minValue,
+            long maxValue,
+            bool optional = true ) : this(
             name,
+            description,
             config,
             minValue,
             optional ) {

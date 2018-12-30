@@ -8,7 +8,11 @@ namespace jsc.commons.cli.arguments {
 
    public class StringArg : Argument<string> {
 
-      public StringArg( string name, bool optional = true ) : base( name, optional ) {
+      public StringArg(
+            string name,
+            string description,
+            bool optional = true ) :
+            base( name, description, optional ) {
          DefaultValue = string.Empty;
       }
 
