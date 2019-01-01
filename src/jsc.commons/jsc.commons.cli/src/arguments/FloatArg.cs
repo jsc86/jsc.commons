@@ -13,7 +13,7 @@ using jsc.commons.rc.interfaces;
 
 namespace jsc.commons.cli.arguments {
 
-   public class FloatArg : Argument<float> {
+   public partial class FloatArg : Argument<float> {
 
       private readonly ICliConfig _config;
 
@@ -69,9 +69,9 @@ namespace jsc.commons.cli.arguments {
          MaxValue = maxValue;
       }
 
-      public float? MinValue { get; }
+      public float? MinValue { get; internal set; }
 
-      public float? MaxValue { get; }
+      public float? MaxValue { get; internal set; }
 
       protected override object ParseInternal( string value ) {
          if( value == null )

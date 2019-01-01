@@ -13,7 +13,7 @@ using jsc.commons.rc.interfaces;
 
 namespace jsc.commons.cli.arguments {
 
-   public class DoubleArg : Argument<double> {
+   public partial class DoubleArg : Argument<double> {
 
       private readonly ICliConfig _config;
 
@@ -69,9 +69,9 @@ namespace jsc.commons.cli.arguments {
          MaxValue = maxValue;
       }
 
-      public double? MinValue { get; }
+      public double? MinValue { get; internal set; }
 
-      public double? MaxValue { get; }
+      public double? MaxValue { get; internal set; }
 
       protected override object ParseInternal( string value ) {
          if( value == null )

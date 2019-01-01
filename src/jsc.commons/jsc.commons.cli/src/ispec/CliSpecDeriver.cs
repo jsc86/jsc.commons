@@ -11,6 +11,7 @@ using System.Reflection;
 
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.ispec.attrib;
+using jsc.commons.cli.ispec.attrib.constraints;
 using jsc.commons.config;
 using jsc.commons.config.interfaces;
 
@@ -72,8 +73,9 @@ namespace jsc.commons.cli.ispec {
                continue;
             if( !string.IsNullOrEmpty( argAttrib.Of ) )
                continue;
+            IArgument arg;
             if( argAttrib.Dynamic )
-               spec.DynamicArgument =
+               spec.DynamicArgument = arg =
                      _argTypeMapper.Map(
                            argAttrib,
                            pi,
@@ -81,11 +83,14 @@ namespace jsc.commons.cli.ispec {
                            string.Empty );
             else
                spec.AddArgument(
-                     _argTypeMapper.Map(
+                     arg = _argTypeMapper.Map(
                            argAttrib,
                            pi,
                            _config.CliConfig,
                            string.Empty ) );
+
+            foreach( ArgumentConstraintAttribute ca in pi.GetCustomAttributes<ArgumentConstraintAttribute>( ) )
+               ca.Handler.Handle( arg, ca );
          }
       }
 
