@@ -11,7 +11,7 @@ using System.Reflection;
 
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.ispec.attrib;
-using jsc.commons.cli.ispec.attrib.constraints;
+using jsc.commons.cli.ispec.constraints.attrib;
 using jsc.commons.config;
 using jsc.commons.config.interfaces;
 

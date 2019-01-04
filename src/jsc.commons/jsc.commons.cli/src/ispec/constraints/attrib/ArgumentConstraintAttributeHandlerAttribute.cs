@@ -6,7 +6,7 @@
 
 using System;
 
-namespace jsc.commons.cli.ispec.attrib.constraints {
+namespace jsc.commons.cli.ispec.constraints.attrib {
 
    [AttributeUsage( AttributeTargets.Class )]
    public class ArgumentConstraintAttributeHandlerAttribute : Attribute {

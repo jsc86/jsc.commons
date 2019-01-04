@@ -5,7 +5,9 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using jsc.commons.cli.interfaces;
-using jsc.commons.cli.ispec.attrib.constraints;
+using jsc.commons.cli.ispec.constraints;
+using jsc.commons.cli.ispec.constraints.attrib;
+using jsc.commons.cli.ispec.constraints.interfaces;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable ClassNeverInstantiated.Global

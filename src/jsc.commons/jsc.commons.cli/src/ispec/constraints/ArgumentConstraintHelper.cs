@@ -7,8 +7,9 @@
 using System;
 
 using jsc.commons.cli.interfaces;
+using jsc.commons.cli.ispec.constraints.attrib;
 
-namespace jsc.commons.cli.ispec.attrib.constraints {
+namespace jsc.commons.cli.ispec.constraints {
 
    public static class ArgumentConstraintHelper {
 

@@ -7,7 +7,9 @@
 using System;
 using System.Reflection;
 
-namespace jsc.commons.cli.ispec.attrib.constraints {
+using jsc.commons.cli.ispec.constraints.interfaces;
+
+namespace jsc.commons.cli.ispec.constraints.attrib {
 
    [AttributeUsage( AttributeTargets.Property|AttributeTargets.Class )]
    public abstract class ArgumentConstraintAttribute : Attribute {

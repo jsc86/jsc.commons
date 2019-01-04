@@ -5,8 +5,9 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using jsc.commons.cli.interfaces;
+using jsc.commons.cli.ispec.constraints.attrib;
 
-namespace jsc.commons.cli.ispec.attrib.constraints {
+namespace jsc.commons.cli.ispec.constraints.interfaces {
 
    public interface IArgumentConstraintAttributeHandler {
 
