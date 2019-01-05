@@ -11,9 +11,11 @@ using System.Reflection;
 
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.ispec.attrib;
+using jsc.commons.cli.ispec.constraints;
 using jsc.commons.cli.ispec.constraints.attrib;
 using jsc.commons.config;
 using jsc.commons.config.interfaces;
+using jsc.commons.rc.interfaces;
 
 namespace jsc.commons.cli.ispec {
 
@@ -58,6 +60,10 @@ namespace jsc.commons.cli.ispec {
          AddFlags( spec, t );
 
          AddArguments( spec, t );
+
+         ConstraintsCollector<T> cc = new ConstraintsCollector<T>( _config, spec );
+         foreach( IRule<IParserResult> rule in cc.Constraints )
+            spec.Rules.Add( rule );
 
          if( spec.Options.Count+spec.Flags.Count+spec.Arguments.Count( ) == 0
                &&spec.DynamicArgument == null )
