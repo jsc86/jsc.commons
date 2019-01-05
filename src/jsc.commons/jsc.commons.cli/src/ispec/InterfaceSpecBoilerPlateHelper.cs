@@ -65,8 +65,16 @@ namespace jsc.commons.cli.ispec {
 
       public IParserResult ParserResult => _parserResult??( _parserResult = CommandLineParser.Parse( _args ) );
 
-      public IBehaviors ConflictResolverContext =>
-            _conflictResolverContext??( _conflictResolverContext = new BehaviorsBase( ) );
+      public IBehaviors ConflictResolverContext {
+         get {
+            if( _conflictResolverContext == null ) {
+               _conflictResolverContext = new BehaviorsBase( );
+               _conflictResolverContext.Set( new ConfigBehavior( CliConfig ) );
+            }
+
+            return _conflictResolverContext;
+         }
+      }
 
       public IParserResult ParserResultResolved {
          get {
