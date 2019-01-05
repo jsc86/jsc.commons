@@ -14,7 +14,6 @@ using jsc.commons.cli.interfaces;
 using jsc.commons.cli.rules;
 using jsc.commons.rc;
 using jsc.commons.rc.generic;
-using jsc.commons.rc.generic.rules;
 using jsc.commons.rc.interfaces;
 
 namespace jsc.commons.cli {
@@ -59,9 +58,7 @@ namespace jsc.commons.cli {
          HelpOption hlpOpt = (HelpOption)prIn.CliSpecification.Options.FirstOrDefault( opt => opt is HelpOption );
          if( hlpOpt != null )
             rules = rules.Select(
-                  r => new Or<IParserResult>(
-                        new HelpIsSet( hlpOpt ),
-                        r ) );
+                  r => new HelpIsSetOr( hlpOpt, r ) );
 
          RuleCheckerBase<IParserResult> rc = new RuleCheckerBase<IParserResult>( rules );
 
