@@ -85,7 +85,9 @@ namespace jsc.commons.cli.ispec.constraints {
          if( aa != null )
             argName = !string.IsNullOrEmpty( aa.Name )
                   ? aa.Name
-                  : propertyName.Replace( aa.Of, string.Empty );
+                  : string.IsNullOrEmpty( aa.Of )
+                        ? propertyName
+                        : propertyName.Replace( aa.Of, string.Empty );
          else if( fa != null )
             argName = !string.IsNullOrEmpty( fa.Name )
                   ? fa.Name

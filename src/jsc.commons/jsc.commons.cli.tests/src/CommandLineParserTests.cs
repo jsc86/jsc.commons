@@ -58,6 +58,36 @@ namespace jsc.commons.cli.tests {
       }
 
       [Test]
+      public void AutoAddedHelpOption_IsNotSet( ) {
+         ICliSpecification spec = new CliSpecification( );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new string[0] );
+
+         Assert.IsNotNull( spec.HelpOption );
+         Assert.IsFalse( pr.IsSet( spec.HelpOption ) );
+      }
+
+      [Test]
+      public void AutoAddedHelpOption_IsSet( ) {
+         ICliSpecification spec = new CliSpecification( );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"--help"} );
+
+         Assert.IsNotNull( spec.HelpOption );
+         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
+      }
+
+      [Test]
+      public void AutoAddedHelpOption_IsSetFlag( ) {
+         ICliSpecification spec = new CliSpecification( );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-h"} );
+
+         Assert.IsNotNull( spec.HelpOption );
+         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
+      }
+
+      [Test]
       public void DynamicArgumentTest( ) {
          IArgument<string> dynStringArg = new StringArg( "dyn arg", null );
          CliSpecification spec =
@@ -238,36 +268,6 @@ namespace jsc.commons.cli.tests {
                false,
                "asdf",
                "qwert" );
-      }
-
-      [Test]
-      public void AutoAddedHelpOption_IsSet( ) {
-         ICliSpecification spec = new CliSpecification( );
-         CommandLineParser clp = new CommandLineParser( spec );
-         IParserResult pr = clp.Parse( new[] {"--help"} );
-
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
-      }
-
-      [Test]
-      public void AutoAddedHelpOption_IsSetFlag( ) {
-         ICliSpecification spec = new CliSpecification( );
-         CommandLineParser clp = new CommandLineParser( spec );
-         IParserResult pr = clp.Parse( new[] {"-h"} );
-
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
-      }
-
-      [Test]
-      public void AutoAddedHelpOption_IsNotSet( ) {
-         ICliSpecification spec = new CliSpecification( );
-         CommandLineParser clp = new CommandLineParser( spec );
-         IParserResult pr = clp.Parse( new string[0] );
-
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsFalse( pr.IsSet( spec.HelpOption ) );
       }
 
    }

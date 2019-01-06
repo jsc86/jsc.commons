@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using jsc.commons.cli.ispec.attrib;
 using jsc.commons.config.interfaces;
 
-namespace jsc.commons.cli.tests {
+namespace jsc.commons.cli.tests.ispec {
 
    [CliDefinition( Description = "A great description of this CLI test interface." )]
    public interface ICliTest : IConfiguration {

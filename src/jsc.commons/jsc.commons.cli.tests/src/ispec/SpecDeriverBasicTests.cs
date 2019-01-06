@@ -15,10 +15,10 @@ using jsc.commons.config.interfaces;
 
 using NUnit.Framework;
 
-namespace jsc.commons.cli.tests {
+namespace jsc.commons.cli.tests.ispec {
 
    [TestFixture]
-   public class SpecDeriverTests {
+   public class SpecDeriverBasicTests {
 
       [CliDefinition]
       public interface ICliIntArg : IConfiguration {
