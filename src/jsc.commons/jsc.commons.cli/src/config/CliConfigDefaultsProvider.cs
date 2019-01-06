@@ -46,7 +46,13 @@ namespace jsc.commons.cli.config {
                               } ) ),
                   new Tuple<string, Func<object>>(
                         nameof( ICliConfig.Prompt ),
-                        ( ) => (Func<IParserResult, IArgument, string>)Default.Prompt )
+                        ( ) => (Func<ICliConfig, IParserResult, IArgument, string>)Default.Prompt ),
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.Out ),
+                        ( ) => Console.Out ),
+                  new Tuple<string, Func<object>>(
+                        nameof( ICliConfig.In ),
+                        ( ) => Console.In )
             } ) { }
 
    }

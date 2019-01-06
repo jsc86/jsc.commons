@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using jsc.commons.behaving.interfaces;
+using jsc.commons.cli.config;
 using jsc.commons.cli.help;
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.rules;
@@ -26,6 +27,7 @@ namespace jsc.commons.cli {
 
       private readonly IEnumerable<IRule<IParserResult>> _rules;
       private readonly Func<IList<ISolution<IParserResult>>, ISolution<IParserResult>> _userPrompt;
+      private readonly ICliConfig _config;
 
       static ConflictResolver( ) {
          __cancelSolution = new Solution<IParserResult>(
@@ -43,8 +45,10 @@ namespace jsc.commons.cli {
       }
 
       public ConflictResolver(
+            ICliConfig config,
             ICliSpecification spec = null,
             Func<IList<ISolution<IParserResult>>, ISolution<IParserResult>> userPrompt = null ) {
+         _config = config;
          _rules = spec?.Rules??Enumerable.Empty<IRule<IParserResult>>( );
          _userPrompt = userPrompt??UserPrompt;
       }
@@ -70,12 +74,11 @@ namespace jsc.commons.cli {
          IViolation<IParserResult> violation;
          prOut = (IParserResult)prIn.Clone( );
          while( ( violation = rc.Check( prOut, context ) ) != NonViolation<IParserResult>.Instance ) {
-            // TODO: replace Console.WriteLine with a more abstract/generic output method (https://github.com/jsc86/jsc.commons/issues/8)
-            Console.WriteLine( );
-            Console.WriteLine( prOut );
-            Console.WriteLine( $"> {violation.Description}" );
+            _config.Out.WriteLine( );
+            _config.Out.WriteLine( prOut );
+            _config.Out.WriteLine( $"> {violation.Description}" );
             if( !violation.HasSolution ) {
-               Console.WriteLine( "> conflict has no solution" );
+               _config.Out.WriteLine( "> conflict has no solution" );
                prOut = null;
                return false;
             }
@@ -134,14 +137,14 @@ namespace jsc.commons.cli {
       private ISolution<IParserResult> UserPrompt( IList<ISolution<IParserResult>> solutions ) {
          int index = 1;
          foreach( ISolution<IParserResult> option in solutions )
-            Console.WriteLine( $"{index++}\t {option.Description}" );
+            _config.Out.WriteLine( $"{index++}\t {option.Description}" );
 
-         Console.Write( "enter option: " );
+         _config.Out.Write( "enter option: " );
          int count = solutions.Count;
-         while( !int.TryParse( Console.ReadLine( ), out index )
+         while( !int.TryParse( _config.In.ReadLine( ), out index )
                ||index < 1
                ||index > count )
-            Console.Write( $"{Environment.NewLine}enter valid option: " );
+            _config.Out.Write( $"{Environment.NewLine}enter valid option: " );
 
          return solutions[ index-1 ];
       }

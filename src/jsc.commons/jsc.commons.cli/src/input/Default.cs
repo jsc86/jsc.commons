@@ -6,15 +6,16 @@
 
 using System;
 
+using jsc.commons.cli.config;
 using jsc.commons.cli.interfaces;
 
 namespace jsc.commons.cli.input {
 
    public static class Default {
 
-      public static string Prompt( IParserResult pr, IArgument arg ) {
-         Console.Write( $"{Environment.NewLine}Enter value for argument {arg.Name}: " );
-         return Console.ReadLine( );
+      public static string Prompt( ICliConfig config, IParserResult pr, IArgument arg ) {
+         config.Out.Write( $"{Environment.NewLine}Enter value for argument {arg.Name}: " );
+         return config.In.ReadLine( );
       }
 
    }

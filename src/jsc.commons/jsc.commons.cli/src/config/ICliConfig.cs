@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 using jsc.commons.cli.interfaces;
 using jsc.commons.config;
@@ -38,10 +39,16 @@ namespace jsc.commons.cli.config {
       IReadOnlyList<IRule<ICliSpecification>> Policies { get; set; }
 
       [ConfigValue]
-      Func<IParserResult, IArgument, string> Prompt { get; set; }
+      Func<ICliConfig, IParserResult, IArgument, string> Prompt { get; set; }
 
       [ConfigValue( Default = true )]
       bool AutoAddHelpOption { get; set; }
+
+      [ConfigValue]
+      TextWriter Out { get; set; }
+
+      [ConfigValue]
+      TextReader In { get; set; }
 
    }
 

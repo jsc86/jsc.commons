@@ -22,9 +22,10 @@ namespace jsc.commons.cli.actions {
       public IArgument<T> Target { get; }
 
       public void Apply( IParserResult subject, IBehaviors context ) {
+         ICliConfig config = context.Get<ConfigBehavior>( ).Config;
          ( subject as ParserResult )?.SetArgument(
                Target,
-               context.Get<ConfigBehavior>( ).Config.Prompt( subject, Target ) );
+               config.Prompt( config, subject, Target ) );
       }
 
       public bool Contradicts( IAction<IParserResult> a ) {

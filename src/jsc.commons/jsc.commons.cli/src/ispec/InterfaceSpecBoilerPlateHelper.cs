@@ -61,7 +61,7 @@ namespace jsc.commons.cli.ispec {
             _cliSpecDeriver??( _cliSpecDeriver = new CliSpecDeriver( CliSpecDeriverConfig ) );
 
       public ConflictResolver ConflictResolver => _conflictResolver
-            ??( _conflictResolver = new ConflictResolver( CliSpecification, Config.UserPrompt ) );
+            ??( _conflictResolver = new ConflictResolver( CliConfig, CliSpecification, Config.UserPrompt ) );
 
       public IParserResult ParserResult => _parserResult??( _parserResult = CommandLineParser.Parse( _args ) );
 
