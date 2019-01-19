@@ -4,6 +4,7 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,6 +14,8 @@ using jsc.commons.cli.interfaces;
 namespace jsc.commons.cli.parser {
 
    public class OptionParser : IParser<IOption> {
+
+      private readonly Func<char, char, bool> _cmpChars;
 
       private readonly ICliConfig _conf;
       private readonly string _optionPrefix;
@@ -25,6 +28,9 @@ namespace jsc.commons.cli.parser {
          _options = spec.Options.ToList( );
          _conf = spec.Config;
          _optionPrefix = spec.Config.OptionPrefix( );
+         _cmpChars = _conf.CaseSensitiveOptions
+               ? (Func<char, char, bool>)( ( c1, c2 ) => c1 == c2 )
+               : ( c1, c2 ) => char.ToUpperInvariant( c1 ) == char.ToUpperInvariant( c2 );
       }
 
       public bool Next( char c ) {
@@ -33,14 +39,14 @@ namespace jsc.commons.cli.parser {
 
          _index++;
          if( _index < _optionPrefix.Length ) {
-            if( _optionPrefix[ _index ] != c )
+            if( !_cmpChars( _optionPrefix[ _index ], c ) )
                return _match = false;
          } else {
             IList<IOption> rem = null;
             int i = _index-_optionPrefix.Length;
             foreach( IOption option in _options ) {
                string deUnifiedName = option.GetDeUnifiedName( _conf );
-               if( ( i >= deUnifiedName.Length )|( deUnifiedName[ i ] != c ) )
+               if( ( i >= deUnifiedName.Length )|!_cmpChars( deUnifiedName[ i ], c ) )
                   ( rem = rem??new List<IOption>( ) ).Add( option );
             }
 

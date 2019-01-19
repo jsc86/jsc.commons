@@ -4,12 +4,15 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using jsc.commons.cli.arguments;
+using jsc.commons.cli.config;
 using jsc.commons.cli.interfaces;
 using jsc.commons.cli.parser;
+using jsc.commons.config;
 using jsc.commons.naming;
 
 using NUnit.Framework;
@@ -154,6 +157,145 @@ namespace jsc.commons.cli.tests {
          Assert.AreEqual( 2, dynIntArgValues.Count );
          Assert.AreEqual( 23, dynIntArgValues[ 0 ] );
          Assert.AreEqual( 42, dynIntArgValues[ 1 ] );
+      }
+
+
+      [Test]
+      public void FlagCaseSensitivityCorrectCase( ) {
+         ICliSpecification spec = new CliSpecification( );
+         IFlag flag = new Flag( 'f' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-f"} );
+         Assert.IsTrue( pr.IsSet( flag ) );
+      }
+
+      [Test]
+      public void FlagCaseSensitivityIncorrectCase( ) {
+         ICliSpecification spec = new CliSpecification( );
+         IFlag flag = new Flag( 'f' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         Exception exc = null;
+         try {
+            clp.Parse( new[] {"-F"} );
+         } catch( Exception ex ) {
+            exc = ex;
+         }
+
+         Assert.IsNotNull( exc );
+         Assert.IsTrue( exc.Message.StartsWith( "unknown flag" ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityCorrectCase( ) {
+         ICliSpecification spec = new CliSpecification( );
+         IOption opt = new Option( new UnifiedName( "opt" ) );
+         spec.Options.Add( opt );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"--opt"} );
+         Assert.IsTrue( pr.IsSet( opt ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseLower( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveOptions = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IOption opt = new Option( new UnifiedName( "opt" ) );
+         spec.Options.Add( opt );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"--opt"} );
+         Assert.IsTrue( pr.IsSet( opt ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseLowerLower( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveFlags = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IFlag flag = new Flag( 'f' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-f"} );
+         Assert.IsTrue( pr.IsSet( flag ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseLowerUpper( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveFlags = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IFlag flag = new Flag( 'f' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-F"} );
+         Assert.IsTrue( pr.IsSet( flag ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseMixed( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveOptions = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IOption opt = new Option( new UnifiedName( "opt" ) );
+         spec.Options.Add( opt );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"--Opt"} );
+         Assert.IsTrue( pr.IsSet( opt ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseUpper( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveOptions = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IOption opt = new Option( new UnifiedName( "opt" ) );
+         spec.Options.Add( opt );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"--OPT"} );
+         Assert.IsTrue( pr.IsSet( opt ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseUpperLower( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveFlags = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IFlag flag = new Flag( 'F' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-f"} );
+         Assert.IsTrue( pr.IsSet( flag ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIgnoreCaseUpperUpper( ) {
+         ICliConfig conf = Config.New<ICliConfig>( );
+         conf.CaseSensitiveFlags = false;
+         ICliSpecification spec = new CliSpecification( conf );
+         IFlag flag = new Flag( 'F' );
+         spec.Flags.Add( flag );
+         CommandLineParser clp = new CommandLineParser( spec );
+         IParserResult pr = clp.Parse( new[] {"-F"} );
+         Assert.IsTrue( pr.IsSet( flag ) );
+      }
+
+      [Test]
+      public void OptionCaseSensitivityIncorrectCase( ) {
+         ICliSpecification spec = new CliSpecification( );
+         IOption opt = new Option( new UnifiedName( "opt" ) );
+         spec.Options.Add( opt );
+         CommandLineParser clp = new CommandLineParser( spec );
+         Exception exc = null;
+         try {
+            clp.Parse( new[] {"--OPT"} );
+         } catch( Exception ex ) {
+            exc = ex;
+         }
+
+         Assert.IsNotNull( exc );
+         Assert.IsTrue( exc.Message.StartsWith( "unknown option" ) );
       }
 
       [Test]

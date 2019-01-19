@@ -6,6 +6,8 @@
 
 using System;
 
+using jsc.commons.cli.config;
+
 namespace jsc.commons.cli.interfaces {
 
    public interface IArgument {
@@ -21,6 +23,8 @@ namespace jsc.commons.cli.interfaces {
       bool IsDynamicArgument { get; }
 
       object Parse( string value, bool throwException = false );
+
+      bool CanStartWithPrefix( ICliConfig conf );
 
    }
 

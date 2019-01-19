@@ -29,8 +29,14 @@ namespace jsc.commons.cli.config {
       [ConfigValue]
       Func<string> FlagPrefix { get; set; }
 
+      [ConfigValue( Default = true )]
+      bool CaseSensitiveFlags { get; set; }
+
       [ConfigValue]
       Func<string> OptionPrefix { get; set; }
+
+      [ConfigValue( Default = true )]
+      bool CaseSensitiveOptions { get; set; }
 
       [ConfigValue]
       string PathSeparator { get; set; }

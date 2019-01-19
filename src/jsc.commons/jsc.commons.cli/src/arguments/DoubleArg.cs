@@ -80,6 +80,10 @@ namespace jsc.commons.cli.arguments {
          return double.Parse( value, _config.Culture );
       }
 
+      public override bool CanStartWithPrefix( ICliConfig conf ) {
+         return ArgumentHelper.SignedNumberCanStartWithPrefixCheck( conf );
+      }
+
    }
 
 }

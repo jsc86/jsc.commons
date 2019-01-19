@@ -41,11 +41,8 @@ namespace jsc.commons.cli.parser {
             ParserResult pr,
             ref IArgument expectedArg,
             ref IItem expectedArgItem ) {
-         List<IParser> parsers = new List<IParser> {
-               new OptionParser( _spec ),
-               new FlagParser( _spec ),
-               new ArgumentParser( expectedArg )
-         };
+         List<IParser> parsers = CreateParsersList( expectedArg );
+
          List<IParser> rem = new List<IParser>( );
          int index = -1;
          foreach( char c in s ) {
@@ -63,13 +60,51 @@ namespace jsc.commons.cli.parser {
                throw new Exception( $"no parser matched input '{s}' at index {index}" );
          }
 
-         IParser pMatch = parsers.FirstOrDefault( );
-         if( pMatch is OptionParser optionParser )
-            MatchOption( optionParser, pr, ref expectedArg, ref expectedArgItem );
-         else if( pMatch is FlagParser parser )
-            MatchFlag( parser, pr, ref expectedArg, ref expectedArgItem );
-         else if( pMatch is ArgumentParser argumentParser )
-            MatchArgument( argumentParser, pr, ref expectedArg, ref expectedArgItem );
+         Match( parsers.FirstOrDefault( ), pr, ref expectedArg, ref expectedArgItem, s );
+      }
+
+      private void Match(
+            IParser pMatch,
+            ParserResult pr,
+            ref IArgument expectedArg,
+            ref IItem expectedArgItem,
+            string s ) {
+         switch( pMatch ) {
+            case OptionParser optionParser:
+               MatchOption( optionParser, pr, ref expectedArg, ref expectedArgItem );
+               break;
+            case FlagParser parser:
+               MatchFlag( parser, pr, ref expectedArg, ref expectedArgItem );
+               break;
+            case InvalidOptionParser _:
+               throw new Exception( $"unknown option {s}" );
+            case InvalidFlagParser _:
+               throw new Exception( $"unknown flag {s}" );
+            case ArgumentParser argumentParser:
+               MatchArgument( argumentParser, pr, ref expectedArg, ref expectedArgItem );
+               break;
+            default:
+               throw new Exception( $"expression '{s}' matched by no parser" );
+         }
+      }
+
+      private List<IParser> CreateParsersList( IArgument expectedArg ) {
+         return expectedArg != null
+               &&expectedArg.CanStartWithPrefix( _spec.Config )
+                     ? new List<IParser> {
+                           new OptionParser( _spec ),
+                           new FlagParser( _spec ),
+                           new ArgumentParser( expectedArg ),
+                           new InvalidOptionParser( _spec ),
+                           new InvalidFlagParser( _spec )
+                     }
+                     : new List<IParser> {
+                           new OptionParser( _spec ),
+                           new FlagParser( _spec ),
+                           new InvalidOptionParser( _spec ),
+                           new InvalidFlagParser( _spec ),
+                           new ArgumentParser( expectedArg )
+                     };
       }
 
       private void MatchArgument(

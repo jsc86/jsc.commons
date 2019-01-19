@@ -22,25 +22,6 @@ namespace jsc.commons.naming {
 
       public IEnumerable<string> Parts => _parts;
 
-      public override string ToString( ) {
-         return string.Join( ".", _parts );
-      }
-
-      public override bool Equals( object obj ) {
-         UnifiedName other = obj as UnifiedName;
-         if( _parts.Length != other?._parts.Length )
-            return false;
-
-         for( int i = 0,
-               l = _parts.Length;
-               i < l;
-               i++ )
-            if( _parts[ i ] != other._parts[ i ] )
-               return false;
-
-         return true;
-      }
-
       public int CompareTo( UnifiedName other ) {
          int i = 0;
          while( true ) {
@@ -61,6 +42,32 @@ namespace jsc.commons.naming {
 
             i++;
          }
+      }
+
+      public override string ToString( ) {
+         return string.Join( ".", _parts );
+      }
+
+      public override bool Equals( object obj ) {
+         return Equals( obj as UnifiedName, StringComparison.Ordinal );
+      }
+
+      public bool Equals( UnifiedName other, StringComparison sc ) {
+         if( _parts.Length != other?._parts.Length )
+            return false;
+
+         for( int i = 0,
+               l = _parts.Length;
+               i < l;
+               i++ )
+            if( string.Compare( _parts[ i ], other._parts[ i ], sc ) != 0 )
+               return false;
+
+         return true;
+      }
+
+      public override int GetHashCode( ) {
+         return _parts != null? _parts.GetHashCode( ) : 0;
       }
 
    }
