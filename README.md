@@ -2,6 +2,7 @@
 
 # jsc.commons
 
+
 ## [jsc.commons.behaving](src/jsc.commons/jsc.commons.behaving/)
 *Behaving* is a codified pattern to add common behaviors
 to a set of instances which generally know how to behave
