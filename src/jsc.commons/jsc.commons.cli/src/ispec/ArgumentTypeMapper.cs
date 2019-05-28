@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 
 using jsc.commons.cli.arguments;
@@ -34,7 +35,9 @@ namespace jsc.commons.cli.ispec {
                {typeof( long ), GetLongArg},
                {typeof( long? ), GetLongArg},
                {typeof( int ), GetIntArg},
-               {typeof( int? ), GetIntArg}
+               {typeof( int? ), GetIntArg},
+               {typeof( FileInfo ), GetFileArg},
+               {typeof( DirectoryInfo ), GetDirectoryArg}
          };
       }
 
@@ -66,6 +69,17 @@ namespace jsc.commons.cli.ispec {
       private static Argument GetIntArg( ICliConfig cliConfig, string name, bool optional ) {
          return new IntArg( name, null, cliConfig, optional );
       }
+
+      private static Argument GetFileArg( ICliConfig cliConfig, string name, bool optional ) {
+         // TODO: issue with order of arguments: interactive set to true here is problematic
+         return new FileArgument( name, null, optional );
+      }
+
+      private static Argument GetDirectoryArg( ICliConfig cliConfig, string name, bool optional ) {
+         // same TODO as above (GetFileArg)
+         return new DirectoryArgument( name, null, optional );
+      }
+
 
       public IArgument Map( ArgumentAttribute argAttrib, PropertyInfo pi, ICliConfig config, string parent ) {
          Type argType = pi.PropertyType;

@@ -24,10 +24,10 @@ namespace jsc.commons.cli {
       private static readonly IEnumerable<ISolution<IParserResult>> __defaultSolutions;
       private static readonly Solution<IParserResult> __cancelSolution;
       private static readonly Solution<IParserResult> __autoSolveSolution;
+      private readonly ICliConfig _config;
 
       private readonly IEnumerable<IRule<IParserResult>> _rules;
       private readonly Func<IList<ISolution<IParserResult>>, ISolution<IParserResult>> _userPrompt;
-      private readonly ICliConfig _config;
 
       static ConflictResolver( ) {
          __cancelSolution = new Solution<IParserResult>(

@@ -14,10 +14,11 @@ namespace jsc.commons.cli.parser {
 
    public class InvalidFlagParser : IParser<object> {
 
+      private readonly Func<char, char, bool> _cmpChars;
+
       private readonly string _flagPrefix;
       private int _index = -1;
       private bool _match = true;
-      private readonly Func<char, char, bool> _cmpChars;
 
       public InvalidFlagParser( ICliSpecification spec ) {
          ICliConfig conf = spec.Config;
@@ -42,7 +43,7 @@ namespace jsc.commons.cli.parser {
       }
 
       public object Done( ) {
-         throw new NotImplementedException(  );
+         throw new NotImplementedException( );
       }
 
    }

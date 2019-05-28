@@ -12,8 +12,9 @@ namespace jsc.commons.cli.parser {
 
    public class InvalidOptionParser : IParser<object> {
 
-      private readonly string _optionPrefix;
       private readonly Func<char, char, bool> _cmpChars;
+
+      private readonly string _optionPrefix;
 
       private int _index = -1;
       private bool _match = true;

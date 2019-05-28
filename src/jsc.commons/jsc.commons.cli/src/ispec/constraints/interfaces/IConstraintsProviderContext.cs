@@ -23,6 +23,14 @@ namespace jsc.commons.cli.ispec.constraints.interfaces {
 
       void Add( IRule<IParserResult> rule );
 
+      IArgument GetArgument( string propertyName );
+
+      IItem GetItem( string propertyName );
+
+      IFlag GetFlag( string propertyName );
+
+      IOption GetOption( string propertyName );
+
    }
 
 }

@@ -43,30 +43,10 @@ namespace jsc.commons.cli.ispec.constraints {
          if( _itemRules.TryGetValue( propertyName, out IRule<IParserResult> itemRule ) )
             return itemRule;
 
-         PropertyInfo pi = _t.GetProperty( propertyName );
-         if( pi == null )
-            throw new Exception( "todo no property" );
-
-         OptionAttribute oa = pi.GetCustomAttribute<OptionAttribute>( );
-         FlagAttribute fa = pi.GetCustomAttribute<FlagAttribute>( );
-         if( oa != null ) {
-            UnifiedName optionName =
-                  _specDeriverConfig.PropertyNamingStyle.FromString(
-                        string.IsNullOrEmpty( oa.Name )? pi.Name : oa.Name );
-            IOption opt = _spec.Options.FirstOrDefault( o => o.Name.Equals( optionName ) );
-            if( opt == null )
-               throw new Exception( "todo no option" );
-            itemRule = new ItemIsSet( opt );
-         } else if( fa != null ) {
-            IFlag flag = _spec.Flags.FirstOrDefault( f => f.Name == fa.Name );
-            if( flag == null )
-               throw new Exception( "todo no flag" );
-            itemRule = new ItemIsSet( flag );
-         } else {
-            throw new Exception( "nothing for prop name" );
-         }
-
+         IItem item = GetItem( propertyName );
+         itemRule = new ItemIsSet( item );
          _itemRules[ propertyName ] = itemRule;
+
          return itemRule;
       }
 
@@ -74,14 +54,26 @@ namespace jsc.commons.cli.ispec.constraints {
          if( _argumentRules.TryGetValue( propertyName, out IRule<IParserResult> argumentRule ) )
             return argumentRule;
 
+         IArgument arg = GetArgument( propertyName );
+         argumentRule = new ArgumentIsSet( arg );
+         _argumentRules[ propertyName ] = argumentRule;
+
+         return argumentRule;
+      }
+
+      public void Add( IRule<IParserResult> rule ) {
+         _rules.Add( rule );
+      }
+
+      public IArgument GetArgument( string propertyName ) {
          PropertyInfo pi = _t.GetProperty( propertyName );
          if( pi == null )
-            throw new Exception( "todo no property" );
+            throw new Exception( $"{_t} has no property {propertyName}" );
 
          ArgumentAttribute aa = pi.GetCustomAttribute<ArgumentAttribute>( );
          FirstArgumentAttribute fa = pi.GetCustomAttribute<FirstArgumentAttribute>( );
          OptionAttribute oa = pi.GetCustomAttribute<OptionAttribute>( );
-         string argName = null;
+         string argName;
          if( aa != null )
             argName = !string.IsNullOrEmpty( aa.Name )
                   ? aa.Name
@@ -95,7 +87,7 @@ namespace jsc.commons.cli.ispec.constraints {
          else if( oa != null )
             argName = $"{propertyName}{CliSpecDeriver.ImplicitFirstArg}";
          else
-            throw new Exception( "todo no arg" );
+            throw new Exception( $"no argument mapped to property {propertyName}" );
 
          IArgument arg = _spec.Arguments.Union(
                      _spec.Options.SelectMany( o => o.Arguments ) )
@@ -103,16 +95,53 @@ namespace jsc.commons.cli.ispec.constraints {
                      _spec.Flags.SelectMany( f => f.Arguments ) )
                .FirstOrDefault( a => a.Name == argName );
          if( arg == null )
-            throw new Exception( "todo no arg" );
+            throw new Exception( $"no argument mapped to property {propertyName}" );
 
-         argumentRule = new ArgumentIsSet( arg );
-
-         _argumentRules[ propertyName ] = argumentRule;
-         return argumentRule;
+         return arg;
       }
 
-      public void Add( IRule<IParserResult> rule ) {
-         _rules.Add( rule );
+      public IItem GetItem( string propertyName ) {
+         PropertyInfo pi = _t.GetProperty( propertyName );
+         if( pi == null )
+            throw new Exception( $"{_t} has no property {propertyName}" );
+
+         IItem item;
+         OptionAttribute oa = pi.GetCustomAttribute<OptionAttribute>( );
+         FlagAttribute fa = pi.GetCustomAttribute<FlagAttribute>( );
+         if( oa != null ) {
+            UnifiedName optionName =
+                  _specDeriverConfig.PropertyNamingStyle.FromString(
+                        string.IsNullOrEmpty( oa.Name )? pi.Name : oa.Name );
+            item = _spec.Options.FirstOrDefault( o => o.Name.Equals( optionName ) );
+            if( item == null )
+               throw new Exception( $"no option mapped to property {propertyName}" );
+         } else if( fa != null ) {
+            item = _spec.Flags.FirstOrDefault( f => f.Name == fa.Name );
+            if( item == null )
+               throw new Exception( $"no flag mapped to property {propertyName}" );
+         } else {
+            throw new Exception( $"no item mapped to property {propertyName}" );
+         }
+
+         return item;
+      }
+
+      public IFlag GetFlag( string propertyName ) {
+         IFlag flag = GetItem( propertyName ) as IFlag;
+
+         if( flag == null )
+            throw new Exception( $"no flag mapped to property {propertyName}" );
+
+         return flag;
+      }
+
+      public IOption GetOption( string propertyName ) {
+         IOption opt = GetItem( propertyName ) as IOption;
+
+         if( opt == null )
+            throw new Exception( $"no flag mapped to property {propertyName}" );
+
+         return opt;
       }
 
       public IEnumerable<IRule<IParserResult>> Rules =>
