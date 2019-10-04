@@ -13,6 +13,8 @@ using jsc.commons.cli.rules;
 using jsc.commons.misc;
 using jsc.commons.rc.interfaces;
 
+using Enumerable = System.Linq.Enumerable;
+
 namespace jsc.commons.cli {
 
    public class ItemBase : IItem {
