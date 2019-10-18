@@ -12,6 +12,7 @@ using System.Reflection;
 using Castle.DynamicProxy;
 
 using jsc.commons.misc;
+using jsc.commons.unidto.core;
 using jsc.commons.unidto.core.attributes;
 using jsc.commons.unidto.core.interfaces;
 
@@ -24,11 +25,12 @@ namespace jsc.commons.unidto.dynamic {
                   new Dictionary<Type, Tuple<Dictionary<MethodInfo, string>, Dictionary<MethodInfo, string>>>( );
 
       private readonly IDataCore _dataCore;
+      private readonly NotifyPropertyChanged _npc;
 
       private Dictionary<MethodInfo, string> _getMethodsMapping;
       private Dictionary<MethodInfo, string> _setMethodsMapping;
 
-      public DtoInterceptor( Type dtoType, IDataCore dataCore ) {
+      public DtoInterceptor( Type dtoType, IDataCore dataCore, NotifyPropertyChanged npc ) {
          if( dataCore == null )
             throw new ArgumentNullException( nameof( dataCore ), $"{nameof( dataCore )} must not be null" );
          if( dtoType == null )
@@ -36,18 +38,29 @@ namespace jsc.commons.unidto.dynamic {
 
          _dataCore = dataCore;
          DtoType = dtoType;
+         _npc = npc;
          Init( );
       }
 
       public Type DtoType { get; }
 
       public void Intercept( IInvocation invocation ) {
-         if( _getMethodsMapping.TryGetValue( invocation.Method, out string propName ) )
+         if( _getMethodsMapping.TryGetValue( invocation.Method, out string propName ) ) {
             invocation.ReturnValue = _dataCore.Get( propName );
-         else if( _setMethodsMapping.TryGetValue( invocation.Method, out propName ) )
-            _dataCore.Set( propName, invocation.Arguments[ 0 ] );
-         else
+         } else if( _setMethodsMapping.TryGetValue( invocation.Method, out propName ) ) {
+            if( _npc == null ) {
+               _dataCore.Set( propName, invocation.Arguments[ 0 ] );
+               return;
+            }
+
+            object oldVal = _dataCore.Get( propName );
+            object newVal = invocation.Arguments[ 0 ];
+            _dataCore.Set( propName, newVal );
+            if( oldVal != newVal )
+               _npc?.OnPropertyChanged( propName );
+         } else {
             throw new Exception( $"{invocation.Method.Name} is not a DTO property" );
+         }
       }
 
       private void Init( ) {

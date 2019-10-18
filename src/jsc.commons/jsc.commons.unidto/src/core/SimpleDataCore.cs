@@ -13,13 +13,16 @@ namespace jsc.commons.unidto.core {
    public class SimpleDataCore : IDirty {
 
       private readonly object[] _data;
+      private readonly NotifyPropertyChanged _npc;
       private readonly PropertyMapper _propertyMapper;
+      private bool _isDirty;
 
-      public SimpleDataCore( Type type ) {
+      public SimpleDataCore( Type type, NotifyPropertyChanged npc ) {
          if( type == null )
             throw new ArgumentNullException( nameof( type ), $"{nameof( type )} must not be null" );
 
          Type = type;
+         _npc = npc;
          _propertyMapper = PropertyMapper.GetPropertyMapper( type );
          _data = new object[_propertyMapper.Count];
       }
@@ -29,12 +32,12 @@ namespace jsc.commons.unidto.core {
       }
 
       public object Get( string key ) {
-         return _data[ _propertyMapper.GetIndex( key ) ];
+         return _data[ _propertyMapper.GetPropertyIndex( key ) ];
       }
 
       public void Set( string key, object value ) {
          IsDirty = true;
-         _data[ _propertyMapper.GetIndex( key ) ] = value;
+         _data[ _propertyMapper.GetPropertyIndex( key ) ] = value;
       }
 
       public object[] GetData( ) {
@@ -45,7 +48,15 @@ namespace jsc.commons.unidto.core {
 
       public Type Type { get; }
 
-      public bool IsDirty { get; private set; }
+      public bool IsDirty {
+         get => _isDirty;
+         private set {
+            if( value == _isDirty )
+               return;
+            _isDirty = value;
+            _npc?.OnPropertyChanged( );
+         }
+      }
 
       public void MarkNotDirty( ) {
          IsDirty = false;

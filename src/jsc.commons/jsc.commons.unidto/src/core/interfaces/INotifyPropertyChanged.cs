@@ -8,14 +8,7 @@ using jsc.commons.unidto.core.attributes;
 
 namespace jsc.commons.unidto.core.interfaces {
 
-   [Marker( nameof( IDirty ) )]
-   [Implementation( typeof( SimpleDataCore ) )]
-   public interface IDirty : IDataCore {
-
-      bool IsDirty { get; }
-
-      void MarkNotDirty( );
-
-   }
+   [Marker( nameof( INotifyPropertyChanged ) )]
+   public interface INotifyPropertyChanged : System.ComponentModel.INotifyPropertyChanged { }
 
 }

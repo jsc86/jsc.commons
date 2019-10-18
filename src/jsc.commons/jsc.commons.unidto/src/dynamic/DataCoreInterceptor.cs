@@ -9,6 +9,7 @@ using System.Reflection;
 
 using Castle.DynamicProxy;
 
+using jsc.commons.unidto.core;
 using jsc.commons.unidto.core.attributes;
 using jsc.commons.unidto.core.interfaces;
 
@@ -16,17 +17,17 @@ namespace jsc.commons.unidto.dynamic {
 
    public class DataCoreInterceptor : IInterceptor {
 
-      public DataCoreInterceptor( Type dataCoreType, Type dtoType ) {
+      public DataCoreInterceptor( Type dataCoreType, Type dtoType, NotifyPropertyChanged npc ) {
          DataCoreType = dataCoreType;
          Type implType = dataCoreType.GetCustomAttribute<ImplementationAttribute>( )?.Type;
 
          ConstructorInfo ci = implType.GetConstructor(
                BindingFlags.Instance|BindingFlags.Public,
                null,
-               new[] {typeof( Type )},
+               new[] {typeof( Type ), typeof( NotifyPropertyChanged )},
                null );
 
-         DataCore = (IDataCore)ci.Invoke( new object[] {dtoType} );
+         DataCore = (IDataCore)ci.Invoke( new object[] {dtoType, npc} );
       }
 
       public IDataCore DataCore { get; }

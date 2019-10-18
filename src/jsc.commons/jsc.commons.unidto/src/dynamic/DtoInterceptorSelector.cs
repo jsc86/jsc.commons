@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
@@ -24,6 +25,10 @@ namespace jsc.commons.unidto.dynamic {
       public IInterceptor[] SelectInterceptors( Type type, MethodInfo method, IInterceptor[] interceptors ) {
          DataCoreInterceptor dci = (DataCoreInterceptor)interceptors.FirstOrDefault( i => i is DataCoreInterceptor );
          DtoInterceptor di = (DtoInterceptor)interceptors.FirstOrDefault( i => i is DtoInterceptor );
+         NotifyPropertyChangedInterceptor npci =
+               (NotifyPropertyChangedInterceptor)interceptors.FirstOrDefault(
+                     i => i is NotifyPropertyChangedInterceptor );
+
          // todo handle facets
 
          if( method.DeclaringType == dci.DataCoreType )
@@ -31,6 +36,9 @@ namespace jsc.commons.unidto.dynamic {
 
          if( method.DeclaringType == di.DtoType )
             return new IInterceptor[] {di};
+
+         if( method.DeclaringType == typeof( INotifyPropertyChanged ) )
+            return new IInterceptor[] {npci};
 
          if( di.DtoType.SelectManyRecursive( i => i.GetInterfaces( ) )
                .Where( i => i.GetCustomAttribute<MarkerAttribute>( ) == null )

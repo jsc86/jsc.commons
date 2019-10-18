@@ -14,13 +14,13 @@ namespace jsc.commons.unidto.core.interfaces {
 
       uint CurrentVersion { get; }
 
+      bool HasChanges { get; }
+
       void ResetToVersion( uint version );
 
       void ResetToSquashed( );
 
       void SquashChanges( );
-
-      bool HasChanges( );
 
    }
 

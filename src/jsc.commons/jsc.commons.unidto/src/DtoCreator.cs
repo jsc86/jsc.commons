@@ -12,6 +12,7 @@ using System.Reflection;
 using Castle.DynamicProxy;
 using Castle.DynamicProxy.Internal;
 
+using jsc.commons.unidto.core;
 using jsc.commons.unidto.core.attributes;
 using jsc.commons.unidto.core.interfaces;
 using jsc.commons.unidto.dynamic;
@@ -41,17 +42,38 @@ namespace jsc.commons.unidto {
          Type dataCoreType = facetTypes.First( t => t.GetInterfaces( ).Contains( typeof( IDataCore ) ) );
          facetTypes = facetTypes.Except( new[] {dataCoreType} ).ToList( );
 
-         DataCoreInterceptor dci = new DataCoreInterceptor( dataCoreType, typeof( T ) );
-         DtoInterceptor di = new DtoInterceptor( typeof( T ), dci.DataCore );
+         T instance = null;
+
+         NotifyPropertyChanged npc = null;
+         Type npcType = facetTypes.FirstOrDefault( t => t == typeof( INotifyPropertyChanged ) );
+         if( npcType != null ) {
+            // ReSharper disable once AccessToModifiedClosure
+            npc = new NotifyPropertyChanged( ( ) => instance );
+            facetTypes = facetTypes.Except( new[] {npcType} ).ToList( );
+         }
+
+         DataCoreInterceptor dci = new DataCoreInterceptor( dataCoreType, typeof( T ), npc );
+         DtoInterceptor di = new DtoInterceptor( typeof( T ), dci.DataCore, npc );
 
          // todo: create interceptors for facets
 
-         return (T)ProxyGenerator.CreateInterfaceProxyWithoutTarget(
-               typeof( T ),
-               Array.Empty<Type>( ),
-               __pgo,
-               di,
-               dci );
+         if( npc == null )
+            instance = (T)ProxyGenerator.CreateInterfaceProxyWithoutTarget(
+                  typeof( T ),
+                  Array.Empty<Type>( ),
+                  __pgo,
+                  di,
+                  dci );
+         else
+            instance = (T)ProxyGenerator.CreateInterfaceProxyWithoutTarget(
+                  typeof( T ),
+                  Array.Empty<Type>( ),
+                  __pgo,
+                  di,
+                  dci,
+                  new NotifyPropertyChangedInterceptor( npc ) );
+
+         return instance;
       }
 
       private static IList<Type> GetFacetTypes<T>( ) {

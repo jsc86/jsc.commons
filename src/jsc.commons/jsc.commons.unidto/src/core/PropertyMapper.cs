@@ -21,6 +21,8 @@ namespace jsc.commons.unidto.core {
       private static readonly Dictionary<Type, PropertyMapper> __typeMapping =
             new Dictionary<Type, PropertyMapper>( );
 
+      private Dictionary<int, string> _indexMapping;
+
       private Dictionary<string, int> _propertyMapping;
 
       private PropertyMapper( Type type ) {
@@ -41,9 +43,11 @@ namespace jsc.commons.unidto.core {
                .SelectMany( i => i.GetProperties( BindingFlags.Instance|BindingFlags.Public ) )
                .ToArray( );
          _propertyMapping = new Dictionary<string, int>( propertyInfos.Length );
+         _indexMapping = new Dictionary<int, string>( propertyInfos.Length );
          int index = 0;
          foreach( PropertyInfo propertyInfo in propertyInfos ) {
             _propertyMapping[ propertyInfo.Name ] = index;
+            _indexMapping[ index ] = propertyInfo.Name;
             index++;
          }
       }
@@ -63,8 +67,12 @@ namespace jsc.commons.unidto.core {
          }
       }
 
-      public int GetIndex( string key ) {
-         return _propertyMapping[ key ];
+      public int GetPropertyIndex( string propertyName ) {
+         return _propertyMapping[ propertyName ];
+      }
+
+      public string GetPropertyName( int propertyIndex ) {
+         return _indexMapping[ propertyIndex ];
       }
 
    }
