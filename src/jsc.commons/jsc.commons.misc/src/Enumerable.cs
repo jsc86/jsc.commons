@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,6 +44,8 @@ namespace jsc.commons.misc {
          if( selector == null )
             throw new ArgumentNullException( nameof( selector ), $"{nameof( selector )} must not be null" );
 
+         source = source.PrepareForMultipleEnumeration( );
+
          IEnumerable<T> ret = System.Linq.Enumerable.Empty<T>( );
 
          return source.Aggregate(
@@ -58,7 +61,18 @@ namespace jsc.commons.misc {
          if( selector == null )
             throw new ArgumentNullException( nameof( selector ), $"{nameof( selector )} must not be null" );
 
+         source = source.PrepareForMultipleEnumeration( );
+
+         // ReSharper disable PossibleMultipleEnumeration
          return source.Union( source.SelectManyRecursive( selector ) );
+         // ReSharper restore PossibleMultipleEnumeration
+      }
+
+      public static IEnumerable<T> PrepareForMultipleEnumeration<T>( this IEnumerable<T> source ) {
+         if( source is ICollection
+               ||source is ICollection<T> )
+            return source;
+         return source.ToList( );
       }
 
    }
