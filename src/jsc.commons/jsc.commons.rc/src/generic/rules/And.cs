@@ -1,6 +1,6 @@
 ﻿// Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -40,12 +40,24 @@ namespace jsc.commons.rc.generic.rules {
                      TargetA.MakeInvalid( ).Union( TargetB.MakeInvalid( ) ).ToList( ) ) );
       }
 
+      public And( IRule<T> targetA, IRule<T> targetB, params IRule<T>[] targets ) :
+            this( targetA, Chain( new[] {targetB}.Union( targets ).ToArray( ) ) ) { }
+
       public IRule<T> TargetA { get; }
 
       public IRule<T> TargetB { get; }
 
       public override string Description =>
             _description??( _description = $"({TargetA.Description} and {TargetB.Description})" );
+
+      private static IRule<T> Chain( IRule<T>[] targets ) {
+         int l = targets.Length;
+         And<T> current = new And<T>( targets[ l-2 ], targets[ l-1 ] );
+         for( int i = l-3; i >= 0; i-- )
+            current = new And<T>( targets[ i ], current );
+
+         return current;
+      }
 
       public override IViolation<T> Check( T subject, IBehaviors context = null ) {
          IViolation<T> va = TargetA.Check( subject, context );

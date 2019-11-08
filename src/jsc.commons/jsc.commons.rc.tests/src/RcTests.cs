@@ -1,6 +1,6 @@
 ﻿// Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -33,6 +33,74 @@ namespace jsc.commons.rc.tests {
                            .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "world" ) as
                      Add<string>;
          Assert.NotNull( addB );
+      }
+
+      private void AddN( And<IList<string>> rule, params string[] args ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( rule );
+         IList<string> list = args.Where( arg => arg != null ).ToList( );
+         IViolation<IList<string>> violation = rc.Check( list );
+         if( args.Length == args.Count( arg => arg != null ) )
+            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         else
+            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      private void OrN( Or<IList<string>> rule, params string[] args ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( rule );
+         IList<string> list = args.Where( arg => arg != null ).ToList( );
+         IViolation<IList<string>> violation = rc.Check( list );
+         if( args.Count( arg => arg != null ) > 0 )
+            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         else
+            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      private void XorN( Xor<IList<string>> rule, params string[] args ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add( rule );
+         IList<string> list = args.Where( arg => arg != null ).ToList( );
+         IViolation<IList<string>> violation = rc.Check( list );
+         if( args.Count( arg => arg != null ) == 1 )
+            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         else
+            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Add3(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c ) {
+         AddN(
+               new And<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ) ),
+               a,
+               b,
+               c );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Add4(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c,
+            [Values( null, "d" )] string d ) {
+         AddN(
+               new And<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ),
+                     new Contains<string>( "d" ) ),
+               a,
+               b,
+               c,
+               d );
       }
 
       [Test]
@@ -166,6 +234,76 @@ namespace jsc.commons.rc.tests {
          list.Add( "hello" );
          violation = rc.Check( list );
          Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Or3(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c ) {
+         OrN(
+               new Or<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ) ),
+               a,
+               b,
+               c );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Or4(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c,
+            [Values( null, "c" )] string d ) {
+         OrN(
+               new Or<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ),
+                     new Contains<string>( "d" ) ),
+               a,
+               b,
+               c,
+               d );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Xor3(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c ) {
+         XorN(
+               new Xor<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ) ),
+               a,
+               b,
+               c );
+      }
+
+      [Test]
+      [Combinatorial]
+      public void Xor4(
+            [Values( null, "a" )] string a,
+            [Values( null, "b" )] string b,
+            [Values( null, "c" )] string c,
+            [Values( null, "d" )] string d ) {
+         XorN(
+               new Xor<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ),
+                     new Contains<string>( "c" ),
+                     new Contains<string>( "d" ) ),
+               a,
+               b,
+               c,
+               d );
       }
 
    }
