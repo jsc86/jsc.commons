@@ -306,6 +306,41 @@ namespace jsc.commons.rc.tests {
                d );
       }
 
+      [Test]
+      public void XorSolutions( ) {
+         IRuleChecker<IList<string>> rc = new RuleCheckerBase<IList<string>>( );
+         rc.Add(
+               new Xor<IList<string>>(
+                     new Contains<string>( "a" ),
+                     new Contains<string>( "b" ) ) );
+
+         IList<string> list = new CList<string>( );
+         IViolation<IList<string>> violation = rc.Check( list );
+
+         Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+
+         ISolution<IList<string>>[] solutions = violation.Solutions.ToArray( );
+
+         Assert.AreEqual( 2, solutions.Length );
+
+         IAction<IList<string>>[] actions1 = solutions[ 0 ].Actions.ToArray( );
+         IAction<IList<string>>[] actions2 = solutions[ 1 ].Actions.ToArray( );
+
+         Assert.AreEqual( 2, actions1.Length );
+         Assert.AreEqual( 2, actions2.Length );
+         Assert.AreEqual( 1, actions1.Count( a => a is Add<string> ) );
+         Assert.AreEqual( 1, actions1.Count( a => a is Remove<string> ) );
+         Assert.AreEqual( 1, actions2.Count( a => a is Add<string> ) );
+         Assert.AreEqual( 1, actions2.Count( a => a is Remove<string> ) );
+
+         IAction<IList<string>>[] allActions = actions1.Union( actions2 ).ToArray( );
+
+         Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "a" ) );
+         Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "b" ) );
+         Assert.AreEqual( 1, allActions.Count( a => a is Remove<string> rem&&rem.Target == "a" ) );
+         Assert.AreEqual( 1, allActions.Count( a => a is Remove<string> rem&&rem.Target == "b" ) );
+      }
+
    }
 
 }

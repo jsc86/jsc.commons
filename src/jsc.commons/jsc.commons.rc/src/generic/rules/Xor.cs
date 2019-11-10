@@ -36,27 +36,37 @@ namespace jsc.commons.rc.generic.rules {
                   $"xor({_targets.Select( t => t.Description ).Aggregate( ( a, b ) => $"{a}, {b}" )})" );
 
       private IEnumerable<ISolution<T>> GetInvalidSolutions( ) {
-         // todo: add more solutions
-         return new ISolution<T>[] {
-               new Solution<T>(
-                     _targets.SelectMany( t => t.MakeValid( ).SelectMany( s => s.Actions ) ) )
-         };
+         IEnumerable<IEnumerable<IAction<T>>> actionPermutations =
+               _targets[ 0 ].MakeInvalid( ).Select( it => it.Actions );
+
+         for( int i = 1; i < _targets.Length; i++ )
+            actionPermutations = actionPermutations.Join(
+                  _targets[ i ].MakeInvalid( ),
+                  a => true,
+                  b => true,
+                  ( a, b ) => a.Union( b.Actions ) );
+
+         foreach( IEnumerable<IAction<T>> actions in actionPermutations )
+            yield return new Solution<T>( actions );
       }
 
       private IEnumerable<ISolution<T>> GetValidSolutions( ) {
-         List<Solution<T>> solutions = new List<Solution<T>>( _targets.Length );
          foreach( IRule<T> validTarget in _targets ) {
             IEnumerable<IRule<T>> invalidTargets = _targets.Except( new[] {validTarget} );
-            solutions.Add(
-                  new Solution<T>(
-                        validTarget.MakeValid( )
-                              .Union( invalidTargets.SelectMany( it => it.MakeInvalid( ) ) )
-                              .SelectMany(
-                                    t => t.Actions )
-                  ) );
-         }
 
-         return solutions;
+            IEnumerable<IEnumerable<IAction<T>>> actionPermutations =
+                  validTarget.MakeValid( ).Select( it => it.Actions );
+
+            foreach( IRule<T> invalidTarget in invalidTargets )
+               actionPermutations = actionPermutations.Join(
+                     invalidTarget.MakeInvalid( ),
+                     a => true,
+                     b => true,
+                     ( a, b ) => a.Union( b.Actions ) );
+
+            foreach( IEnumerable<IAction<T>> actions in actionPermutations )
+               yield return new Solution<T>( actions );
+         }
       }
 
       public override IViolation<T> Check( T subject, IBehaviors context = null ) {
