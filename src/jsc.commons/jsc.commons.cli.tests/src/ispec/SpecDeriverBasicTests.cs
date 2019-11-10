@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -69,6 +69,29 @@ namespace jsc.commons.cli.tests.ispec {
 
       }
 
+      public enum MyEnum {
+
+         Value1,
+         Value2
+
+      }
+
+      [CliDefinition]
+      public interface ICliEnumArg : IConfiguration {
+
+         [Argument]
+         MyEnum Arg { get; set; }
+
+      }
+
+      [CliDefinition]
+      public interface ICliNullableEnumArg : IConfiguration {
+
+         [Argument]
+         MyEnum? Arg { get; set; }
+
+      }
+
       [Test]
       public void DynArg( ) {
          ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
@@ -118,6 +141,26 @@ namespace jsc.commons.cli.tests.ispec {
          Assert.AreEqual( 1, argValues[ 0 ] );
          Assert.AreEqual( 2, argValues[ 1 ] );
          Assert.AreEqual( 3, argValues[ 2 ] );
+      }
+
+      [Test]
+      public void EnumArg_IsSet( ) {
+         ICliEnumArg cli = new InterfaceSpecBoilerPlateHelper<ICliEnumArg>(
+               new[] {
+                     MyEnum.Value1.ToString( )
+               } ).CliConfigObject;
+
+         Assert.AreEqual( MyEnum.Value1, cli.Arg );
+      }
+
+      [Test]
+      public void EnumArg_IsSetLowerCase( ) {
+         ICliEnumArg cli = new InterfaceSpecBoilerPlateHelper<ICliEnumArg>(
+               new[] {
+                     MyEnum.Value2.ToString( ).ToLower( )
+               } ).CliConfigObject;
+
+         Assert.AreEqual( MyEnum.Value2, cli.Arg );
       }
 
       [Test]
@@ -234,6 +277,24 @@ namespace jsc.commons.cli.tests.ispec {
          Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Count( ) );
          Assert.AreEqual( 1, cli.StringOptionOneDynIntArg.First( ) );
          Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Last( ) );
+      }
+
+      [Test]
+      public void NullableEnumArg_IsNotSet( ) {
+         ICliNullableEnumArg cli = new InterfaceSpecBoilerPlateHelper<ICliNullableEnumArg>(
+               new string[0] ).CliConfigObject;
+
+         Assert.IsFalse( cli.Arg.HasValue );
+      }
+
+      [Test]
+      public void NullableEnumArg_IsSet( ) {
+         ICliNullableEnumArg cli = new InterfaceSpecBoilerPlateHelper<ICliNullableEnumArg>(
+               new[] {
+                     MyEnum.Value2.ToString( )
+               } ).CliConfigObject;
+
+         Assert.AreEqual( MyEnum.Value2, cli.Arg );
       }
 
       [Test]

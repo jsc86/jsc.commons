@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -9,6 +9,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+
+using Castle.DynamicProxy.Internal;
 
 using jsc.commons.cli.arguments;
 using jsc.commons.cli.config;
@@ -132,11 +134,34 @@ namespace jsc.commons.cli.ispec {
 
       private Func<ICliConfig, string, bool, Argument> GetMap( Type t ) {
          Func<ICliConfig, string, bool, Argument> map;
-         if( _extMapping == null
-               ||!_extMapping.TryGetValue( t, out map ) )
-            if( !_mapping.TryGetValue( t, out map ) )
-               throw new Exception( $"no mapper for type '{t}'" );
-         return map;
+
+         if( _extMapping != null
+               &&_extMapping.TryGetValue( t, out map ) )
+            return map;
+
+         if( _mapping.TryGetValue( t, out map ) )
+            return map;
+
+         if( t.IsEnum ) {
+            map = ( cliType, name, optional ) => MapEnumType( t, cliType, name, optional );
+            return map;
+         }
+
+         if( t.IsNullableType( ) ) {
+            Type tg = t.GenericTypeArguments[ 0 ];
+            if( tg.IsEnum ) {
+               map = ( cliType, name, optional ) => MapEnumType( tg, cliType, name, optional );
+               return map;
+            }
+         }
+
+         throw new Exception( $"no mapper for type '{t}'" );
+      }
+
+      private Argument MapEnumType( Type enumType, ICliConfig cliConfig, string name, bool optional ) {
+         Type enumArgType = typeof( EnumArg<> ).MakeGenericType( enumType );
+         Argument arg = (Argument)Activator.CreateInstance( enumArgType, name, (string)null, optional );
+         return arg;
       }
 
    }
