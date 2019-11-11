@@ -30,7 +30,7 @@ namespace jsc.commons.rc.generic.rules {
                ? (IViolation<T>)new Violation<T>(
                      this,
                      Reduce(
-                           MakeInvalid( ),
+                           MakeValid( ),
                            subject ) )
                : NonViolation<T>.Instance;
       }
