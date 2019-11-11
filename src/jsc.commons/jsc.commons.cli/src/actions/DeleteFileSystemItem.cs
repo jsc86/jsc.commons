@@ -17,8 +17,12 @@ namespace jsc.commons.cli.actions {
          // nop
       }
 
-
       public override string Description => _description??( _description = $"delete file/directory of {Target.Name}" );
+
+
+      public override bool ChangesSubject( IParserResult subject ) {
+         return true;
+      }
 
       public override void Apply( IParserResult subject, IBehaviors context = null ) {
          Target.Delete( subject.GetValue( Target ) );

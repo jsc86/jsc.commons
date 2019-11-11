@@ -19,20 +19,25 @@ namespace jsc.commons.rc.tests {
    [TestFixture]
    public class RcTests {
 
-      private void AssertAndViolation( IViolation<IList<string>> violation ) {
+      private void AssertAndViolation( IViolation<IList<string>> violation, IList<string> subject ) {
          Assert.IsInstanceOf<Violation<IList<string>>>( violation );
          Assert.AreEqual( 1, violation.Solutions.Count( ) );
-         Assert.AreEqual( 2, violation.Solutions.First( ).Actions.Count( ) );
-         Add<string> addA =
-               violation.Solutions.First( )
-                           .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "hello" ) as
-                     Add<string>;
-         Assert.NotNull( addA );
-         Add<string> addB =
-               violation.Solutions.First( )
-                           .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "world" ) as
-                     Add<string>;
-         Assert.NotNull( addB );
+         Assert.AreEqual( 2-subject.Count, violation.Solutions.First( ).Actions.Count( ) );
+         if( subject.Contains( "world" ) ) {
+            Add<string> addA =
+                  violation.Solutions.First( )
+                              .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "hello" ) as
+                        Add<string>;
+            Assert.NotNull( addA );
+         }
+
+         if( subject.Contains( "hello" ) ) {
+            Add<string> addB =
+                  violation.Solutions.First( )
+                              .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "world" ) as
+                        Add<string>;
+            Assert.NotNull( addB );
+         }
       }
 
       private void AddN( And<IList<string>> rule, params string[] args ) {
@@ -110,16 +115,16 @@ namespace jsc.commons.rc.tests {
          IList<string> list = new List<string>( );
 
          IViolation<IList<string>> violation = rc.Check( list );
-         AssertAndViolation( violation );
+         AssertAndViolation( violation, list );
 
          list.Add( "hello" );
          violation = rc.Check( list );
-         AssertAndViolation( violation );
+         AssertAndViolation( violation, list );
 
          list.Remove( "hello" );
          list.Add( "world" );
          violation = rc.Check( list );
-         AssertAndViolation( violation );
+         AssertAndViolation( violation, list );
 
          list.Add( "hello" );
          violation = rc.Check( list );
@@ -326,19 +331,19 @@ namespace jsc.commons.rc.tests {
          IAction<IList<string>>[] actions1 = solutions[ 0 ].Actions.ToArray( );
          IAction<IList<string>>[] actions2 = solutions[ 1 ].Actions.ToArray( );
 
-         Assert.AreEqual( 2, actions1.Length );
-         Assert.AreEqual( 2, actions2.Length );
+         Assert.AreEqual( 1, actions1.Length );
+         Assert.AreEqual( 1, actions2.Length );
          Assert.AreEqual( 1, actions1.Count( a => a is Add<string> ) );
-         Assert.AreEqual( 1, actions1.Count( a => a is Remove<string> ) );
+         Assert.AreEqual( 0, actions1.Count( a => a is Remove<string> ) );
          Assert.AreEqual( 1, actions2.Count( a => a is Add<string> ) );
-         Assert.AreEqual( 1, actions2.Count( a => a is Remove<string> ) );
+         Assert.AreEqual( 0, actions2.Count( a => a is Remove<string> ) );
 
          IAction<IList<string>>[] allActions = actions1.Union( actions2 ).ToArray( );
 
          Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "a" ) );
          Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "b" ) );
-         Assert.AreEqual( 1, allActions.Count( a => a is Remove<string> rem&&rem.Target == "a" ) );
-         Assert.AreEqual( 1, allActions.Count( a => a is Remove<string> rem&&rem.Target == "b" ) );
+         Assert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "a" ) );
+         Assert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "b" ) );
       }
 
    }

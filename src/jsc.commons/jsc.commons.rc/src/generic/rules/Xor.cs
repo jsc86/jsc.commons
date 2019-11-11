@@ -80,7 +80,11 @@ namespace jsc.commons.rc.generic.rules {
          if( nonViolationCount == 1 )
             return NonViolation<T>.Instance;
 
-         return new Violation<T>( this, MakeValid( ) );
+         return new Violation<T>(
+               this,
+               Reduce(
+                     MakeValid( ),
+                     subject ) );
       }
 
       public override IEnumerable<ISolution<T>> MakeValid( ) {

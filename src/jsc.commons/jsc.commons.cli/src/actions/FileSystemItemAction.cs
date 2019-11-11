@@ -35,6 +35,8 @@ namespace jsc.commons.cli.actions {
          }
       }
 
+      public abstract bool ChangesSubject( IParserResult subject );
+
       public abstract string Description { get; }
 
       public bool IsInteractive { get; }

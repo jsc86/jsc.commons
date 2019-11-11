@@ -69,7 +69,9 @@ namespace jsc.commons.rc.generic.rules {
 
          return new Violation<T>(
                this,
-               MakeValid( ) );
+               Reduce(
+                     MakeValid( ),
+                     subject ) );
       }
 
       public override IEnumerable<ISolution<T>> MakeValid( ) {

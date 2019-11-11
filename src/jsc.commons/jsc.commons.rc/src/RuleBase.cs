@@ -1,6 +1,6 @@
 ﻿// Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -24,6 +24,14 @@ namespace jsc.commons.rc {
 
       public virtual IEnumerable<ISolution<T>> MakeInvalid( ) {
          return Enumerable.Empty<ISolution<T>>( );
+      }
+
+      protected ISolution<T> Reduce( ISolution<T> solution, T subject ) {
+         return new Solution<T>( solution.Actions.Where( a => a.ChangesSubject( subject ) ) );
+      }
+
+      protected IEnumerable<ISolution<T>> Reduce( IEnumerable<ISolution<T>> solutions, T subject ) {
+         return solutions.Select( s => Reduce( s, subject ) ).Where( s => s.Actions.Any( ) ).ToArray( );
       }
 
    }

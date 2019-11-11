@@ -19,6 +19,10 @@ namespace jsc.commons.cli.actions {
 
       public override string Description => _description??( _description = $"create file/directory of {Target.Name}" );
 
+      public override bool ChangesSubject( IParserResult subject ) {
+         return true;
+      }
+
       public override void Apply( IParserResult subject, IBehaviors context = null ) {
          Target.Create( subject.GetValue( Target ) );
       }

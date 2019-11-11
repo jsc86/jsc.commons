@@ -1,6 +1,6 @@
 ﻿// Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2018 Jacob Schlesinger
+// Copyright (c) 2019 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -43,6 +43,14 @@ namespace jsc.commons.rc.interfaces {
       /// <param name="a"></param>
       /// <returns></returns>
       bool Contradicts( IAction<T> a );
+
+      /// <summary>
+      ///    Indicates whether this action would actually change
+      ///    the subject, if applied to it.
+      /// </summary>
+      /// <param name="subject"></param>
+      /// <returns></returns>
+      bool ChangesSubject( T subject );
 
    }
 
