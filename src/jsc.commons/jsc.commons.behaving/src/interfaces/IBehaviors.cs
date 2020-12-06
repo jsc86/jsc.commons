@@ -4,9 +4,13 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System.Collections.Generic;
+
 namespace jsc.commons.behaving.interfaces {
 
    public interface IBehaviors {
+
+      IEnumerable<object> Objects { get; }
 
       T Get<T>( ) where T : IBehavior;
 

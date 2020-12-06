@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections.Generic;
 
 using jsc.commons.behaving.interfaces;
 
@@ -23,7 +24,7 @@ namespace jsc.commons.behaving {
       public static bool TryGet<T>( this IBehaviorsContainer bc, out T behavior ) where T : IBehavior {
          if( bc is BehaviorsContainerBase bcb
                &&!bcb.LazyBehaviors.IsInitialized ) {
-            behavior = default( T );
+            behavior = default;
             return false;
          }
 
@@ -52,6 +53,22 @@ namespace jsc.commons.behaving {
                return behaviors.TryGet( out behavior );
             case IBehaviorsContainer container:
                return container.TryGet( out behavior );
+            default:
+               throw new ArgumentException(
+                     $"object {nameof( o )} of type {o.GetType( )} does not know how to behave" );
+         }
+      }
+
+      public static IEnumerable<object> Objects( this IBehaviorsContainer bc ) {
+         return bc.Behaviors.Objects;
+      }
+
+      public static IEnumerable<object> Objects( this object o ) {
+         switch( o ) {
+            case IBehaviors behaviors:
+               return behaviors.Objects;
+            case IBehaviorsContainer container:
+               return container.Objects( );
             default:
                throw new ArgumentException(
                      $"object {nameof( o )} of type {o.GetType( )} does not know how to behave" );

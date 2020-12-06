@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using jsc.commons.behaving.interfaces;
 
@@ -34,7 +35,7 @@ namespace jsc.commons.behaving {
 
       public bool TryGet<T>( out T behavior ) where T : IBehavior {
          if( !_lazyBehaviors.IsInitialized ) {
-            behavior = default( T );
+            behavior = default;
             return false;
          }
 
@@ -44,13 +45,16 @@ namespace jsc.commons.behaving {
             return true;
          }
 
-         behavior = default( T );
+         behavior = default;
          return false;
       }
 
       public void Set( IBehavior behavior ) {
          _lazyBehaviors.Instance[ behavior.GetType( ) ] = behavior;
       }
+
+      public IEnumerable<object> Objects =>
+            _lazyBehaviors.IsInitialized? _lazyBehaviors.Instance.Values : Enumerable.Empty<object>( );
 
    }
 

@@ -5,6 +5,8 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 using jsc.commons.behaving.interfaces;
 
@@ -21,13 +23,15 @@ namespace jsc.commons.behaving {
       }
 
       public bool TryGet<T>( out T behavior ) where T : IBehavior {
-         behavior = default( T );
+         behavior = default;
          return false;
       }
 
       public void Set( IBehavior behavior ) {
          throw new NotImplementedException( );
       }
+
+      public IEnumerable<object> Objects => Enumerable.Empty<object>( );
 
    }
 
