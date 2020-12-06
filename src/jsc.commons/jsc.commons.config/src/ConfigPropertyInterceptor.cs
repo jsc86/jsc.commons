@@ -13,6 +13,9 @@ using Castle.Core.Internal;
 using Castle.DynamicProxy;
 
 using jsc.commons.config.interfaces;
+using jsc.commons.misc;
+
+using Enumerable = System.Linq.Enumerable;
 
 namespace jsc.commons.config {
 
@@ -88,10 +91,16 @@ namespace jsc.commons.config {
 
             IDefaultsProvider dp = GetDefaultsProvider( t );
 
+            IEnumerable<Type> types = t.SelectManyRecursiveInclusive(
+                  t2 => t2.GetInterfaces( ) );
+
             // read default values
-            List<PropertyInfo> props = t.GetProperties( )
-                  .Where( p => p.GetAttribute<ConfigValueAttribute>( ) != null )
-                  .ToList( );
+            List<PropertyInfo> props =
+                  types.SelectMany(
+                              t2 => t2.GetProperties( )
+                                    .Where( p => p.GetAttribute<ConfigValueAttribute>( ) != null )
+                        )
+                        .ToList( );
             Dictionary<string, Tuple<object, Type>> defaults =
                   new Dictionary<string, Tuple<object, Type>>( props.Count );
             props.ForEach(
