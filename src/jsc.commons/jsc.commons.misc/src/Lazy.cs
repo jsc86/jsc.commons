@@ -30,8 +30,7 @@ namespace jsc.commons.misc {
          get {
             if( _instance == null )
                lock( this ) {
-                  if( _instance == null )
-                     _instance = _spawner( );
+                  _instance ??= _spawner( );
                }
 
             return _instance;

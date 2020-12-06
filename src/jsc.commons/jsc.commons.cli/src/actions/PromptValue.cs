@@ -38,7 +38,7 @@ namespace jsc.commons.cli.actions {
       }
 
       public string Description =>
-            _description??( _description = $"enter value for argument {Target.Name}" );
+            _description ??= $"enter value for argument {Target.Name}";
 
 
       public bool IsInteractive { get; } = true;

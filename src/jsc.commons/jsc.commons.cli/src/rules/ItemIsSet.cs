@@ -47,11 +47,8 @@ namespace jsc.commons.cli.rules {
       public IItem Target { get; }
 
       public override string Description =>
-            _description??
-            ( _description = string.Format(
-                  "{0} {1} is set",
-                  Target is IOption? "option" : "flag",
-                  ( Target as IOption )?.Name.ToString( )??( Target as IFlag )?.Name.ToString( ) ) );
+            _description ??= $"{( Target is IOption? "option" : "flag" )} "+
+                  $"{( Target as IOption )?.Name.ToString( )??( Target as IFlag )?.Name.ToString( )} is set";
 
       public override IViolation<IParserResult> Check( IParserResult subject, IBehaviors context = null ) {
          if( subject.IsSet( Target ) )

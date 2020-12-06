@@ -40,7 +40,7 @@ namespace jsc.commons.rc.generic.rules {
       public IRule<T> TargetB { get; }
 
       public override string Description =>
-            _description??( _description = $"({TargetA.Description}) implies ({TargetB.Description})" );
+            _description ??= $"({TargetA.Description}) implies ({TargetB.Description})";
 
       public override IViolation<T> Check( T subject, IBehaviors context = null ) {
          IViolation<T> va = TargetA.Check( subject, context );

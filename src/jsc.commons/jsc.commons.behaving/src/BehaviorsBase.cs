@@ -26,8 +26,7 @@ namespace jsc.commons.behaving {
          if( !_lazyBehaviors.IsInitialized )
             throw new ArgumentException( $"no behavior of type {typeof( T )} set" );
 
-         object behavior;
-         if( _lazyBehaviors.Instance.TryGetValue( typeof( T ), out behavior ) )
+         if( _lazyBehaviors.Instance.TryGetValue( typeof( T ), out object behavior ) )
             return (T)behavior;
 
          throw new ArgumentException( $"no behavior of type {typeof( T )} set" );

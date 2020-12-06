@@ -44,19 +44,6 @@ namespace jsc.commons.cli.arguments {
 
       public bool Interactive { get; internal set; }
 
-//      RuleDeriver.Instance.AddArgumentRuleDeriver(
-//      typeof( DoubleArg ),
-//      arg => {
-//         List<IRule<IParserResult>> rules = new List<IRule<IParserResult>>( 2 );
-//         if( ( (DoubleArg)arg ).MinValue.HasValue )
-//               // ReSharper disable once PossibleInvalidOperationException
-//            rules.Add( new MinValue<double>( (DoubleArg)arg, ( (DoubleArg)arg ).MinValue.Value ) );
-//         if( ( (DoubleArg)arg ).MaxValue.HasValue )
-//               // ReSharper disable once PossibleInvalidOperationException
-//            rules.Add( new MaxValue<double>( (DoubleArg)arg, ( (DoubleArg)arg ).MaxValue.Value ) );
-//         return rules;
-//      } );
-
       protected static void RegisterRuleDerivers<T>( ) where T : FileSystemItemArgument {
          bool file = typeof( T ).IsAssignableFrom( typeof( FileArgument ) );
          RuleDeriver.Instance.AddArgumentRuleDeriver(

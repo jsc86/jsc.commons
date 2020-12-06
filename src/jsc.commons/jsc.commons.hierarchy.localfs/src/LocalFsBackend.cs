@@ -48,7 +48,7 @@ namespace jsc.commons.hierarchy.localfs {
          }
       }
 
-      private IPath BasePath => _basePath??( _basePath = Path.Parse( _config.BasePath.FullName ) );
+      private IPath BasePath => _basePath ??= Path.Parse( _config.BasePath.FullName );
 
       public void Dispose( ) {
          // nop
@@ -191,7 +191,7 @@ namespace jsc.commons.hierarchy.localfs {
             foreach( object meta in resource.Meta.Objects( ) ) {
                tw.WriteLine( $"{meta.GetType( ).FullName}, {meta.GetType( ).Assembly.GetName( ).Name}" );
                // serializer.Serialize( tw, meta );
-               // workaround serializer bug
+               // work around serializer bug
                string s = serializer.Serialize( meta );
                tw.Write( s.Replace( "\n\n", "\n" ) );
                tw.WriteLine( "---" );

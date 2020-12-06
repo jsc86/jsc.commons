@@ -46,7 +46,7 @@ namespace jsc.commons.cli.rules {
 
       private IArgument Target { get; }
 
-      public override string Description => _description??( _description = $"argument {Target.Name} is set" );
+      public override string Description => _description ??= $"argument {Target.Name} is set";
 
       public override IViolation<IParserResult> Check( IParserResult subject, IBehaviors context = null ) {
          if( subject.IsSet( Target ) )

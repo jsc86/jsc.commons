@@ -55,7 +55,7 @@ namespace jsc.commons.cli.rules {
 
       public T MinVal { get; }
 
-      public override string Description => _description??( _description = $"{Target.Name} >= {MinVal}" );
+      public override string Description => _description ??= $"{Target.Name} >= {MinVal}";
 
       public override IViolation<IParserResult> Check( IParserResult subject, IBehaviors context = null ) {
          try {

@@ -76,7 +76,6 @@ namespace jsc.commons.unidto.dynamic {
       }
 
       private Tuple<Dictionary<MethodInfo, string>, Dictionary<MethodInfo, string>> MapMethods( ) {
-         //PropertyInfo[] pis = _dataCore.Type.GetProperties( BindingFlags.Instance|BindingFlags.Public );
          PropertyInfo[] pis = _dataCore.Type.GetInterfaces( )
                .SelectManyRecursiveInclusive( i => i.GetInterfaces( ) )
                .Where( i => i.GetCustomAttribute<MarkerAttribute>( ) == null )

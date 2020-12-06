@@ -32,8 +32,7 @@ namespace jsc.commons.rc.generic.rules {
       private IEnumerable<IRule<T>> Targets => new EnumerableWrapper<IRule<T>>( _targets );
 
       public override string Description =>
-            _description??( _description =
-                  $"xor({_targets.Select( t => t.Description ).Aggregate( ( a, b ) => $"{a}, {b}" )})" );
+            _description ??= $"xor({_targets.Select( t => t.Description ).Aggregate( ( a, b ) => $"{a}, {b}" )})";
 
       private IEnumerable<ISolution<T>> GetInvalidSolutions( ) {
          IEnumerable<IEnumerable<IAction<T>>> actionPermutations =

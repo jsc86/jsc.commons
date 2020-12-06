@@ -33,11 +33,8 @@ namespace jsc.commons.cli.actions {
       }
 
       public string Description =>
-            _description??
-            ( _description = string.Format(
-                  "remove {0} {1}",
-                  Target is IOption? "option" : "flag",
-                  ( Target as IOption )?.Name.ToString( )??( Target as IFlag )?.Name.ToString( ) ) );
+            _description ??= $"remove {( Target is IOption? "option" : "flag" )} "
+                  +$"{( Target as IOption )?.Name.ToString( )??( Target as IFlag )?.Name.ToString( )}";
 
       public bool IsInteractive { get; } = false;
 

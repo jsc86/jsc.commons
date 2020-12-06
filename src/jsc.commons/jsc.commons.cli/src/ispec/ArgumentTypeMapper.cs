@@ -88,11 +88,8 @@ namespace jsc.commons.cli.ispec {
          if( argAttrib.Dynamic ) {
             if( !typeof( IEnumerable ).IsAssignableFrom( argType ) )
                throw new ArgumentException(
-                     string.Format(
-                           "dynamic property type must be assignable to {0} but was {1} for {2}",
-                           typeof( IEnumerable<> ),
-                           argType,
-                           pi.Name ) );
+                     $"dynamic property type must be assignable to {typeof( IEnumerable<> )}  "
+                     +$"but was {argType} for {pi.Name}" );
             argType = argType.GenericTypeArguments[ 0 ];
          }
 
@@ -112,11 +109,7 @@ namespace jsc.commons.cli.ispec {
          if( argAttrib?.Dynamic??false ) {
             if( !typeof( IEnumerable ).IsAssignableFrom( t ) )
                throw new ArgumentException(
-                     string.Format(
-                           "dynamic property type must be assignable to {0} but was {1} for {2}",
-                           typeof( IEnumerable<> ),
-                           t,
-                           name ) );
+                     $"dynamic property type must be assignable to {typeof( IEnumerable<> )} but was {t} for {name}" );
             t = t.GenericTypeArguments[ 0 ];
          }
 

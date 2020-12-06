@@ -27,6 +27,7 @@ namespace jsc.commons.rc.interfaces {
       ///    Violation occurred for the given subject.
       /// </summary>
       /// <param name="subject"></param>
+      /// <param name="context"></param>
       /// <returns></returns>
       IViolation<T> Check( T subject, IBehaviors context = null );
 

@@ -41,20 +41,21 @@ namespace jsc.commons.cli.actions {
                != 0;
       }
 
-      public string Description => _description??( _description = $"set argument {Target.Name} to {Value}" );
+      public string Description => _description ??= $"set argument {Target.Name} to {Value}";
 
       public bool IsInteractive { get; } = false;
 
-      internal static X Add<X>( X a, X b ) where X : struct {
+      internal static TX Add<TX>( TX a, TX b ) where TX : struct {
          return ExecOperator( "op_Addition", a, b );
       }
 
-      internal static X Sub<X>( X a, X b ) where X : struct {
+      internal static TX Sub<TX>( TX a, TX b ) where TX : struct {
          return ExecOperator( "op_Subtraction", a, b );
       }
 
-      private static X ExecOperator<X>( string op, X a, X b ) where X : struct {
-         return (X)a.GetType( )
+      private static TX ExecOperator<TX>( string op, TX a, TX b ) where TX : struct {
+         // ReSharper disable once PossibleNullReferenceException
+         return (TX)a.GetType( )
                .GetMethod( op )
                .Invoke(
                      null,

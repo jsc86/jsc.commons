@@ -22,7 +22,7 @@ namespace jsc.commons.unidto.core {
          _getInstance = getInstance;
       }
 
-      private object Instance => _instance??( _instance = _getInstance( ) );
+      private object Instance => _instance ??= _getInstance( );
 
       public event PropertyChangedEventHandler PropertyChanged;
 

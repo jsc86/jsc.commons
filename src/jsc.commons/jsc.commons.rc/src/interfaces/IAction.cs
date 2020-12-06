@@ -32,6 +32,7 @@ namespace jsc.commons.rc.interfaces {
       ///    Applies this Action on the given subject.
       /// </summary>
       /// <param name="subject"></param>
+      /// <param name="context"></param>
       void Apply( T subject, IBehaviors context );
 
       /// <summary>

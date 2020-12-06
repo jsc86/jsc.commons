@@ -99,7 +99,7 @@ namespace jsc.commons.rc {
             IList<IAction<T>> appliedActions,
             Action<ApplicationResult<T>> onResult,
             Action acceptDelegate,
-            PropertyObject<bool> cancelationToken,
+            PropertyObject<bool> cancellationToken,
             Func<IViolation<T>, ISolution<T>> onViolation ) {
          IViolation<T> violation = Check( subject, _context );
 
@@ -113,7 +113,7 @@ namespace jsc.commons.rc {
          } else {
             if( onViolation == null ) {
                foreach( ISolution<T> solution in violation.Solutions ) {
-                  if( cancelationToken.Value )
+                  if( cancellationToken.Value )
                      return;
 
                   if( solution.Actions.Any(
@@ -133,13 +133,13 @@ namespace jsc.commons.rc {
                         appliedActionsClone,
                         onResult,
                         acceptDelegate,
-                        cancelationToken,
+                        cancellationToken,
                         null );
                }
             } else {
                ISolution<T> solution = onViolation( violation );
                if( solution == null ) {
-                  cancelationToken.Value = true;
+                  cancellationToken.Value = true;
                   onResult(
                         new ApplicationResult<T>(
                               subject,
@@ -160,7 +160,7 @@ namespace jsc.commons.rc {
                         appliedActionsClone,
                         onResult,
                         acceptDelegate,
-                        cancelationToken,
+                        cancellationToken,
                         onViolation );
                }
             }

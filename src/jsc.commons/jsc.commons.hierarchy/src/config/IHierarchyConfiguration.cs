@@ -54,9 +54,6 @@ namespace jsc.commons.hierarchy.config {
                               GroupResourceClass.Instance,
                               UserResourceClass.Instance
                         } )
-                  // new Tuple<string, Func<object>>(
-                  //       nameof( IHierarchyConfiguration.BackendConfiguration ),
-                  //       ( ) => Config.New<ILocalFsBackendConfiguration>( ) )
             } ) { }
 
    }

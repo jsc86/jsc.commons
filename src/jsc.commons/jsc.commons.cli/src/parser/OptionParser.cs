@@ -47,7 +47,7 @@ namespace jsc.commons.cli.parser {
             foreach( IOption option in _options ) {
                string deUnifiedName = option.GetDeUnifiedName( _conf );
                if( ( i >= deUnifiedName.Length )|!_cmpChars( deUnifiedName[ i ], c ) )
-                  ( rem = rem??new List<IOption>( ) ).Add( option );
+                  ( rem ??= new List<IOption>( ) ).Add( option );
             }
 
             foreach( IOption option in rem??Enumerable.Empty<IOption>( ) )

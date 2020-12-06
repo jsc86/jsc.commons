@@ -116,9 +116,8 @@ namespace jsc.commons.cli.tests.arguments {
             Assert.IsNotNull( cli );
             Assert.IsNotNull( cli.FileArg );
             Assert.IsTrue( cli.FileArg.Exists );
-
          } finally {
-            fi.Delete(  );
+            fi.Delete( );
          }
       }
 

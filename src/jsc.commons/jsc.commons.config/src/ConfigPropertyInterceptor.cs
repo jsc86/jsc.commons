@@ -15,8 +15,6 @@ using Castle.DynamicProxy;
 using jsc.commons.config.interfaces;
 using jsc.commons.misc;
 
-using Enumerable = System.Linq.Enumerable;
-
 namespace jsc.commons.config {
 
    internal class ConfigPropertyInterceptor : IInterceptor {

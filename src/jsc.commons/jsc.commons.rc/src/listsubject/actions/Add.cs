@@ -33,7 +33,7 @@ namespace jsc.commons.rc.listsubject.actions {
          return !subject.Contains( Target );
       }
 
-      public string Description => _description??( _description = $"add {Target}" );
+      public string Description => _description ??= $"add {Target}";
 
       public bool IsInteractive { get; } = false;
 

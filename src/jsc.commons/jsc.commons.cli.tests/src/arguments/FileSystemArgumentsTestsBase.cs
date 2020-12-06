@@ -13,6 +13,18 @@ namespace jsc.commons.cli.tests.arguments {
    [TestFixture]
    public class FileSystemArgumentsTestsBase {
 
+      [SetUp]
+      public void SetUp( ) {
+         CleanUp( );
+         __tempBaseDirDI.Create( );
+         __tempBaseDirDI.Refresh( );
+      }
+
+      [TearDown]
+      public void TearDown( ) {
+         CleanUp( );
+      }
+
       private const string __tempBaseDir = "01aa4596-5919-461b-ac73-ddd77b984c41";
       protected static readonly DirectoryInfo __tempBaseDirDI;
 
@@ -29,17 +41,8 @@ namespace jsc.commons.cli.tests.arguments {
          __tempBaseDirDI.Refresh( );
       }
 
-      [SetUp]
-      public void SetUp( ) {
-         CleanUp( );
-         __tempBaseDirDI.Create( );
-         __tempBaseDirDI.Refresh( );
-      }
-
-      [TearDown]
-      public void TearDown( ) => CleanUp( );
-
-      [Test, Order(int.MinValue)]
+      [Test]
+      [Order( int.MinValue )]
       public void TestSetupWorks( ) {
          Assert.IsTrue( __tempBaseDirDI.Exists );
       }

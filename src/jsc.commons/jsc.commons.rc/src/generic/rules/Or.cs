@@ -48,7 +48,7 @@ namespace jsc.commons.rc.generic.rules {
       public IRule<T> TargetB { get; }
 
       public override string Description =>
-            _description??( _description = $"({TargetA.Description} or {TargetB.Description})" );
+            _description ??= $"({TargetA.Description} or {TargetB.Description})";
 
       private static IRule<T> Chain( IRule<T>[] targets ) {
          int l = targets.Length;

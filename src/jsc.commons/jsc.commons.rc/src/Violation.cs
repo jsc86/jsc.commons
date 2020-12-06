@@ -31,7 +31,7 @@ namespace jsc.commons.rc {
 
       public IEnumerable<ISolution<T>> Solutions { get; }
 
-      public string Description => _description??( _description = $"violated: {Rule.Description}" );
+      public string Description => _description ??= $"violated: {Rule.Description}";
 
       public bool HasSolution { get; }
 

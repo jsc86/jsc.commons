@@ -9,10 +9,6 @@ using jsc.commons.cli.ispec.constraints;
 using jsc.commons.cli.ispec.constraints.attrib;
 using jsc.commons.cli.ispec.constraints.interfaces;
 
-// ReSharper disable MemberCanBePrivate.Global
-// ReSharper disable ClassNeverInstantiated.Global
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
-
 namespace jsc.commons.cli.arguments {
 
    public partial class IntArg {

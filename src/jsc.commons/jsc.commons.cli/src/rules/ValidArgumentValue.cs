@@ -27,7 +27,7 @@ namespace jsc.commons.cli.rules {
       public IArgument<T> Target { get; }
 
       public override string Description =>
-            _description??( _description = $"valid {Target.ValueType.Name} value for {Target}" );
+            _description ??= $"valid {Target.ValueType.Name} value for {Target}";
 
       public override IViolation<IParserResult> Check( IParserResult subject, IBehaviors context = null ) {
          if( !subject.IsSet( Target ) )

@@ -39,9 +39,9 @@ namespace jsc.commons.cli.ispec {
       }
 
       public IInterfaceSpecBoilerPlateHelperConfig Config =>
-            _config??( _config = commons.config.Config.New<IInterfaceSpecBoilerPlateHelperConfig>( ) );
+            _config ??= commons.config.Config.New<IInterfaceSpecBoilerPlateHelperConfig>( );
 
-      public ICliConfig CliConfig => _cliConfig??( _cliConfig = commons.config.Config.New<ICliConfig>( ) );
+      public ICliConfig CliConfig => _cliConfig ??= commons.config.Config.New<ICliConfig>( );
 
       public ICliSpecDeriverConfig CliSpecDeriverConfig {
          get {
@@ -55,15 +55,15 @@ namespace jsc.commons.cli.ispec {
       }
 
       public ICliSpecification CliSpecification =>
-            _cliSpecification??( _cliSpecification = CliSpecDeriver.DeriveSpecification<T>( ) );
+            _cliSpecification ??= CliSpecDeriver.DeriveSpecification<T>( );
 
       public CliSpecDeriver CliSpecDeriver =>
-            _cliSpecDeriver??( _cliSpecDeriver = new CliSpecDeriver( CliSpecDeriverConfig ) );
+            _cliSpecDeriver ??= new CliSpecDeriver( CliSpecDeriverConfig );
 
-      public ConflictResolver ConflictResolver => _conflictResolver
-            ??( _conflictResolver = new ConflictResolver( CliConfig, CliSpecification, Config.UserPrompt ) );
+      public ConflictResolver ConflictResolver =>
+            _conflictResolver ??= new ConflictResolver( CliConfig, CliSpecification, Config.UserPrompt );
 
-      public IParserResult ParserResult => _parserResult??( _parserResult = CommandLineParser.Parse( _args ) );
+      public IParserResult ParserResult => _parserResult ??= CommandLineParser.Parse( _args );
 
       public IBehaviors ConflictResolverContext {
          get {
@@ -89,10 +89,10 @@ namespace jsc.commons.cli.ispec {
       }
 
       public ICommandLineParser CommandLineParser =>
-            _commandLineParser??( _commandLineParser = new CommandLineParser( CliSpecification ) );
+            _commandLineParser ??= new CommandLineParser( CliSpecification );
 
-      public ParserResultMapper ParserResultMapper => _parserResultMapper
-            ??( _parserResultMapper = new ParserResultMapper( CliSpecDeriverConfig, CliSpecification ) );
+      public ParserResultMapper ParserResultMapper =>
+            _parserResultMapper ??= new ParserResultMapper( CliSpecDeriverConfig, CliSpecification );
 
       public T CliConfigObject {
          get {

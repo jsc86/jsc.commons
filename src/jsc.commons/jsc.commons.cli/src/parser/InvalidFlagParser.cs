@@ -5,7 +5,6 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
-using System.Collections.Generic;
 
 using jsc.commons.cli.config;
 using jsc.commons.cli.interfaces;
@@ -22,7 +21,6 @@ namespace jsc.commons.cli.parser {
 
       public InvalidFlagParser( ICliSpecification spec ) {
          ICliConfig conf = spec.Config;
-         new List<IItem>( );
          _flagPrefix = spec.Config.FlagPrefix( );
          _cmpChars = conf.CaseSensitiveFlags
                ? (Func<char, char, bool>)( ( c1, c2 ) => c1 == c2 )

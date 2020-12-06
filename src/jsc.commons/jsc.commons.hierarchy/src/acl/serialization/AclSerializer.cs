@@ -13,7 +13,7 @@ using jsc.commons.hierarchy.config;
 
 namespace jsc.commons.hierarchy.acl.serialization {
 
-   public class AclSerializer {
+   public static class AclSerializer {
 
       public static string Serialize( IAccessControlList acl ) {
          StringBuilder sb = new StringBuilder( );

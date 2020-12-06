@@ -92,11 +92,11 @@ namespace jsc.commons.cli {
 
       internal void Set( IItem item ) {
          switch( item ) {
-            case IOption _:
-               Set( (IOption)item );
+            case IOption option:
+               Set( option );
                break;
-            case IFlag _:
-               Set( (IFlag)item );
+            case IFlag flag:
+               Set( flag );
                break;
             default:
                throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );
@@ -113,11 +113,11 @@ namespace jsc.commons.cli {
 
       internal void Unset( IItem item ) {
          switch( item ) {
-            case IOption _:
-               Unset( (IOption)item );
+            case IOption option:
+               Unset( option );
                break;
-            case IFlag _:
-               Unset( (IFlag)item );
+            case IFlag flag:
+               Unset( flag );
                break;
             default:
                throw new Exception( $"{nameof( item )} must either be {nameof( IOption )} or {nameof( IFlag )}" );

@@ -23,7 +23,7 @@ namespace jsc.commons.rc {
       }
 
       public IViolation<T> Check( T subject, IBehaviors context = null ) {
-         context = context??EmptyBehaviors.Instance;
+         context ??= EmptyBehaviors.Instance;
          foreach( IRule<T> rule in _rules ) {
             IViolation<T> violation = rule.Check( subject, context );
             if( violation != NonViolation<T>.Instance )
@@ -34,7 +34,7 @@ namespace jsc.commons.rc {
       }
 
       public bool Check( T subject, out IEnumerable<IViolation<T>> violations, IBehaviors context = null ) {
-         context = context??EmptyBehaviors.Instance;
+         context ??= EmptyBehaviors.Instance;
          violations = new List<IViolation<T>>( );
          foreach( IRule<T> rule in _rules ) {
             IViolation<T> violation = rule.Check( subject, context );

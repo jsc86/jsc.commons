@@ -110,11 +110,7 @@ namespace jsc.commons.cli.ispec {
          IFlag flag = _spec.Flags.FirstOrDefault( f => f.Name.Equals( fa.Name ) );
          if( flag == null )
             throw new Exception(
-                  string.Format(
-                        "property {0} has no corresponding {1} with name {2}",
-                        pi.Name,
-                        nameof( IFlag ),
-                        fa.Name ) );
+                  $"property {pi.Name} has no corresponding {nameof( IFlag )} with name {fa.Name}" );
 
          if( pi.PropertyType.IsAssignableFrom( typeof( bool ) ) ) {
             value = _pr.IsSet( flag );
@@ -122,10 +118,7 @@ namespace jsc.commons.cli.ispec {
          }
 
          throw new Exception(
-               string.Format(
-                     "flag property {0} should be assignable from bool but is of type {1}",
-                     pi.Name,
-                     pi.PropertyType ) );
+               $"flag property {pi.Name} should be assignable from bool but is of type {pi.PropertyType}" );
       }
 
       private bool ReadArgument( PropertyInfo pi, Type type, out object value ) {
@@ -202,11 +195,7 @@ namespace jsc.commons.cli.ispec {
          IOption opt = _spec.Options.FirstOrDefault( o => o.Name.Equals( optUnName ) );
          if( opt == null )
             throw new Exception(
-                  string.Format(
-                        "property {0} has no corresponding {1} with unified name {2}",
-                        name,
-                        nameof( IOption ),
-                        optUnName ) );
+                  $"property {name} has no corresponding {nameof( IOption )} with unified name {optUnName}" );
          return opt;
       }
 

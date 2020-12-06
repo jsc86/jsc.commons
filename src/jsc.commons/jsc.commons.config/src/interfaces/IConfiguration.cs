@@ -36,7 +36,7 @@ namespace jsc.commons.config.interfaces {
       object this[ string key, Type type = null ] { get; set; }
 
       /// <summary>
-      ///    The set of keys for all configuraiton properties contained by this Configuraiton.
+      ///    The set of keys for all configuration properties contained by this Configuration.
       /// </summary>
       IEnumerable<string> Keys { get; }
 

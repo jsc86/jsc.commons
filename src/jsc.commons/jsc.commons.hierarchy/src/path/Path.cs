@@ -62,7 +62,7 @@ namespace jsc.commons.hierarchy.path {
 
          _elements = new string[basePath._elements.Length+1];
          Array.Copy( basePath._elements, _elements, basePath._elements.Length );
-         _elements[ _elements.Length-1 ] = resourceName;
+         _elements[ ^1 ] = resourceName;
 
          Absolute = basePath.Absolute;
          Elements = new EnumerableWrapper<string>( _elements );

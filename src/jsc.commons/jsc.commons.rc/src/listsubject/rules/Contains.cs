@@ -43,7 +43,7 @@ namespace jsc.commons.rc.listsubject.rules {
 
       public T Target { get; }
 
-      public override string Description => _description??( _description = $"contains {Target}" );
+      public override string Description => _description ??= $"contains {Target}";
 
       public override IViolation<IList<T>> Check( IList<T> subject, IBehaviors context ) {
          if( subject.Contains( Target ) )

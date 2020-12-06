@@ -34,8 +34,7 @@ namespace jsc.commons.config.backend {
                   new Dictionary<string, Tuple<object, Type>>( );
             foreach( string key in config.Keys ) {
                Tuple<object, Type> configProp = config.GetConfigProperty( key );
-               object value;
-               if( Read( key, configProp.Item2, out value ) )
+               if( Read( key, configProp.Item2, out object value ) )
                   read[ key ] = new Tuple<object, Type>( value, configProp.Item2 );
             }
 

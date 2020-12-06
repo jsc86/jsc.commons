@@ -32,6 +32,7 @@ namespace jsc.commons.rc.interfaces {
       ///    If the Rule is satisfied a NonViolation is returned.
       /// </summary>
       /// <param name="subject"></param>
+      /// <param name="context"></param>
       /// <returns></returns>
       IViolation<T> Check( T subject, IBehaviors context );
 

@@ -34,12 +34,12 @@ namespace jsc.commons.config {
             if( configProp.Item2 != null
                   &&type != null
                   &&configProp.Item2 != type )
-               throw new ApplicationException( $"config property type missmatch: {type}/{configProp.Item2}" );
+               throw new ApplicationException( $"config property type mismatch: {type}/{configProp.Item2}" );
 
             return configProp.Item1;
          }
          set {
-            type = type??value?.GetType( );
+            type ??= value?.GetType( );
             Tuple<object, Type> configProp = GetConfigProperty( key );
             if( configProp == null ) {
                if( type == null )
@@ -59,8 +59,7 @@ namespace jsc.commons.config {
 
 
       public Tuple<object, Type> GetConfigProperty( string key ) {
-         Tuple<object, Type> configProp;
-         return Values.TryGetValue( key, out configProp )? configProp : null;
+         return Values.TryGetValue( key, out Tuple<object, Type> configProp )? configProp : null;
       }
 
       public IEnumerable<string> Keys => Values.Keys;

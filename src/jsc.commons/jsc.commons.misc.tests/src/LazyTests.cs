@@ -42,7 +42,7 @@ namespace jsc.commons.misc.tests {
 
    internal class TestClass {
 
-      public static List<TestClass> Instances = new List<TestClass>( );
+      public static readonly List<TestClass> Instances = new List<TestClass>( );
 
       public TestClass( ) {
          Instances.Add( this );

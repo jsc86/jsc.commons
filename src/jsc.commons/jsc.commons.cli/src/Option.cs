@@ -46,7 +46,7 @@ namespace jsc.commons.cli {
       public UnifiedName Name { get; }
 
       public string GetDeUnifiedName( ICliConfig conf ) {
-         return _deUnifiedName = _deUnifiedName??conf.OptionNamingStyle.ToString( Name );
+         return _deUnifiedName ??= conf.OptionNamingStyle.ToString( Name );
       }
 
       public char? FlagAlias { get; }

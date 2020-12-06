@@ -26,10 +26,6 @@ namespace jsc.commons.hierarchy {
          _timeout = timeout;
       }
 
-      ~Hierarchy( ) {
-         Dispose( );
-      }
-
       public override void Dispose( ) {
          if( _disposed )
             return;
@@ -77,6 +73,10 @@ namespace jsc.commons.hierarchy {
          Task<IEnumerable<string>> getTask = GetChildrenResourceNamesAsync( path );
          getTask.Wait( _timeout );
          return getTask.Result;
+      }
+
+      ~Hierarchy( ) {
+         Dispose( );
       }
 
    }

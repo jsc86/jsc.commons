@@ -25,7 +25,7 @@ namespace jsc.commons.rc {
       public IEnumerable<IAction<T>> Actions { get; }
 
       public string Description =>
-            _description??( _description = string.Join( ", ", Actions.Select( a => a.Description ) ) );
+            _description ??= string.Join( ", ", Actions.Select( a => a.Description ) );
 
    }
 

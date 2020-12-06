@@ -17,7 +17,7 @@ namespace jsc.commons.cli.actions {
          // nop
       }
 
-      public override string Description => _description??( _description = $"create file/directory of {Target.Name}" );
+      public override string Description => _description ??= $"create file/directory of {Target.Name}";
 
       public override bool ChangesSubject( IParserResult subject ) {
          return true;

@@ -55,7 +55,7 @@ namespace jsc.commons.cli.rules {
 
       public T MaxVal { get; }
 
-      public override string Description => _description??( _description = $"{Target} <= {MaxVal}" );
+      public override string Description => _description ??= $"{Target} <= {MaxVal}";
 
       public override IViolation<IParserResult> Check( IParserResult subject, IBehaviors context = null ) {
          try {

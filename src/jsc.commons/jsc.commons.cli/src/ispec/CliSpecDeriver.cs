@@ -203,7 +203,7 @@ namespace jsc.commons.cli.ispec {
                continue;
             if( argAttrib.Dynamic )
                continue;
-            args = args??new List<IArgument>( );
+            args ??= new List<IArgument>( );
             AddArgument( args, argAttrib, pi, parent );
          }
 

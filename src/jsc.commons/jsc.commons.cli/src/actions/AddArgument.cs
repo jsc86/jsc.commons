@@ -36,7 +36,7 @@ namespace jsc.commons.cli.actions {
          return !subject.IsSet( Target );
       }
 
-      public string Description => _description??( _description = $"add argument {Target.Name}" );
+      public string Description => _description ??= $"add argument {Target.Name}";
 
       public bool IsInteractive { get; } = false;
 

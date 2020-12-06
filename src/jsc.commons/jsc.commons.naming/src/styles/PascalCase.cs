@@ -62,7 +62,7 @@ namespace jsc.commons.naming.styles {
             cPrev = c;
          }
 
-         parts.Add( char.IsUpper( sb[ sb.Length-1 ] )? sb.ToString( ) : sb.ToString( ).ToLower( ) );
+         parts.Add( char.IsUpper( sb[ ^1 ] )? sb.ToString( ) : sb.ToString( ).ToLower( ) );
 
          return new UnifiedName( parts );
       }

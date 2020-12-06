@@ -141,16 +141,12 @@ namespace jsc.commons.hierarchy.acl {
                throw new Exception( $"malformed target '{targetString}'" );
             }
 
-         switch( targetPrefix ) {
-            case "USER":
-               return new AcrUser( action, target, privileges );
-            case "GROUP":
-               return new AcrGroup( action, target, privileges );
-            case "EVERYONE":
-               return new AcrEveryone( action, privileges );
-            default:
-               throw new Exception( ); // make the compiler happy, should be dead code
-         }
+         return targetPrefix switch {
+               "USER" => new AcrUser( action, target, privileges ),
+               "GROUP" => new AcrGroup( action, target, privileges ),
+               "EVERYONE" => new AcrEveryone( action, privileges ),
+               _ => throw new Exception( ) // make the compiler happy, should be dead code
+         };
       }
 
    }

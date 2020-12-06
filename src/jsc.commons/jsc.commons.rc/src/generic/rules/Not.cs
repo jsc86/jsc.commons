@@ -21,7 +21,7 @@ namespace jsc.commons.rc.generic.rules {
 
       public IRule<T> Target { get; }
 
-      public override string Description => _description??( _description = $"not {Target.Description}" );
+      public override string Description => _description ??= $"not {Target.Description}";
 
       public override IViolation<T> Check( T subject, IBehaviors context = null ) {
          IViolation<T> violation = Target.Check( subject, context );

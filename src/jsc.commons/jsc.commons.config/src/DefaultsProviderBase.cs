@@ -29,11 +29,10 @@ namespace jsc.commons.config {
       }
 
       public Func<object> GetDefault( string propName, bool throwIfNull = false ) {
-         Func<object> value;
-         if( !TryGetDefault( propName, out value )&&throwIfNull )
+         if( !TryGetDefault( propName, out Func<object> func )&&throwIfNull )
             throw new ApplicationException( $"no default for '{propName}'" );
 
-         return value;
+         return func;
       }
 
    }
