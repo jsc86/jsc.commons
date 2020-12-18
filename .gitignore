@@ -32,4 +32,4 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-jsc.commons.playground/src/
+jsc.commons.playground/src/*

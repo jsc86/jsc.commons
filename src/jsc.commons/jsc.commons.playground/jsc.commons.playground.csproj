@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>8</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\jsc.commons.async\jsc.commons.async.csproj" />
+      <ProjectReference Include="..\jsc.commons.behaving\jsc.commons.behaving.csproj" />
+      <ProjectReference Include="..\jsc.commons.cli\jsc.commons.cli.csproj" />
+      <ProjectReference Include="..\jsc.commons.config\jsc.commons.config.csproj" />
+      <ProjectReference Include="..\jsc.commons.hierarchy.localfs\jsc.commons.hierarchy.localfs.csproj" />
+      <ProjectReference Include="..\jsc.commons.hierarchy\jsc.commons.hierarchy.csproj" />
+      <ProjectReference Include="..\jsc.commons.misc\jsc.commons.misc.csproj" />
+      <ProjectReference Include="..\jsc.commons.naming\jsc.commons.naming.csproj" />
+      <ProjectReference Include="..\jsc.commons.rc\jsc.commons.rc.csproj" />
+      <ProjectReference Include="..\jsc.commons.unidto\jsc.commons.unidto.csproj" />
+    </ItemGroup>
+
+</Project>
