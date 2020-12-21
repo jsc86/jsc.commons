@@ -18,11 +18,9 @@ namespace jsc.commons.hierarchy.resources.classes {
 
    public abstract class ResourceClass : IResourceClass {
 
-      public ResourceClass( string name, Guid id, IEnumerable<IPrivilegeClass> applicablePrivileges ) {
+      public ResourceClass( string name, ulong id, IEnumerable<IPrivilegeClass> applicablePrivileges ) {
          if( name == null )
             throw new ArgumentNullException( nameof( name ), $"{nameof( name )} must not be null" );
-         if( id == null )
-            throw new ArgumentNullException( nameof( id ), $"{nameof( id )} must not be null" );
 
          Name = name;
          Id = id;
@@ -34,7 +32,7 @@ namespace jsc.commons.hierarchy.resources.classes {
       }
 
       public string Name { get; }
-      public Guid Id { get; }
+      public ulong Id { get; }
       public IEnumerable<IPrivilegeClass> ApplicablePrivileges { get; }
       public abstract IResource CreateResource( IPath path, string name, IMeta meta = null );
 

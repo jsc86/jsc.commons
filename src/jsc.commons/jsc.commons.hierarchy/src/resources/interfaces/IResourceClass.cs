@@ -17,7 +17,7 @@ namespace jsc.commons.hierarchy.resources.interfaces {
 
       string Name { get; }
 
-      Guid Id { get; }
+      ulong Id { get; }
 
       IEnumerable<IPrivilegeClass> ApplicablePrivileges { get; }
 

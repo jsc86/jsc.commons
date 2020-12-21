@@ -29,7 +29,7 @@ namespace jsc.commons.hierarchy.resources.classes {
 
       private ReferenceResourceClass( ) : base(
             "Reference",
-            new Guid( "00000000-0000-0000-0000-000000000003" ),
+            3,
             __applicablePrivileges ) { }
 
       public static ReferenceResourceClass Instance { get; } = new ReferenceResourceClass( );

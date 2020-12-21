@@ -29,7 +29,7 @@ namespace jsc.commons.hierarchy.resources.classes {
 
       private FileResourceClass( ) : base(
             "File",
-            new Guid( "00000000-0000-0000-0000-000000000002" ),
+            2,
             __applicablePrivileges ) { }
 
       public static FileResourceClass Instance { get; } = new FileResourceClass( );

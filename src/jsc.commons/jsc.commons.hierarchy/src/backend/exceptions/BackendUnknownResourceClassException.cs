@@ -12,21 +12,21 @@ namespace jsc.commons.hierarchy.backend.exceptions {
 
    public class BackendUnknownResourceClassException : BackendExceptionBase {
 
-      public BackendUnknownResourceClassException( IHierarchyBackend backend, Guid resourceClassId, string message ) :
+      public BackendUnknownResourceClassException( IHierarchyBackend backend, ulong resourceClassId, string message ) :
             base( backend, message ) {
          ResourceClassId = resourceClassId;
       }
 
       public BackendUnknownResourceClassException(
             IHierarchyBackend backend,
-            Guid resourceClassId,
+            ulong resourceClassId,
             string message,
             Exception innerException )
             : base( backend, message, innerException ) {
          ResourceClassId = resourceClassId;
       }
 
-      public Guid ResourceClassId { get; }
+      public ulong ResourceClassId { get; }
 
    }
 

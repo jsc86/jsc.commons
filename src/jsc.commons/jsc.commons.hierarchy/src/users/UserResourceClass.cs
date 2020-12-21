@@ -30,7 +30,7 @@ namespace jsc.commons.hierarchy.users {
 
       private UserResourceClass( ) : base(
             "User",
-            new Guid( "00000000-0000-0000-0000-000000000012" ),
+            12,
             __applicablePrivileges ) { }
 
       public static UserResourceClass Instance { get; } = new UserResourceClass( );

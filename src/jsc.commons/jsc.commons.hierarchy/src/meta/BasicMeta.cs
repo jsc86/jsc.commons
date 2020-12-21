@@ -12,7 +12,7 @@ namespace jsc.commons.hierarchy.meta {
 
    public class BasicMeta : IBehavior {
 
-      public Guid ResourceClass { get; set; }
+      public ulong ResourceClass { get; set; }
 
    }
 

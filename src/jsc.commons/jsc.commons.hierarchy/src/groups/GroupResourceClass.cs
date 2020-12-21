@@ -31,7 +31,7 @@ namespace jsc.commons.hierarchy.groups {
 
       private GroupResourceClass( ) : base(
             "Group",
-            new Guid( "00000000-0000-0000-0000-000000000011" ),
+            11,
             __applicablePrivileges ) { }
 
       public static GroupResourceClass Instance { get; } = new GroupResourceClass( );
