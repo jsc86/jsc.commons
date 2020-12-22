@@ -1,3 +1,9 @@
+// Licensed under the MIT license.
+// See LICENSE file in the project root directory for full information.
+// Copyright (c) 2020 Jacob Schlesinger
+// File authors (in chronological order):
+//  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
+
 using System;
 using System.IO;
 
@@ -30,8 +36,10 @@ namespace jsc.commons.hierarchy.localfs.config {
                         ( ) => typeof( LocalFsBackend ) ),
                   new Tuple<string, Func<object>>(
                         nameof( IBackendConfiguration.BackendFactory ),
-                        ( ) => (Func<IHierarchyConfiguration, IHierarchyBackend>)
-                              ( config => new LocalFsBackend( config ) )
+                        ( ) => (Func<IHierarchyConfiguration, IBackendConfiguration, IHierarchyBackend>)
+                              ( ( config, backendConfig ) => new LocalFsBackend(
+                                    config,
+                                    (ILocalFsBackendConfiguration)backendConfig ) )
                   ),
                   new Tuple<string, Func<object>>(
                         nameof( ILocalFsBackendConfiguration.BasePath ),

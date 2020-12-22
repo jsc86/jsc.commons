@@ -1,3 +1,9 @@
+// Licensed under the MIT license.
+// See LICENSE file in the project root directory for full information.
+// Copyright (c) 2020 Jacob Schlesinger
+// File authors (in chronological order):
+//  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,11 +38,14 @@ namespace jsc.commons.hierarchy.localfs {
       private readonly IHierarchyConfiguration _hierarchyConfig;
       private IPath _basePath;
 
-      public LocalFsBackend( IHierarchyConfiguration hierarchyConfig ) {
+      public LocalFsBackend(
+            IHierarchyConfiguration hierarchyConfig,
+            ILocalFsBackendConfiguration config ) {
          hierarchyConfig.MustNotBeNull( nameof( hierarchyConfig ) );
+         config.MustNotBeNull( nameof( config ) );
 
          _hierarchyConfig = hierarchyConfig;
-         _config = (ILocalFsBackendConfiguration)_hierarchyConfig.BackendConfiguration;
+         _config = config;
 
          if( !_config.BasePath.Exists ) {
             if( _config.CreateBasePath )

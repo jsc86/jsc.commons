@@ -20,9 +20,11 @@ namespace jsc.commons.hierarchy {
       private readonly TimeSpan _timeout;
       private bool _disposed = true;
 
-      public Hierarchy( IHierarchyConfiguration conf = null ) : this( conf, TimeSpan.FromSeconds( 30 ) ) { }
+      public Hierarchy( IHierarchyConfiguration configuration = null ) : this(
+            configuration,
+            TimeSpan.FromSeconds( 30 ) ) { }
 
-      public Hierarchy( IHierarchyConfiguration conf, TimeSpan timeout ) : base( conf ) {
+      public Hierarchy( IHierarchyConfiguration configuration, TimeSpan timeout ) : base( configuration ) {
          _timeout = timeout;
       }
 

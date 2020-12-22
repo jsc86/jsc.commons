@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Timers;
 
 using jsc.commons.async;
-using jsc.commons.config;
 using jsc.commons.hierarchy.backend.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
+using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy {
 
@@ -29,9 +29,12 @@ namespace jsc.commons.hierarchy {
       private volatile bool _disposed;
       private volatile bool _disposing;
 
-      public HierarchyAsync( IHierarchyConfiguration conf ) {
-         Configuration = conf??Config.New<IHierarchyConfiguration>( );
-         _backend = Configuration.BackendConfiguration.BackendFactory( Configuration );
+      public HierarchyAsync( IHierarchyConfiguration configuration ) {
+         configuration.MustNotBeNull( nameof( configuration ) );
+
+         _backend = configuration.BackendConfiguration.BackendFactory(
+               configuration,
+               configuration.BackendConfiguration );
          _resources = new Dictionary<IPath, WeakReference<IResource>>( );
          _ets = new ExecutionTokenSpool( );
          _cleanupTimer = new Timer( TimeSpan.FromSeconds( 10 ).TotalMilliseconds );

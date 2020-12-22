@@ -4,8 +4,6 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
-using System;
-
 using jsc.commons.behaving.interfaces;
 
 namespace jsc.commons.hierarchy.meta {

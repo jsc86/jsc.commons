@@ -19,7 +19,7 @@ namespace jsc.commons.hierarchy.config {
       Type BackendType { get; set; }
 
       [ConfigValue]
-      Func<IHierarchyConfiguration, IHierarchyBackend> BackendFactory { get; set; }
+      Func<IHierarchyConfiguration, IBackendConfiguration, IHierarchyBackend> BackendFactory { get; set; }
 
    }
 

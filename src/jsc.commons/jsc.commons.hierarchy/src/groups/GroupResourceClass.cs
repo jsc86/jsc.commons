@@ -4,7 +4,6 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
