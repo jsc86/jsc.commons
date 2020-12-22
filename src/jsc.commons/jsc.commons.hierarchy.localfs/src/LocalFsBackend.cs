@@ -27,6 +27,7 @@ using jsc.commons.misc;
 
 using YamlDotNet.Serialization;
 
+using File = System.IO.File;
 using Path = jsc.commons.hierarchy.path.Path;
 
 namespace jsc.commons.hierarchy.localfs {
@@ -143,6 +144,37 @@ namespace jsc.commons.hierarchy.localfs {
          } catch( Exception exc ) {
             throw new BackendWriteException( this, resource, $"failed to write resource {resource}", exc );
          }
+      }
+
+      public Task Delete( IResource resource ) {
+         resource.MustNotBeNull( nameof( resource ) );
+
+         try {
+            if( resource is FolderResourceBase )
+               DeleteFolder( resource );
+            else
+               DeleteFile( resource );
+
+            return Task.CompletedTask;
+         } catch( BackendExceptionBase ) {
+            throw;
+         } catch( Exception exc ) {
+            throw new BackendDeleteException( this, resource, $"failed to delete resource {resource}", exc );
+         }
+      }
+
+      private void DeleteFile( IResource resource ) {
+         string filePath = BasePath.Append( resource.Path ).ToString( );
+         string metaPath = $"{filePath}{_config.MetaSuffix}";
+
+         File.Delete( metaPath );
+         File.Delete( filePath );
+      }
+
+      private void DeleteFolder( IResource resource ) {
+         string folderPath = BasePath.Append( resource.Path ).ToString( );
+
+         Directory.Delete( folderPath, true );
       }
 
       private IMeta GetMeta( FileInfo fiMeta ) {

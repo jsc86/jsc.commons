@@ -21,6 +21,8 @@ namespace jsc.commons.hierarchy.backend.interfaces {
 
       Task Set( IResource resource );
 
+      Task Delete( IResource resource );
+
    }
 
 }

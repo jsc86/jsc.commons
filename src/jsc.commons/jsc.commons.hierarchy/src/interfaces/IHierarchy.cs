@@ -25,6 +25,8 @@ namespace jsc.commons.hierarchy.interfaces {
 
       void Set( IResource resource );
 
+      void Delete( IResource resource );
+
       IEnumerable<string> GetChildrenResourceNames( IPath path );
 
    }
@@ -36,6 +38,8 @@ namespace jsc.commons.hierarchy.interfaces {
       Task<T> GetAsync<T, T2>( IPath path ) where T : IResource<T2> where T2 : IResourceClass;
 
       Task SetAsync( IResource resource );
+
+      Task DeleteAsync( IResource resource );
 
       Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path );
 

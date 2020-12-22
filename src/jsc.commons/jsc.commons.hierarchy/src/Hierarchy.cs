@@ -71,6 +71,11 @@ namespace jsc.commons.hierarchy {
          setTask.Wait( _timeout );
       }
 
+      public void Delete( IResource resource ) {
+         Task deleteTask = DeleteAsync( resource );
+         deleteTask.Wait( _timeout );
+      }
+
       public IEnumerable<string> GetChildrenResourceNames( IPath path ) {
          Task<IEnumerable<string>> getTask = GetChildrenResourceNamesAsync( path );
          getTask.Wait( _timeout );

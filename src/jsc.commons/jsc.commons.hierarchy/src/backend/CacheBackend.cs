@@ -17,6 +17,8 @@ using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.backend {
 
+   // TODO: add locking for cache operations
+
    public class CacheBackend : IHierarchyBackend {
 
       private readonly IHierarchyBackend _backend;
@@ -85,6 +87,37 @@ namespace jsc.commons.hierarchy.backend {
 
          _cache.Set( resource.Path.ToString( ), resource, _cacheItemPolicy );
          await _backend.Set( resource );
+      }
+
+      public async Task Delete( IResource resource ) {
+         resource.MustNotBeNull( nameof( resource ) );
+         if( _disposed )
+            throw new ObjectDisposedException( nameof( CacheBackend ) );
+
+         _cache.Remove( resource.Path.ToString( ) );
+
+         List<string> toBeRemoved = new List<string>( );
+         foreach( KeyValuePair<string, object> kvp in _cache )
+            if( IsSubPathOf( resource.Path, ( (IResource)kvp.Value ).Path ) )
+               toBeRemoved.Add( kvp.Key );
+
+         foreach( string key in toBeRemoved )
+            _cache.Remove( key );
+
+         await _backend.Delete( resource );
+      }
+
+      private static bool IsSubPathOf( IPath sub, IPath path ) {
+         IEnumerator<string> pathEnumerator = path.Elements.GetEnumerator( );
+         foreach( string subElement in sub.Elements ) {
+            if( !pathEnumerator.MoveNext( ) )
+               return false;
+
+            if( subElement != pathEnumerator.Current )
+               return false;
+         }
+
+         return true;
       }
 
    }

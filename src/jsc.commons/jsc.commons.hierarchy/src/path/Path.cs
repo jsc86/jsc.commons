@@ -27,6 +27,7 @@ namespace jsc.commons.hierarchy.path {
       private Path( string[] elements, bool absolute ) {
          _elements = elements;
          Absolute = absolute;
+         Elements = new EnumerableWrapper<string>( _elements );
       }
 
       internal Path( IPath path ) {
@@ -35,11 +36,13 @@ namespace jsc.commons.hierarchy.path {
 
          _elements = path.Elements.ToArray( );
          Absolute = path.Absolute;
+         Elements = new EnumerableWrapper<string>( _elements );
       }
 
       public Path( bool absolute ) {
          _elements = new string[0];
          Absolute = absolute;
+         Elements = new EnumerableWrapper<string>( _elements );
       }
 
       public Path( string resourceName, bool absolute = true ) {
@@ -50,6 +53,7 @@ namespace jsc.commons.hierarchy.path {
 
          _elements = new[] {resourceName};
          Absolute = absolute;
+         Elements = new EnumerableWrapper<string>( _elements );
       }
 
       public Path( Path basePath, string resourceName ) {
