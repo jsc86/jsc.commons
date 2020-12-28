@@ -6,14 +6,14 @@
 
 using jsc.commons.behaving.interfaces;
 
-namespace jsc.commons.hierarchy.meta {
+namespace jsc.commons.hierarchy.resources {
 
-   public class BasicMeta : IBehavior {
+   public class ReferenceMeta : IBehavior {
 
-      public ulong ResourceClass { get; set; }
+      public string Path { get; set; }
 
       public override string ToString( ) {
-         return $"meta: resource class id {ResourceClass}";
+         return $"meta: reference path {Path}";
       }
 
    }

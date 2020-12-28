@@ -36,6 +36,10 @@ namespace jsc.commons.hierarchy.resources.classes {
       public IEnumerable<IPrivilegeClass> ApplicablePrivileges { get; }
       public abstract IResource CreateResource( IPath path, string name, IMeta meta = null );
 
+      public override string ToString( ) {
+         return Name;
+      }
+
    }
 
 }

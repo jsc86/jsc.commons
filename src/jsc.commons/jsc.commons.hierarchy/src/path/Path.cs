@@ -5,6 +5,7 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.path {
 
-   public class Path : IPath {
+   public class Path : IPath, IComparable, IComparable<Path> {
 
       private static readonly Regex __pathSepRegex = new Regex( "/" );
 
@@ -72,6 +73,13 @@ namespace jsc.commons.hierarchy.path {
          Elements = new EnumerableWrapper<string>( _elements );
       }
 
+      public int CompareTo( Path other ) {
+         if( other == null )
+            return -1;
+
+         return CompareTo( (IPath)other );
+      }
+
       public bool Absolute { get; }
 
       public IEnumerable<string> Elements { get; }
@@ -90,6 +98,28 @@ namespace jsc.commons.hierarchy.path {
 
             return _basePath;
          }
+      }
+
+      public int CompareTo( object obj ) {
+         if( obj == null )
+            return -1;
+
+         return obj switch {
+               Path path => CompareTo( (IPath)path ),
+               IPath path => CompareTo( path ),
+               _ => -1
+         };
+      }
+
+      public int CompareTo( IPath other ) {
+         if( other == null )
+            return -1;
+
+         if( Absolute&&!other.Absolute
+               ||!Absolute&&other.Absolute )
+            return -1;
+
+         return Compare( _elements, other.Elements );
       }
 
       public Path Append( string resourceName ) {
@@ -153,6 +183,23 @@ namespace jsc.commons.hierarchy.path {
                throw new ArgumentException( $"{nameof( resourceName )} must not be empty", nameof( resourceName ) );
 
          return new Path( resourceNames, absolute );
+      }
+
+      private static int Compare( IEnumerable<string> enumerableLeft, IEnumerable<string> enumerableRight ) {
+         IEnumerator enumeratorRight = enumerableRight.GetEnumerator( );
+         foreach( string elementLeft in enumerableLeft ) {
+            if( !enumeratorRight.MoveNext( ) )
+               return 1;
+            string elementRight = (string)enumeratorRight.Current;
+            int r = string.Compare( elementLeft, elementRight, StringComparison.Ordinal );
+            if( r != 0 )
+               return r;
+         }
+
+         if( enumeratorRight.MoveNext( ) )
+            return -1;
+
+         return 0;
       }
 
    }

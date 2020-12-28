@@ -4,7 +4,6 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -35,8 +34,7 @@ namespace jsc.commons.hierarchy.resources.classes {
       public static ReferenceResourceClass Instance { get; } = new ReferenceResourceClass( );
 
       public override IResource CreateResource( IPath path, string name, IMeta meta = null ) {
-         // todo
-         throw new NotImplementedException( );
+         return new Reference( path, name, meta );
       }
 
    }

@@ -4,11 +4,12 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
 using System.Collections.Generic;
 
 namespace jsc.commons.hierarchy.path.interfaces {
 
-   public interface IPath {
+   public interface IPath : IComparable, IComparable<IPath> {
 
       bool Absolute { get; }
 

@@ -13,7 +13,7 @@ using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.interfaces {
 
-   public interface IHierarchy : IDisposable {
+   public interface IHierarchy : IHierarchyAsync {
 
       IResource Get( IPath path );
 

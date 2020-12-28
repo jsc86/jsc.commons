@@ -5,7 +5,9 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
+using System.Text;
 
+using jsc.commons.behaving;
 using jsc.commons.hierarchy.meta;
 using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path;
@@ -45,13 +47,24 @@ namespace jsc.commons.hierarchy.resources {
             Path = path.Append( name );
       }
 
-      public string Name { get; }
+      public string Name { get; protected set; }
       public IMeta Meta { get; }
       public IResourceClass ResourceClass { get; }
       public IPath Path { get; }
 
       public override string ToString( ) {
-         return Path.ToString( );
+         StringBuilder sb = new StringBuilder( );
+         sb.Append( Path );
+         sb.Append( " (" );
+         sb.Append( ResourceClass );
+         sb.Append( ")" );
+         sb.Append( Environment.NewLine );
+         foreach( object meta in Meta.Objects( ) ) {
+            sb.Append( meta );
+            sb.Append( Environment.NewLine );
+         }
+
+         return sb.ToString( );
       }
 
    }
