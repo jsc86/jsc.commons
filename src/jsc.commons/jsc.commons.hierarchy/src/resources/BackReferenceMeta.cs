@@ -52,9 +52,9 @@ namespace jsc.commons.hierarchy.resources {
             referenceResource.Meta.Set( backReferenceMeta );
          }
 
-         string path = referenceResource.Path.ToString( );
-         if( !backReferenceMeta.BackReferences.Contains( path ) )
-            backReferenceMeta.BackReferences.Add( path );
+         string backReferencePath = backReferenceResource.Path.ToString( );
+         if( !backReferenceMeta.BackReferences.Contains( backReferencePath ) )
+            backReferenceMeta.BackReferences.Add( backReferencePath );
       }
 
    }
