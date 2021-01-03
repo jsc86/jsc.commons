@@ -35,18 +35,18 @@ namespace jsc.commons.hierarchy {
          return hierarchy.Get( Path.Parse( path ).Append( resourceName ) );
       }
 
-      public static T Get<T, T2>( this IHierarchy hierarchy, IPath path, string resourceName )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static T Get<T>( this IHierarchy hierarchy, IPath path, string resourceName )
+            where T : IResource {
          return (T)hierarchy.Get( path, resourceName );
       }
 
-      public static T Get<T, T2>( this IHierarchy hierarchy, string path )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static T Get<T>( this IHierarchy hierarchy, string path )
+            where T : IResource {
          return (T)hierarchy.Get( path );
       }
 
-      public static T Get<T, T2>( this IHierarchy hierarchy, string path, string resourceName )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static T Get<T>( this IHierarchy hierarchy, string path, string resourceName )
+            where T : IResource {
          return (T)hierarchy.Get( path, resourceName );
       }
 
@@ -84,29 +84,29 @@ namespace jsc.commons.hierarchy {
          return hierarchy.TryGet( Path.Parse( path ).Append( resourceName ), out resource );
       }
 
-      public static bool TryGet<T, T2>( this IHierarchy hierarchy, IPath path, string resourceName, out T resource )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static bool TryGet<T>( this IHierarchy hierarchy, IPath path, string resourceName, out T resource )
+            where T : IResource {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
          path.MustNotBeNull( nameof( path ) );
 
-         return hierarchy.TryGet<T, T2>( path.Append( resourceName ), out resource );
+         return hierarchy.TryGet( path.Append( resourceName ), out resource );
       }
 
-      public static bool TryGet<T, T2>( this IHierarchy hierarchy, string path, out T resource )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static bool TryGet<T>( this IHierarchy hierarchy, string path, out T resource )
+            where T : IResource {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
          path.MustNotBeNull( nameof( path ) );
 
-         return hierarchy.TryGet<T, T2>( Path.Parse( path ), out resource );
+         return hierarchy.TryGet( Path.Parse( path ), out resource );
       }
 
-      public static bool TryGet<T, T2>( this IHierarchy hierarchy, string path, string resourceName, out T resource )
-            where T : IResource<T2> where T2 : IResourceClass {
+      public static bool TryGet<T>( this IHierarchy hierarchy, string path, string resourceName, out T resource )
+            where T : IResource {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
          path.MustNotBeNull( nameof( path ) );
          resourceName.MustNotBeNull( nameof( resourceName ) );
 
-         return hierarchy.TryGet<T, T2>( Path.Parse( path ).Append( resourceName ), out resource );
+         return hierarchy.TryGet( Path.Parse( path ).Append( resourceName ), out resource );
       }
 
    }

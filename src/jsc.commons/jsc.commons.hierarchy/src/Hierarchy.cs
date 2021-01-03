@@ -42,7 +42,7 @@ namespace jsc.commons.hierarchy {
          return getTask.Result;
       }
 
-      public T Get<T, T2>( IPath path ) where T : IResource<T2> where T2 : IResourceClass {
+      public T Get<T>( IPath path ) where T : IResource {
          return (T)Get( path );
       }
 
@@ -56,10 +56,10 @@ namespace jsc.commons.hierarchy {
          }
       }
 
-      public bool TryGet<T, T2>( IPath path, out T resource ) where T : IResource<T2> where T2 : IResourceClass {
+      public bool TryGet<T>( IPath path, out T resource ) where T : IResource {
          resource = default;
          try {
-            resource = Get<T, T2>( path );
+            resource = Get<T>( path );
             return true;
          } catch( Exception ) {
             return false;

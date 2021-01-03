@@ -42,7 +42,7 @@ namespace jsc.commons.hierarchy {
       }
 
 
-      public async Task<T> GetAsync<T, T2>( IPath path ) where T : IResource<T2> where T2 : IResourceClass {
+      public async Task<T> GetAsync<T>( IPath path ) where T : IResource {
          return (T)await GetAsync( path );
       }
 

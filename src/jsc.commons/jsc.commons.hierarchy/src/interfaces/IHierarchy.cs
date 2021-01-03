@@ -17,11 +17,11 @@ namespace jsc.commons.hierarchy.interfaces {
 
       IResource Get( IPath path );
 
-      T Get<T, T2>( IPath path ) where T : IResource<T2> where T2 : IResourceClass;
+      T Get<T>( IPath path ) where T : IResource;
 
       bool TryGet( IPath path, out IResource resource );
 
-      bool TryGet<T, T2>( IPath path, out T resource ) where T : IResource<T2> where T2 : IResourceClass;
+      bool TryGet<T>( IPath path, out T resource ) where T : IResource;
 
       void Set( IResource resource );
 
@@ -35,7 +35,7 @@ namespace jsc.commons.hierarchy.interfaces {
 
       Task<IResource> GetAsync( IPath path );
 
-      Task<T> GetAsync<T, T2>( IPath path ) where T : IResource<T2> where T2 : IResourceClass;
+      Task<T> GetAsync<T>( IPath path ) where T : IResource;
 
       Task SetAsync( IResource resource );
 
