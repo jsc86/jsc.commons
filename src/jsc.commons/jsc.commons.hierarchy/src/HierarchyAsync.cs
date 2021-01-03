@@ -55,6 +55,9 @@ namespace jsc.commons.hierarchy {
             throw new ArgumentNullException( nameof( resource ), $"{nameof( resource )} must not be null" );
 
          await _backend.Set( resource );
+
+         if( ResourceCreated != null )
+            await ResourceCreated( this, new ResourceCreatedEventArgs( this, resource ) );
       }
 
       public async Task DeleteAsync( IResource resource ) {
@@ -62,6 +65,9 @@ namespace jsc.commons.hierarchy {
          resource.MustNotBeNull( nameof( resource ) );
 
          await _backend.Delete( resource );
+
+         if( ResourceDeleted != null )
+            await ResourceDeleted( this, new ResourceDeletedEventArgs( this, resource ) );
       }
 
       public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path ) {
@@ -89,7 +95,14 @@ namespace jsc.commons.hierarchy {
 
             await FallBackMoveAsync( resource, targetPath );
          }
+
+         if( ResourceMoved != null )
+            await ResourceMoved( this, new ResourceMovedEventArgs( this, resource, targetPath ) );
       }
+
+      public event ResourceCreatedHandler ResourceCreated;
+      public event ResourceDeletedHandler ResourceDeleted;
+      public event ResourceMovedHandler ResourceMoved;
 
       public virtual void Dispose( ) {
          CheckDisposed( );

@@ -19,8 +19,6 @@ using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.backend {
 
-   // TODO: add locking for cache operations
-
    public class CacheBackend : IHierarchyBackend {
 
       private readonly IHierarchyBackend _backend;
