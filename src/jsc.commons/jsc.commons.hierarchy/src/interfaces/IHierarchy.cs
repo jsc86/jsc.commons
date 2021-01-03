@@ -29,6 +29,8 @@ namespace jsc.commons.hierarchy.interfaces {
 
       IEnumerable<string> GetChildrenResourceNames( IPath path );
 
+      void Move( IResource resource, IPath targetPath );
+
    }
 
    public interface IHierarchyAsync : IDisposable {
@@ -42,6 +44,8 @@ namespace jsc.commons.hierarchy.interfaces {
       Task DeleteAsync( IResource resource );
 
       Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path );
+
+      Task MoveAsync( IResource resource, IPath targetPath );
 
    }
 

@@ -11,7 +11,7 @@ using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.resources {
 
-   public abstract class FileResourceBase<T> : ResourceBase<T> where T : IResourceClass {
+   public abstract class FileResourceBase<T> : ResourceBase<T>, IFileResource<T> where T : IResourceClass {
 
       protected FileResourceBase( IPath path, string name, T resourceClass, IMeta meta = null ) :
             base( path, name, resourceClass, meta ) { }

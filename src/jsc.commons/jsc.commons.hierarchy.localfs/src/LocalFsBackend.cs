@@ -163,6 +163,11 @@ namespace jsc.commons.hierarchy.localfs {
          }
       }
 
+      public Task Move( IResource resource, IPath targetPath ) {
+         // TODO: impl
+         throw new NotImplementedException( );
+      }
+
       private void DeleteFile( IResource resource ) {
          string filePath = BasePath.Append( resource.Path ).ToString( );
          string metaPath = $"{filePath}{_config.MetaSuffix}";

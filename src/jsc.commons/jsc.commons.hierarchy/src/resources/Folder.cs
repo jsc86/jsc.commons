@@ -11,7 +11,7 @@ using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.resources {
 
-   public abstract class FolderResourceBase : ResourceBase {
+   public abstract class FolderResourceBase : ResourceBase, IFolderResource {
 
       protected FolderResourceBase(
             IPath path,
@@ -27,7 +27,7 @@ namespace jsc.commons.hierarchy.resources {
 
    }
 
-   public abstract class FolderResourceBase<T> : FolderResourceBase, IResource<T> where T : IResourceClass {
+   public abstract class FolderResourceBase<T> : FolderResourceBase, IFolderResource<T> where T : IResourceClass {
 
       protected FolderResourceBase(
             IPath path,

@@ -23,6 +23,8 @@ namespace jsc.commons.hierarchy.backend.interfaces {
 
       Task Delete( IResource resource );
 
+      Task Move( IResource resource, IPath targetPath );
+
    }
 
 }

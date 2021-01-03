@@ -30,6 +30,9 @@ namespace jsc.commons.hierarchy.config {
       [ConfigValue]
       IBackendConfiguration BackendConfiguration { get; set; }
 
+      [ConfigValue( Default = false )]
+      bool AllowUseOfMoveFallback { get; set; }
+
    }
 
    public class HierarchyConfigurationDefaultsProvider : DefaultsProviderBase {

@@ -82,6 +82,11 @@ namespace jsc.commons.hierarchy {
          return getTask.Result;
       }
 
+      public void Move( IResource resource, IPath targetPath ) {
+         Task moveTask = MoveAsync( resource, targetPath );
+         moveTask.Wait( _timeout );
+      }
+
       ~Hierarchy( ) {
          Dispose( );
       }
