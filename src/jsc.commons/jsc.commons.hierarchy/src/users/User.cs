@@ -4,9 +4,15 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System.Collections.Generic;
+
+using jsc.commons.behaving;
+using jsc.commons.hierarchy.groups;
+using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
+using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.users {
 
@@ -17,6 +23,23 @@ namespace jsc.commons.hierarchy.users {
             name,
             UserResourceClass.Instance,
             meta ) { }
+
+      public IEnumerable<IPath> GetGroupIDs( ) {
+         if( !this.TryGet( out BackReferenceMeta backReferences )
+               ||backReferences.BackReferences.Count == 0 )
+            yield break;
+
+         foreach( string pathString in backReferences.BackReferences )
+            yield return path.Path.Parse( pathString );
+      }
+
+      public IEnumerable<Group> GetGroups( IHierarchy hierarchy ) {
+         hierarchy.MustNotBeNull( nameof( hierarchy ) );
+
+         foreach( IPath groupId in GetGroupIDs( ) )
+            if( hierarchy.Get( groupId ) is Group group )
+               yield return group;
+      }
 
    }
 
