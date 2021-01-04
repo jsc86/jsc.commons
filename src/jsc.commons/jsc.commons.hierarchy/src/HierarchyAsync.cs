@@ -57,7 +57,7 @@ namespace jsc.commons.hierarchy {
          await _backend.Set( resource );
 
          if( ResourceCreated != null )
-            await ResourceCreated( this, new ResourceCreatedEventArgs( this, resource ) );
+            await ResourceCreated( this, new ResourceSetEventArgs( this, resource ) );
       }
 
       public async Task DeleteAsync( IResource resource ) {
@@ -100,7 +100,7 @@ namespace jsc.commons.hierarchy {
             await ResourceMoved( this, new ResourceMovedEventArgs( this, resource, targetPath ) );
       }
 
-      public event ResourceCreatedHandler ResourceCreated;
+      public event ResourceSetHandler ResourceCreated;
       public event ResourceDeletedHandler ResourceDeleted;
       public event ResourceMovedHandler ResourceMoved;
 

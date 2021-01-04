@@ -34,15 +34,15 @@ namespace jsc.commons.hierarchy {
 
    }
 
-   public class ResourceCreatedEventArgs : ResourceEventArgs {
+   public class ResourceSetEventArgs : ResourceEventArgs {
 
-      public ResourceCreatedEventArgs( IHierarchyAsync hierarchyAsync, IResource resource ) : base(
+      public ResourceSetEventArgs( IHierarchyAsync hierarchyAsync, IResource resource ) : base(
             hierarchyAsync,
             resource ) { }
 
    }
 
-   public delegate Task ResourceCreatedHandler( object sender, ResourceCreatedEventArgs args );
+   public delegate Task ResourceSetHandler( object sender, ResourceSetEventArgs args );
 
    public class ResourceDeletedEventArgs : ResourceEventArgs {
 
