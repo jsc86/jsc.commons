@@ -17,7 +17,6 @@ namespace jsc.commons.hierarchy {
 
    public class Hierarchy : HierarchyAsync, IHierarchy {
 
-      private readonly TimeSpan _timeout;
       private bool _disposed = true;
 
       public Hierarchy( IHierarchyConfiguration configuration = null ) : this(
@@ -25,8 +24,10 @@ namespace jsc.commons.hierarchy {
             TimeSpan.FromSeconds( 30 ) ) { }
 
       public Hierarchy( IHierarchyConfiguration configuration, TimeSpan timeout ) : base( configuration ) {
-         _timeout = timeout;
+         Timeout = timeout;
       }
+
+      public TimeSpan Timeout { get; }
 
       public override void Dispose( ) {
          if( _disposed )
@@ -38,7 +39,7 @@ namespace jsc.commons.hierarchy {
 
       public T Get<T>( IPath path ) where T : IResource {
          Task<T> getTask = GetAsync<T>( path );
-         getTask.Wait( _timeout );
+         getTask.Wait( Timeout );
          return getTask.Result;
       }
 
@@ -54,23 +55,23 @@ namespace jsc.commons.hierarchy {
 
       public void Set( IResource resource ) {
          Task setTask = SetAsync( resource );
-         setTask.Wait( _timeout );
+         setTask.Wait( Timeout );
       }
 
       public void Delete( IResource resource ) {
          Task deleteTask = DeleteAsync( resource );
-         deleteTask.Wait( _timeout );
+         deleteTask.Wait( Timeout );
       }
 
       public IEnumerable<string> GetChildrenResourceNames( IPath path ) {
          Task<IEnumerable<string>> getTask = GetChildrenResourceNamesAsync( path );
-         getTask.Wait( _timeout );
+         getTask.Wait( Timeout );
          return getTask.Result;
       }
 
       public void Move( IResource resource, IPath targetPath ) {
          Task moveTask = MoveAsync( resource, targetPath );
-         moveTask.Wait( _timeout );
+         moveTask.Wait( Timeout );
       }
 
       ~Hierarchy( ) {

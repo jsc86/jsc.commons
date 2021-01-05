@@ -17,7 +17,7 @@ namespace jsc.commons.hierarchy.interfaces {
 
    public interface IHierarchyManagerAsync {
 
-      IHierarchyAsync Hierarchy { get; }
+      IHierarchyAsync HierarchyAsync { get; }
 
       Task<User> GetSystemUserAsync( );
 

@@ -4,6 +4,7 @@
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
+using System;
 using System.Collections.Generic;
 
 using jsc.commons.hierarchy.interfaces;
@@ -43,6 +44,8 @@ namespace jsc.commons.hierarchy {
       public void Move( IResource resource, IPath targetPath ) {
          _hierarchy.Move( resource, targetPath );
       }
+
+      public TimeSpan Timeout => _hierarchy.Timeout;
 
    }
 

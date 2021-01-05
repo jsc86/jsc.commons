@@ -6,15 +6,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
-using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.interfaces {
 
    public interface IHierarchy : IHierarchyAsync {
+
+      TimeSpan Timeout { get; }
 
       T Get<T>( IPath path ) where T : IResource;
 
@@ -27,28 +27,6 @@ namespace jsc.commons.hierarchy.interfaces {
       IEnumerable<string> GetChildrenResourceNames( IPath path );
 
       void Move( IResource resource, IPath targetPath );
-
-   }
-
-   public interface IHierarchyAsync : IDisposable {
-
-      IHierarchyConfiguration Configuration { get; }
-
-      Task<T> GetAsync<T>( IPath path ) where T : IResource;
-
-      Task SetAsync( IResource resource );
-
-      Task DeleteAsync( IResource resource );
-
-      Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path );
-
-      Task MoveAsync( IResource resource, IPath targetPath );
-
-      event ResourceSetHandler ResourceCreated;
-
-      event ResourceDeletedHandler ResourceDeleted;
-
-      event ResourceMovedHandler ResourceMoved;
 
    }
 

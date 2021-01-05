@@ -47,12 +47,12 @@ namespace jsc.commons.hierarchy {
             hierarchyManagerConfiguration.ExcludePaths ??= new List<IPath>( 0 );
          }
 
-         Hierarchy = hierarchy;
+         HierarchyAsync = hierarchy;
          _conf ??= Config.New<IHierarchyManagerConfiguration>( );
 
-         Hierarchy.ResourceCreated += OnHierarchyResourceCreated;
-         Hierarchy.ResourceDeleted += OnHierarchyResourceDeleted;
-         Hierarchy.ResourceMoved += OnHierarchyResourceMoved;
+         HierarchyAsync.ResourceCreated += OnHierarchyResourceCreated;
+         HierarchyAsync.ResourceDeleted += OnHierarchyResourceDeleted;
+         HierarchyAsync.ResourceMoved += OnHierarchyResourceMoved;
 
          BootStrap( ).Wait( ); // timeout?
       }
@@ -63,38 +63,38 @@ namespace jsc.commons.hierarchy {
 
       private IPath GroupsFolderPath => BaseFolderPath.Append( _conf.GroupsFolder );
 
-      public IHierarchyAsync Hierarchy { get; }
+      public IHierarchyAsync HierarchyAsync { get; }
 
       public async Task<User> GetSystemUserAsync( ) {
-         return await Hierarchy.GetAsync<User>( UsersFolderPath.Append( _conf.SystemUser ) );
+         return await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( _conf.SystemUser ) );
       }
 
       public async Task<T> GetAsync<T>( User user, IPath path ) where T : IResource {
          CheckResponsibility( path );
          await CheckPrivilege( user, path, ReadPrivilege.Instance );
 
-         return await Hierarchy.GetAsync<T>( path );
+         return await HierarchyAsync.GetAsync<T>( path );
       }
 
       public async Task SetAsync( User user, IResource resource ) {
          CheckResponsibility( resource.Path );
          await CheckPrivilege( user, resource.Path.BasePath, CreatePrivilege.Instance );
 
-         await Hierarchy.SetAsync( resource );
+         await HierarchyAsync.SetAsync( resource );
       }
 
       public async Task DeleteAsync( User user, IResource resource ) {
          CheckResponsibility( resource.Path );
          await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
 
-         await Hierarchy.DeleteAsync( resource );
+         await HierarchyAsync.DeleteAsync( resource );
       }
 
       public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, IPath path ) {
          CheckResponsibility( path );
          await CheckPrivilege( user, path, ReadPrivilege.Instance );
 
-         return await Hierarchy.GetChildrenResourceNamesAsync( path );
+         return await HierarchyAsync.GetChildrenResourceNamesAsync( path );
       }
 
       public async Task MoveAsync( User user, IResource resource, IPath targetPath ) {
@@ -103,13 +103,13 @@ namespace jsc.commons.hierarchy {
          await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
          await CheckPrivilege( user, targetPath, CreatePrivilege.Instance ); // write privilege?
 
-         await Hierarchy.MoveAsync( resource, targetPath );
+         await HierarchyAsync.MoveAsync( resource, targetPath );
       }
 
       public async Task<IEnumerable<Group>> GetGroupsForUserAsync( User user ) {
          List<Group> groups = new List<Group>( );
 
-         await foreach( Group group in user.GetGroupsAsync( Hierarchy ) ) {
+         await foreach( Group group in user.GetGroupsAsync( HierarchyAsync ) ) {
             groups.Add( group );
             groups.AddRange( await GetParentGroupsAsync( group ) );
          }
@@ -120,8 +120,8 @@ namespace jsc.commons.hierarchy {
       public async Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, IPath path ) {
          IList<IPath> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
          do {
-            IResource resource = await Hierarchy.GetAsync<IResource>( path );
-            IAccessControlList acl = resource.GetAccessControlList( Hierarchy.Configuration );
+            IResource resource = await HierarchyAsync.GetAsync<IResource>( path );
+            IAccessControlList acl = resource.GetAccessControlList( HierarchyAsync.Configuration );
             bool? hasPrivilege = acl.HasPrivilege( user.Path, groupPaths, privilege );
 
             if( hasPrivilege.HasValue ) // if null, the ACL check is not conclusive
@@ -167,7 +167,7 @@ namespace jsc.commons.hierarchy {
          if( parentPath == Path.RootPath )
             return Enumerable.Empty<Group>( );
 
-         IResource parentResource = await Hierarchy.GetAsync<IResource>( parentPath );
+         IResource parentResource = await HierarchyAsync.GetAsync<IResource>( parentPath );
          if( !( parentResource is Group parentGroup ) )
             return Enumerable.Empty<Group>( );
 
@@ -195,7 +195,7 @@ namespace jsc.commons.hierarchy {
             User systemUser = await GetOrCreateSystemUser( );
 
             try {
-               IAccessControlList acl = baseFolder.GetAccessControlList( Hierarchy.Configuration );
+               IAccessControlList acl = baseFolder.GetAccessControlList( HierarchyAsync.Configuration );
                if( !acl.AccessControlRules.Any( ) ) {
                   if( _conf.BaseFolderAclFactory != null ) {
                      _conf.BaseFolderAclFactory( acl, systemUser );
@@ -205,7 +205,7 @@ namespace jsc.commons.hierarchy {
                   }
 
                   baseFolder.SetAccessControlList( acl );
-                  await Hierarchy.SetAsync( baseFolder );
+                  await HierarchyAsync.SetAsync( baseFolder );
                }
             } catch( Exception exc ) {
                throw new Exception( $"failed to set ACL for base folder: {exc.Message}", exc );
@@ -224,7 +224,7 @@ namespace jsc.commons.hierarchy {
          } catch( Exception exc ) {
             systemUser = new User( UsersFolderPath, _conf.SystemUser );
             try {
-               await Hierarchy.SetAsync( systemUser );
+               await HierarchyAsync.SetAsync( systemUser );
             } catch( Exception exc2 ) {
                throw new Exception(
                      $"failed to get or create system user: {exc2.Message}",
@@ -245,13 +245,13 @@ namespace jsc.commons.hierarchy {
             IPath previousPath = currentPath;
             currentPath = currentPath.Append( pathElement );
             try {
-               folder = await Hierarchy.GetAsync<Folder>( currentPath );
+               folder = await HierarchyAsync.GetAsync<Folder>( currentPath );
                if( folder == null )
                   throw new Exception( $"folder {currentPath} does not exist" );
             } catch( Exception exc ) {
                folder = new Folder( previousPath, pathElement );
                try {
-                  await Hierarchy.SetAsync( folder );
+                  await HierarchyAsync.SetAsync( folder );
                } catch( Exception exc2 ) {
                   throw new Exception(
                         $"failed to get or create folder {path} recursively due to errors: {exc2.Message}",
