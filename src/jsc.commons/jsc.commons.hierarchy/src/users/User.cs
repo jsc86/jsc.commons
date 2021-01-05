@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -38,6 +38,14 @@ namespace jsc.commons.hierarchy.users {
 
          foreach( IPath groupId in GetGroupIDs( ) )
             if( hierarchy.Get( groupId ) is Group group )
+               yield return group;
+      }
+
+      public async IAsyncEnumerable<Group> GetGroupsAsync( IHierarchyAsync hierarchy ) {
+         hierarchy.MustNotBeNull( nameof( hierarchy ) );
+
+         foreach( IPath groupId in GetGroupIDs( ) )
+            if( await hierarchy.GetAsync( groupId ) is Group group )
                yield return group;
       }
 

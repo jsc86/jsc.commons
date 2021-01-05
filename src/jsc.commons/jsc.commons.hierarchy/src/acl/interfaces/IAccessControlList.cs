@@ -1,10 +1,13 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System.Collections.Generic;
+
+using jsc.commons.hierarchy.acl.privileges.interfaces;
+using jsc.commons.hierarchy.path.interfaces;
 
 namespace jsc.commons.hierarchy.acl.interfaces {
 
@@ -15,6 +18,8 @@ namespace jsc.commons.hierarchy.acl.interfaces {
       void Add( IAccessControlRule acr );
 
       void Remove( IAccessControlRule acr );
+
+      bool? HasPrivilege( IPath userPath, IList<IPath> groupPaths, IPrivilege privilege );
 
    }
 

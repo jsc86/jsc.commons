@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -72,6 +72,8 @@ namespace jsc.commons.hierarchy.path {
          Absolute = basePath.Absolute;
          Elements = new EnumerableWrapper<string>( _elements );
       }
+
+      public static IPath RootPath { get; } = new Path( true );
 
       public int CompareTo( Path other ) {
          if( other == null )
