@@ -37,9 +37,6 @@ namespace jsc.commons.hierarchy {
 
       public IHierarchyConfiguration Configuration => _hierarchy.Configuration;
 
-      public Task<IResource> GetAsync( IPath path ) {
-         return _hierarchy.GetAsync( path );
-      }
 
       public Task<T> GetAsync<T>( IPath path ) where T : IResource {
          return _hierarchy.GetAsync<T>( path );
@@ -106,7 +103,7 @@ namespace jsc.commons.hierarchy {
          IEnumerable<string> childResourceNames = await _hierarchy.GetChildrenResourceNamesAsync( resource.Path );
          IList<IResource> childResources = new List<IResource>( );
          foreach( string resourceName in childResourceNames )
-            childResources.Add( await _hierarchy.GetAsync( resource.Path.Append( resourceName ) ) );
+            childResources.Add( await _hierarchy.GetAsync<IResource>( resource.Path.Append( resourceName ) ) );
 
          IEnumerable<IResource> allResources = new EnumerableWrapper<IResource>( childResources );
          foreach( IResource childResource in childResources )

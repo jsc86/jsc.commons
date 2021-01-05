@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -28,7 +28,7 @@ namespace jsc.commons.hierarchy.resources {
          path.MustNotBeNull( nameof(path) );
          hierarchy.MustNotBeNull( nameof(hierarchy) );
 
-         IResource resource = await hierarchy.GetAsync( path );
+         IResource resource = await hierarchy.GetAsync<IResource>( path );
          if( resource == null )
             throw new Exception( $"found no resource for path {path}" );
 
@@ -41,7 +41,7 @@ namespace jsc.commons.hierarchy.resources {
          path.MustNotBeNull( nameof(path) );
          hierarchy.MustNotBeNull( nameof(hierarchy) );
 
-         IResource resource = hierarchy.Get( path );
+         IResource resource = hierarchy.Get<IResource>( path );
          if( resource == null )
             throw new Exception( $"found no resource for path {path}" );
 
@@ -78,7 +78,7 @@ namespace jsc.commons.hierarchy.resources {
 
          IPath path = GetLinkedResourcePath( );
 
-         return hierarchy.Get( path );
+         return hierarchy.Get<IResource>( path );
       }
    }
 

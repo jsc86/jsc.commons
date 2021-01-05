@@ -16,11 +16,7 @@ namespace jsc.commons.hierarchy.interfaces {
 
    public interface IHierarchy : IHierarchyAsync {
 
-      IResource Get( IPath path );
-
       T Get<T>( IPath path ) where T : IResource;
-
-      bool TryGet( IPath path, out IResource resource );
 
       bool TryGet<T>( IPath path, out T resource ) where T : IResource;
 
@@ -37,8 +33,6 @@ namespace jsc.commons.hierarchy.interfaces {
    public interface IHierarchyAsync : IDisposable {
 
       IHierarchyConfiguration Configuration { get; }
-
-      Task<IResource> GetAsync( IPath path );
 
       Task<T> GetAsync<T>( IPath path ) where T : IResource;
 

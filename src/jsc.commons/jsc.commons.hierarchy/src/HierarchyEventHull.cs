@@ -20,16 +20,8 @@ namespace jsc.commons.hierarchy {
          _hierarchy = hierarchy;
       }
 
-      public IResource Get( IPath path ) {
-         return _hierarchy.Get( path );
-      }
-
       public T Get<T>( IPath path ) where T : IResource {
          return _hierarchy.Get<T>( path );
-      }
-
-      public bool TryGet( IPath path, out IResource resource ) {
-         return _hierarchy.TryGet( path, out resource );
       }
 
       public bool TryGet<T>( IPath path, out T resource ) where T : IResource {

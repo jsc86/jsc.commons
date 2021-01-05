@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -36,17 +36,12 @@ namespace jsc.commons.hierarchy {
 
       public IHierarchyConfiguration Configuration { get; }
 
-      public async Task<IResource> GetAsync( IPath path ) {
+      public async Task<T> GetAsync<T>( IPath path ) where T : IResource {
          CheckDisposed( );
          if( path == null )
             throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
 
-         return await _backend.Get( path );
-      }
-
-
-      public async Task<T> GetAsync<T>( IPath path ) where T : IResource {
-         return (T)await GetAsync( path );
+         return (T)await _backend.Get( path );
       }
 
       public async Task SetAsync( IResource resource ) {

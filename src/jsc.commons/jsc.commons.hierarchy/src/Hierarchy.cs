@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -36,24 +36,10 @@ namespace jsc.commons.hierarchy {
          base.Dispose( );
       }
 
-      public IResource Get( IPath path ) {
-         Task<IResource> getTask = GetAsync( path );
+      public T Get<T>( IPath path ) where T : IResource {
+         Task<T> getTask = GetAsync<T>( path );
          getTask.Wait( _timeout );
          return getTask.Result;
-      }
-
-      public T Get<T>( IPath path ) where T : IResource {
-         return (T)Get( path );
-      }
-
-      public bool TryGet( IPath path, out IResource resource ) {
-         resource = null;
-         try {
-            resource = Get( path );
-            return true;
-         } catch( Exception ) {
-            return false;
-         }
       }
 
       public bool TryGet<T>( IPath path, out T resource ) where T : IResource {

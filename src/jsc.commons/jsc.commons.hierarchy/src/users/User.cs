@@ -12,6 +12,7 @@ using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
+using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.users {
@@ -37,7 +38,7 @@ namespace jsc.commons.hierarchy.users {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
          foreach( IPath groupId in GetGroupIDs( ) )
-            if( hierarchy.Get( groupId ) is Group group )
+            if( hierarchy.Get<IResource>( groupId ) is Group group )
                yield return group;
       }
 
@@ -45,7 +46,7 @@ namespace jsc.commons.hierarchy.users {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
          foreach( IPath groupId in GetGroupIDs( ) )
-            if( await hierarchy.GetAsync( groupId ) is Group group )
+            if( await hierarchy.GetAsync<IResource>( groupId ) is Group group )
                yield return group;
       }
 

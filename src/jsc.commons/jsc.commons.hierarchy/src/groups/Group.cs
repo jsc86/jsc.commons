@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -11,6 +11,7 @@ using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
+using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
 using jsc.commons.misc;
 
@@ -35,7 +36,7 @@ namespace jsc.commons.hierarchy.groups {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
          foreach( IPath userId in GetUserIDs( hierarchy ) )
-            if( hierarchy.Get( userId ) is User user )
+            if( hierarchy.Get<IResource>( userId ) is User user )
                yield return user;
       }
 

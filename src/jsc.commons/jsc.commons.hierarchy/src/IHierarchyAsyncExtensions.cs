@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -14,55 +14,35 @@ using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy {
 
-   public static class IHierarchyAsyncExtensions {
+   public static class HierarchyAsyncExtensions {
 
-      public static async Task<IResource> Get(
+      public static async Task<T> GetAsync<T>(
             this IHierarchyAsync hierarchyAsync,
             IPath path,
-            string resourceName ) {
+            string resourceName ) where T : IResource {
          hierarchyAsync.MustNotBeNull( nameof( HierarchyAsync ) );
 
-         return await hierarchyAsync.GetAsync( path.Append( resourceName ) );
+         return await hierarchyAsync.GetAsync<T>( path.Append( resourceName ) );
       }
 
-      public static async Task<IResource> Get(
+      public static async Task<T> GetAsync<T>(
             this IHierarchyAsync hierarchyAsync,
-            string path ) {
+            string path ) where T : IResource {
          hierarchyAsync.MustNotBeNull( nameof( hierarchyAsync ) );
          path.MustNotBeNull( nameof( path ) );
 
-         return await hierarchyAsync.GetAsync( Path.Parse( path ) );
+         return await hierarchyAsync.GetAsync<T>( Path.Parse( path ) );
       }
 
-      public static async Task<IResource> Get(
+      public static async Task<T> GetAsync<T>(
             this IHierarchyAsync hierarchyAsync,
             string path,
-            string resourceName ) {
+            string resourceName ) where T : IResource {
          hierarchyAsync.MustNotBeNull( nameof( hierarchyAsync ) );
          path.MustNotBeNull( nameof( path ) );
          resourceName.MustNotBeNull( nameof( resourceName ) );
 
-         return await hierarchyAsync.GetAsync( Path.Parse( path ).Append( resourceName ) );
-      }
-
-      public static async Task<T> Get<T, T2>(
-            this IHierarchyAsync hierarchyAsync,
-            IPath path,
-            string resourceName ) where T : IResource<T2> where T2 : IResourceClass {
-         return (T)await hierarchyAsync.Get( path, resourceName );
-      }
-
-      public static async Task<T> Get<T, T2>(
-            this IHierarchyAsync hierarchyAsync,
-            string path ) where T : IResource<T2> where T2 : IResourceClass {
-         return (T)await hierarchyAsync.Get( path );
-      }
-
-      public static async Task<T> Get<T, T2>(
-            this IHierarchyAsync hierarchyAsync,
-            string path,
-            string resourceName ) where T : IResource<T2> where T2 : IResourceClass {
-         return (T)await hierarchyAsync.Get( path, resourceName );
+         return await hierarchyAsync.GetAsync<T>( Path.Parse( path ).Append( resourceName ) );
       }
 
    }

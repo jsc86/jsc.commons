@@ -120,7 +120,7 @@ namespace jsc.commons.hierarchy {
       public async Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, IPath path ) {
          IList<IPath> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
          do {
-            IResource resource = await Hierarchy.GetAsync( path );
+            IResource resource = await Hierarchy.GetAsync<IResource>( path );
             IAccessControlList acl = resource.GetAccessControlList( Hierarchy.Configuration );
             bool? hasPrivilege = acl.HasPrivilege( user.Path, groupPaths, privilege );
 
