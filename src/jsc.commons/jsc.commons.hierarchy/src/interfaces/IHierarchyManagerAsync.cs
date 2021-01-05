@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using jsc.commons.hierarchy.acl.privileges.interfaces;
+using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
@@ -18,6 +19,14 @@ namespace jsc.commons.hierarchy.interfaces {
    public interface IHierarchyManagerAsync {
 
       IHierarchyAsync HierarchyAsync { get; }
+
+      IHierarchyManagerConfiguration Configuration { get; }
+
+      IPath BaseFolderPath { get; }
+
+      IPath UsersFolderPath { get; }
+
+      IPath GroupsFolderPath { get; }
 
       Task<User> GetSystemUserAsync( );
 

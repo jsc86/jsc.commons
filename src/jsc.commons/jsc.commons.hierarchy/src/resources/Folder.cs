@@ -49,9 +49,10 @@ namespace jsc.commons.hierarchy.resources {
 
       public Folder( IPath path, string name, IMeta meta = null ) : base(
             path,
-            name,
+            name??string.Empty,
             FolderResourceClass.Instance,
-            meta ) { }
+            meta,
+            hierarchy.path.Path.RootPath.Equals( path )&&string.IsNullOrEmpty( name ) ) { }
 
    }
 

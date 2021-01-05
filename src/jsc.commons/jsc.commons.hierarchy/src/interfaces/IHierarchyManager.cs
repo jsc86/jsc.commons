@@ -6,6 +6,8 @@
 
 using System.Collections.Generic;
 
+using jsc.commons.hierarchy.acl.privileges.interfaces;
+using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
@@ -27,6 +29,12 @@ namespace jsc.commons.hierarchy.interfaces {
       IEnumerable<string> GetChildrenResourceNames( User user, IPath path );
 
       void Move( User user, IResource resource, IPath targetPath );
+
+      bool HasPrivilege( User user, IPrivilege privilege, IPath path );
+
+      User GetSystemUser( );
+
+      IEnumerable<Group> GetGroupsForUser( User user );
 
    }
 

@@ -28,7 +28,7 @@ namespace jsc.commons.hierarchy.config {
       [ConfigValue]
       IPath GroupsFolder { get; set; }
 
-      [ConfigValue]
+      [ConfigValue( Default = "sysusr" )]
       string SystemUser { get; set; }
 
       [ConfigValue]

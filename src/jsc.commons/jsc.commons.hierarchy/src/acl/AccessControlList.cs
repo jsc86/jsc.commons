@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using jsc.commons.hierarchy.acl.interfaces;
+using jsc.commons.hierarchy.acl.privileges;
 using jsc.commons.hierarchy.acl.privileges.interfaces;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.misc;
@@ -43,17 +44,18 @@ namespace jsc.commons.hierarchy.acl {
                case AcrInherit acrInherit:
                   return null;
                case AcrEveryone acrEveryone:
-                  if( acr.Privileges.Contains( privilege ) )
+                  if( acr.Privileges.Contains( privilege )
+                        ||acr.Privileges.Contains( AllPrivilege.Instance ) )
                      return acr.Action == EnAccessControlAction.Allow;
                   break;
                case AcrGroup acrGroup:
                   if( groupPaths.Contains( acrGroup.ToPath )
-                        &&acr.Privileges.Contains( privilege ) )
+                        &&( acr.Privileges.Contains( privilege )||acr.Privileges.Contains( AllPrivilege.Instance ) ) )
                      return acr.Action == EnAccessControlAction.Allow;
                   break;
                case AcrUser acrUser:
-                  if( acr.ToPath == userPath
-                        &&acr.Privileges.Contains( privilege ) )
+                  if( acr.ToPath.Equals( userPath )
+                        &&( acr.Privileges.Contains( privilege )||acr.Privileges.Contains( AllPrivilege.Instance ) ) )
                      return acr.Action == EnAccessControlAction.Allow;
                   break;
                default:

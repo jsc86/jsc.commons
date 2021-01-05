@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using jsc.commons.hierarchy.acl.privileges.interfaces;
 using jsc.commons.hierarchy.config;
+using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
@@ -58,6 +60,24 @@ namespace jsc.commons.hierarchy {
       public void Move( User user, IResource resource, IPath targetPath ) {
          Task moveTask = MoveAsync( user, resource, targetPath );
          moveTask.Wait( Hierarchy.Timeout );
+      }
+
+      public bool HasPrivilege( User user, IPrivilege privilege, IPath path ) {
+         Task<bool> hasPrivilegeTask = HasPrivilegeAsync( user, privilege, path );
+         hasPrivilegeTask.Wait( Hierarchy.Timeout );
+         return hasPrivilegeTask.Result;
+      }
+
+      public User GetSystemUser( ) {
+         Task<User> getSystemUserTask = GetSystemUserAsync( );
+         getSystemUserTask.Wait( Hierarchy.Timeout );
+         return getSystemUserTask.Result;
+      }
+
+      public IEnumerable<Group> GetGroupsForUser( User user ) {
+         Task<IEnumerable<Group>> getGroupsForUserTask = GetGroupsForUserAsync( user );
+         getGroupsForUserTask.Wait( Hierarchy.Timeout );
+         return getGroupsForUserTask.Result;
       }
 
    }

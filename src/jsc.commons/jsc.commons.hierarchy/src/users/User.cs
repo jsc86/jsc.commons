@@ -5,6 +5,8 @@
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 using jsc.commons.behaving;
 using jsc.commons.hierarchy.groups;
@@ -14,6 +16,8 @@ using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
+
+using Enumerable = System.Linq.Enumerable;
 
 namespace jsc.commons.hierarchy.users {
 
@@ -26,12 +30,11 @@ namespace jsc.commons.hierarchy.users {
             meta ) { }
 
       public IEnumerable<IPath> GetGroupIDs( ) {
-         if( !this.TryGet( out BackReferenceMeta backReferences )
+         if( !Meta.TryGet( out BackReferenceMeta backReferences )
                ||backReferences.BackReferences.Count == 0 )
-            yield break;
+            return Enumerable.Empty<IPath>( );
 
-         foreach( string pathString in backReferences.BackReferences )
-            yield return path.Path.Parse( pathString );
+         return backReferences.BackReferences.Select( path.Path.Parse );
       }
 
       public IEnumerable<Group> GetGroups( IHierarchy hierarchy ) {
@@ -42,12 +45,16 @@ namespace jsc.commons.hierarchy.users {
                yield return group;
       }
 
-      public async IAsyncEnumerable<Group> GetGroupsAsync( IHierarchyAsync hierarchy ) {
+      public async Task<IEnumerable<Group>> GetGroupsAsync( IHierarchyAsync hierarchy ) {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
+
+         List<Group> groups = new List<Group>( );
 
          foreach( IPath groupId in GetGroupIDs( ) )
             if( await hierarchy.GetAsync<IResource>( groupId ) is Group group )
-               yield return group;
+               groups.Add( group );
+
+         return groups;
       }
 
    }

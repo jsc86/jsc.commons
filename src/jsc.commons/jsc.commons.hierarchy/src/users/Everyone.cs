@@ -10,7 +10,7 @@ namespace jsc.commons.hierarchy.users {
 
    public class Everyone : ResourceBase<UserResourceClass> {
 
-      public Everyone( ) : base( RootFolder.RootPath, "everyone", UserResourceClass.Instance, null, false ) { }
+      public Everyone( ) : base( path.Path.RootPath, "everyone", UserResourceClass.Instance, null, false ) { }
 
    }
 

@@ -95,7 +95,9 @@ namespace jsc.commons.hierarchy.localfs {
                      basicMeta.ResourceClass,
                      $"unknown resource class id {basicMeta.ResourceClass}" );
 
-            return Task.FromResult( resourceClass.CreateResource( path.BasePath, path.Name, meta ) );
+            return path.Equals( Path.RootPath )
+                  ? Task.FromResult( (IResource)new Folder( Path.RootPath, null, meta ) )
+                  : Task.FromResult( resourceClass.CreateResource( path.BasePath, path.Name, meta ) );
          } catch( BackendExceptionBase ) {
             throw;
          } catch( Exception exc ) {

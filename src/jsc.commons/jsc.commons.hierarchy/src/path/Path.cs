@@ -73,7 +73,7 @@ namespace jsc.commons.hierarchy.path {
          Elements = new EnumerableWrapper<string>( _elements );
       }
 
-      public static IPath RootPath { get; } = new Path( true );
+      public static Path RootPath { get; } = new Path( true );
 
       public int CompareTo( Path other ) {
          if( other == null )
@@ -202,6 +202,24 @@ namespace jsc.commons.hierarchy.path {
             return -1;
 
          return 0;
+      }
+
+      public override bool Equals( object obj ) {
+         if( obj == null )
+            return false;
+
+         if( !( obj is IPath other ) )
+            return false;
+
+         return CompareTo( other ) == 0;
+      }
+
+      public override int GetHashCode( ) {
+         int hashCode = 0;
+         foreach( string element in _elements )
+            hashCode += element.GetHashCode( );
+
+         return hashCode;
       }
 
    }

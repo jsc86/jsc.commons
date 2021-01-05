@@ -31,8 +31,6 @@ namespace jsc.commons.hierarchy {
 
    public class HierarchyManagerAsync : IHierarchyManagerAsync {
 
-      private readonly IHierarchyManagerConfiguration _conf;
-
       public HierarchyManagerAsync(
             IHierarchyAsync hierarchy,
             IHierarchyManagerConfiguration hierarchyManagerConfiguration = null ) {
@@ -44,11 +42,13 @@ namespace jsc.commons.hierarchy {
                   nameof( hierarchyManagerConfiguration.UsersFolder ) );
             hierarchyManagerConfiguration.GroupsFolder.MustNotBeNull(
                   nameof( hierarchyManagerConfiguration.GroupsFolder ) );
+            hierarchyManagerConfiguration.SystemUser.MustNotBeNull(
+                  nameof( hierarchyManagerConfiguration.SystemUser ) );
             hierarchyManagerConfiguration.ExcludePaths ??= new List<IPath>( 0 );
          }
 
          HierarchyAsync = hierarchy;
-         _conf ??= Config.New<IHierarchyManagerConfiguration>( );
+         Configuration ??= Config.New<IHierarchyManagerConfiguration>( );
 
          HierarchyAsync.ResourceCreated += OnHierarchyResourceCreated;
          HierarchyAsync.ResourceDeleted += OnHierarchyResourceDeleted;
@@ -57,16 +57,18 @@ namespace jsc.commons.hierarchy {
          BootStrap( ).Wait( ); // timeout?
       }
 
-      private IPath BaseFolderPath => _conf.BaseFolder;
+      public IPath BaseFolderPath => Configuration.BaseFolder;
 
-      private IPath UsersFolderPath => BaseFolderPath.Append( _conf.UsersFolder );
+      public IPath UsersFolderPath => BaseFolderPath.Append( Configuration.UsersFolder );
 
-      private IPath GroupsFolderPath => BaseFolderPath.Append( _conf.GroupsFolder );
+      public IPath GroupsFolderPath => BaseFolderPath.Append( Configuration.GroupsFolder );
 
       public IHierarchyAsync HierarchyAsync { get; }
 
+      public IHierarchyManagerConfiguration Configuration { get; }
+
       public async Task<User> GetSystemUserAsync( ) {
-         return await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( _conf.SystemUser ) );
+         return await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( Configuration.SystemUser ) );
       }
 
       public async Task<T> GetAsync<T>( User user, IPath path ) where T : IResource {
@@ -109,7 +111,7 @@ namespace jsc.commons.hierarchy {
       public async Task<IEnumerable<Group>> GetGroupsForUserAsync( User user ) {
          List<Group> groups = new List<Group>( );
 
-         await foreach( Group group in user.GetGroupsAsync( HierarchyAsync ) ) {
+         foreach( Group group in await user.GetGroupsAsync( HierarchyAsync ) ) {
             groups.Add( group );
             groups.AddRange( await GetParentGroupsAsync( group ) );
          }
@@ -127,34 +129,44 @@ namespace jsc.commons.hierarchy {
             if( hasPrivilege.HasValue ) // if null, the ACL check is not conclusive
                return hasPrivilege.Value;
 
-            if( !acl.AccessControlRules.Any( ) // on empty, Inherit is assumed
+            if( acl.AccessControlRules.Any( ) // on empty, Inherit is assumed
                   // if the first ACR is explicitly not Inherit, we're done: disallow by default
                   &&acl.AccessControlRules.First( ).Action != EnAccessControlAction.Inherit )
                return false;
 
             path = path.BasePath;
-         } while( BaseFolderPath.IsContainedIn( path ) );
+         } while( BaseFolderPath.IsContainedIn( path )
+               ||BaseFolderPath.Equals( path ) );
 
          return false;
       }
 
-      private void CheckResponsibility( IPath path ) {
-         if( BaseFolderPath.IsContainedIn( path ) )
-            throw new PathOutsideOfBoundsException(
-                  this,
-                  path,
-                  $"base path {BaseFolderPath}",
-                  BaseFolderPath,
-                  _conf.ExcludePaths );
-
-         foreach( IPath excludedPath in _conf.ExcludePaths )
-            if( excludedPath.IsContainedIn( path ) )
+      private bool CheckResponsibility( IPath path, bool throwException = true ) {
+         if( BaseFolderPath.IsContainedIn( path ) ) {
+            if( throwException )
                throw new PathOutsideOfBoundsException(
                      this,
                      path,
-                     $"excluded path {excludedPath}",
+                     $"base path {BaseFolderPath}",
                      BaseFolderPath,
-                     _conf.ExcludePaths );
+                     Configuration.ExcludePaths );
+
+            return false;
+         }
+
+         foreach( IPath excludedPath in Configuration.ExcludePaths )
+            if( excludedPath.IsContainedIn( path ) ) {
+               if( throwException )
+                  throw new PathOutsideOfBoundsException(
+                        this,
+                        path,
+                        $"excluded path {excludedPath}",
+                        BaseFolderPath,
+                        Configuration.ExcludePaths );
+               return false;
+            }
+
+         return true;
       }
 
       private async Task CheckPrivilege( User user, IPath path, IPrivilege privilege ) {
@@ -175,15 +187,18 @@ namespace jsc.commons.hierarchy {
       }
 
       private Task OnHierarchyResourceMoved( object sender, ResourceMovedEventArgs args ) {
-         throw new NotImplementedException( );
+         // TODO: implement
+         return Task.CompletedTask;
       }
 
       private Task OnHierarchyResourceDeleted( object sender, ResourceDeletedEventArgs args ) {
-         throw new NotImplementedException( );
+         // TODO: implement
+         return Task.CompletedTask;
       }
 
       private Task OnHierarchyResourceCreated( object sender, ResourceSetEventArgs args ) {
-         throw new NotImplementedException( );
+         // TODO: implement
+         return Task.CompletedTask;
       }
 
       private async Task BootStrap( ) {
@@ -197,8 +212,8 @@ namespace jsc.commons.hierarchy {
             try {
                IAccessControlList acl = baseFolder.GetAccessControlList( HierarchyAsync.Configuration );
                if( !acl.AccessControlRules.Any( ) ) {
-                  if( _conf.BaseFolderAclFactory != null ) {
-                     _conf.BaseFolderAclFactory( acl, systemUser );
+                  if( Configuration.BaseFolderAclFactory != null ) {
+                     Configuration.BaseFolderAclFactory( acl, systemUser );
                   } else {
                      acl.Add( AcrBuilder.ToEveryone( ).Deny( new AllPrivilege( ) ) );
                      acl.Add( AcrBuilder.To( systemUser ).Allow( new AllPrivilege( ) ) );
@@ -222,7 +237,7 @@ namespace jsc.commons.hierarchy {
             if( systemUser == null )
                throw new Exception( );
          } catch( Exception exc ) {
-            systemUser = new User( UsersFolderPath, _conf.SystemUser );
+            systemUser = new User( UsersFolderPath, Configuration.SystemUser );
             try {
                await HierarchyAsync.SetAsync( systemUser );
             } catch( Exception exc2 ) {
@@ -238,6 +253,27 @@ namespace jsc.commons.hierarchy {
 
       private async Task<Folder> GetOrCreateFolderRecursive( IPath path ) {
          path.MustNotBeNull( nameof( path ) );
+
+         if( path.Equals( Path.RootPath ) ) {
+            Folder rootFolder;
+            try {
+               rootFolder = await HierarchyAsync.GetAsync<Folder>( Path.RootPath );
+               if( rootFolder == null )
+                  throw new Exception( "did not find root folder" );
+            } catch( Exception exc ) {
+               rootFolder = new Folder( Path.RootPath, null );
+               try {
+                  await HierarchyAsync.SetAsync( rootFolder );
+                  rootFolder = await HierarchyAsync.GetAsync<Folder>( Path.RootPath );
+               } catch( Exception exc2 ) {
+                  throw new Exception(
+                        $"failed to get or create root folder due to errors: {exc2.Message}",
+                        new AggregateException( exc, exc2 ) );
+               }
+            }
+
+            return rootFolder;
+         }
 
          IPath currentPath = new Path( true );
          Folder folder = null;
