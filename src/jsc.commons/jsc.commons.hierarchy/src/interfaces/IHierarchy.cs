@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.interfaces {
@@ -16,17 +16,17 @@ namespace jsc.commons.hierarchy.interfaces {
 
       TimeSpan Timeout { get; }
 
-      T Get<T>( IPath path ) where T : IResource;
+      T Get<T>( Path path ) where T : IResource;
 
-      bool TryGet<T>( IPath path, out T resource ) where T : IResource;
+      bool TryGet<T>( Path path, out T resource ) where T : IResource;
 
       void Set( IResource resource );
 
       void Delete( IResource resource );
 
-      IEnumerable<string> GetChildrenResourceNames( IPath path );
+      IEnumerable<string> GetChildrenResourceNames( Path path );
 
-      void Move( IResource resource, IPath targetPath );
+      void Move( IResource resource, Path targetPath );
 
    }
 

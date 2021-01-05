@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 using jsc.commons.hierarchy.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 
 namespace jsc.commons.hierarchy.exceptions {
 
@@ -16,22 +16,22 @@ namespace jsc.commons.hierarchy.exceptions {
 
       public PathOutsideOfBoundsException(
             IHierarchyManagerAsync hierarchyManagerAsync,
-            IPath path,
+            Path path,
             string hint,
-            IPath basePath,
-            IList<IPath> excludedPaths ) : base(
+            Path basePath,
+            IList<Path> excludedPaths ) : base(
             $"the requested path {path} is outside of the bounds of the hierarchy manager: {hint}" ) {
          HierarchyManagerAsync = hierarchyManagerAsync;
          Path = path;
          BasePath = basePath;
-         ExcludedPaths = new ReadOnlyCollection<IPath>( excludedPaths );
+         ExcludedPaths = new ReadOnlyCollection<Path>( excludedPaths );
       }
 
-      public IEnumerable<IPath> ExcludedPaths { get; }
+      public IEnumerable<Path> ExcludedPaths { get; }
 
-      public IPath BasePath { get; }
+      public Path BasePath { get; }
 
-      public IPath Path { get; }
+      public Path Path { get; }
 
       public IHierarchyManagerAsync HierarchyManagerAsync { get; }
 

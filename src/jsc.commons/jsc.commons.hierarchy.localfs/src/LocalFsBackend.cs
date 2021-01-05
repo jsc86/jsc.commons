@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -19,8 +19,6 @@ using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.localfs.config;
 using jsc.commons.hierarchy.meta;
 using jsc.commons.hierarchy.meta.interfaces;
-using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
@@ -37,7 +35,7 @@ namespace jsc.commons.hierarchy.localfs {
       private readonly ILocalFsBackendConfiguration _config;
 
       private readonly IHierarchyConfiguration _hierarchyConfig;
-      private IPath _basePath;
+      private Path _basePath;
 
       public LocalFsBackend(
             IHierarchyConfiguration hierarchyConfig,
@@ -58,13 +56,13 @@ namespace jsc.commons.hierarchy.localfs {
          }
       }
 
-      private IPath BasePath => _basePath ??= Path.Parse( _config.BasePath.FullName );
+      private Path BasePath => _basePath ??= Path.Parse( _config.BasePath.FullName );
 
       public void Dispose( ) {
          // nop
       }
 
-      public Task<IResource> Get( IPath path ) {
+      public Task<IResource> Get( Path path ) {
          path.MustNotBeNull( nameof( path ) );
 
          try {
@@ -105,7 +103,7 @@ namespace jsc.commons.hierarchy.localfs {
          }
       }
 
-      public Task<IEnumerable<string>> List( IPath path ) {
+      public Task<IEnumerable<string>> List( Path path ) {
          path.MustNotBeNull( nameof( path ) );
          try {
             string fullPath = BasePath.Append( path ).ToString( );
@@ -165,7 +163,7 @@ namespace jsc.commons.hierarchy.localfs {
          }
       }
 
-      public Task Move( IResource resource, IPath targetPath ) {
+      public Task Move( IResource resource, Path targetPath ) {
          // TODO: impl
          throw new NotImplementedException( );
       }

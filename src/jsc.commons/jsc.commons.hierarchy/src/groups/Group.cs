@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
@@ -19,13 +18,13 @@ namespace jsc.commons.hierarchy.groups {
 
    public class Group : FolderResourceBase<GroupResourceClass> {
 
-      public Group( IPath path, string name, IMeta meta = null ) : base(
+      public Group( Path path, string name, IMeta meta = null ) : base(
             path,
             name,
             GroupResourceClass.Instance,
             meta ) { }
 
-      public IEnumerable<IPath> GetUserIDs( IHierarchy hierarchy ) {
+      public IEnumerable<Path> GetUserIDs( IHierarchy hierarchy ) {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
          foreach( string resourceName in hierarchy.GetChildrenResourceNames( Path ) )
@@ -35,7 +34,7 @@ namespace jsc.commons.hierarchy.groups {
       public IEnumerable<User> GetUsers( IHierarchy hierarchy ) {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
-         foreach( IPath userId in GetUserIDs( hierarchy ) )
+         foreach( Path userId in GetUserIDs( hierarchy ) )
             if( hierarchy.Get<IResource>( userId ) is User user )
                yield return user;
       }

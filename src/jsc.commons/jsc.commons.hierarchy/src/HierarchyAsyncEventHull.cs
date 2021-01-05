@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -38,7 +37,7 @@ namespace jsc.commons.hierarchy {
       public IHierarchyConfiguration Configuration => _hierarchy.Configuration;
 
 
-      public Task<T> GetAsync<T>( IPath path ) where T : IResource {
+      public Task<T> GetAsync<T>( Path path ) where T : IResource {
          return _hierarchy.GetAsync<T>( path );
       }
 
@@ -60,12 +59,12 @@ namespace jsc.commons.hierarchy {
                await ResourceDeleted( this, new ResourceDeletedEventArgs( this, deletedResource ) );
       }
 
-      public Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path ) {
+      public Task<IEnumerable<string>> GetChildrenResourceNamesAsync( Path path ) {
          return _hierarchy.GetChildrenResourceNamesAsync( path );
       }
 
-      public async Task MoveAsync( IResource resource, IPath targetPath ) {
-         IPath oldPath = resource.Path;
+      public async Task MoveAsync( IResource resource, Path targetPath ) {
+         Path oldPath = resource.Path;
          IEnumerable<IResource> movedResources = null;
          if( ResourceMoved != null
                &&resource is IFolderResource folder )

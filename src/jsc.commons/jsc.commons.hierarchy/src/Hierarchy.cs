@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy {
@@ -37,13 +37,13 @@ namespace jsc.commons.hierarchy {
          base.Dispose( );
       }
 
-      public T Get<T>( IPath path ) where T : IResource {
+      public T Get<T>( Path path ) where T : IResource {
          Task<T> getTask = GetAsync<T>( path );
          getTask.Wait( Timeout );
          return getTask.Result;
       }
 
-      public bool TryGet<T>( IPath path, out T resource ) where T : IResource {
+      public bool TryGet<T>( Path path, out T resource ) where T : IResource {
          resource = default;
          try {
             resource = Get<T>( path );
@@ -63,13 +63,13 @@ namespace jsc.commons.hierarchy {
          deleteTask.Wait( Timeout );
       }
 
-      public IEnumerable<string> GetChildrenResourceNames( IPath path ) {
+      public IEnumerable<string> GetChildrenResourceNames( Path path ) {
          Task<IEnumerable<string>> getTask = GetChildrenResourceNamesAsync( path );
          getTask.Wait( Timeout );
          return getTask.Result;
       }
 
-      public void Move( IResource resource, IPath targetPath ) {
+      public void Move( IResource resource, Path targetPath ) {
          Task moveTask = MoveAsync( resource, targetPath );
          moveTask.Wait( Timeout );
       }

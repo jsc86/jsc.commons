@@ -12,7 +12,7 @@ using jsc.commons.behaving;
 using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
@@ -23,24 +23,24 @@ namespace jsc.commons.hierarchy.users {
 
    public class User : FileResourceBase<UserResourceClass> {
 
-      public User( IPath path, string name, IMeta meta = null ) : base(
+      public User( Path path, string name, IMeta meta = null ) : base(
             path,
             name,
             UserResourceClass.Instance,
             meta ) { }
 
-      public IEnumerable<IPath> GetGroupIDs( ) {
+      public IEnumerable<Path> GetGroupIDs( ) {
          if( !Meta.TryGet( out BackReferenceMeta backReferences )
                ||backReferences.BackReferences.Count == 0 )
-            return Enumerable.Empty<IPath>( );
+            return Enumerable.Empty<Path>( );
 
-         return backReferences.BackReferences.Select( path.Path.Parse );
+         return backReferences.BackReferences.Select( Path.Parse );
       }
 
       public IEnumerable<Group> GetGroups( IHierarchy hierarchy ) {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
-         foreach( IPath groupId in GetGroupIDs( ) )
+         foreach( Path groupId in GetGroupIDs( ) )
             if( hierarchy.Get<IResource>( groupId ) is Group group )
                yield return group;
       }
@@ -50,7 +50,7 @@ namespace jsc.commons.hierarchy.users {
 
          List<Group> groups = new List<Group>( );
 
-         foreach( IPath groupId in GetGroupIDs( ) )
+         foreach( Path groupId in GetGroupIDs( ) )
             if( await hierarchy.GetAsync<IResource>( groupId ) is Group group )
                groups.Add( group );
 

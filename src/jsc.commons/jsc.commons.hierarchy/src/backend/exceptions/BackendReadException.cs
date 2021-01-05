@@ -1,25 +1,25 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using System;
 
 using jsc.commons.hierarchy.backend.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 
 namespace jsc.commons.hierarchy.backend.exceptions {
 
    public class BackendReadException : BackendExceptionBase {
 
-      public BackendReadException( IHierarchyBackend backend, IPath path, string message ) : base( backend, message ) {
+      public BackendReadException( IHierarchyBackend backend, Path path, string message ) : base( backend, message ) {
          Path = path;
       }
 
       public BackendReadException(
             IHierarchyBackend backend,
-            IPath path,
+            Path path,
             string message,
             Exception innerException ) : base(
             backend,
@@ -29,7 +29,7 @@ namespace jsc.commons.hierarchy.backend.exceptions {
       }
 
 
-      public IPath Path { get; }
+      public Path Path { get; }
 
    }
 

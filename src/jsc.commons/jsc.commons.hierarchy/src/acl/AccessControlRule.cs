@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -16,7 +16,6 @@ using jsc.commons.hierarchy.acl.privileges.classes.interfaces;
 using jsc.commons.hierarchy.acl.privileges.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.misc;
 
 using Enumerable = System.Linq.Enumerable;
@@ -32,7 +31,7 @@ namespace jsc.commons.hierarchy.acl {
 
       protected AccessControlRule(
             EnAccessControlAction action,
-            IPath toPath,
+            Path toPath,
             IEnumerable<IPrivilege> privileges ) {
          Action = action;
          ToPath = toPath;
@@ -44,7 +43,7 @@ namespace jsc.commons.hierarchy.acl {
       protected virtual string ToPrefix { get; } = string.Empty;
 
       public EnAccessControlAction Action { get; }
-      public IPath ToPath { get; }
+      public Path ToPath { get; }
       public IEnumerable<IPrivilege> Privileges { get; }
 
       public override string ToString( ) {
@@ -129,7 +128,7 @@ namespace jsc.commons.hierarchy.acl {
             }
          }
 
-         IPath target = null;
+         Path target = null;
          string targetString = match.Groups[ "target" ].Value.Trim( );
 
          if( targetString.ToUpper( ) == "EVERYONE" )

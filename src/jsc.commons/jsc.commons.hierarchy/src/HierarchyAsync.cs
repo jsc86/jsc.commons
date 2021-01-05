@@ -12,7 +12,6 @@ using jsc.commons.hierarchy.backend.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -36,7 +35,7 @@ namespace jsc.commons.hierarchy {
 
       public IHierarchyConfiguration Configuration { get; }
 
-      public async Task<T> GetAsync<T>( IPath path ) where T : IResource {
+      public async Task<T> GetAsync<T>( Path path ) where T : IResource {
          CheckDisposed( );
          if( path == null )
             throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
@@ -65,7 +64,7 @@ namespace jsc.commons.hierarchy {
             await ResourceDeleted( this, new ResourceDeletedEventArgs( this, resource ) );
       }
 
-      public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path ) {
+      public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( Path path ) {
          CheckDisposed( );
          if( path == null )
             throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
@@ -73,7 +72,7 @@ namespace jsc.commons.hierarchy {
          return await _backend.List( path );
       }
 
-      public async Task MoveAsync( IResource resource, IPath targetPath ) {
+      public async Task MoveAsync( IResource resource, Path targetPath ) {
          CheckDisposed( );
          resource.MustNotBeNull( nameof( resource ) );
          targetPath.MustNotBeNull( nameof( resource ) );
@@ -110,7 +109,7 @@ namespace jsc.commons.hierarchy {
          _disposing = false;
       }
 
-      private async Task FallBackMoveAsync( IResource resource, IPath targetPath ) {
+      private async Task FallBackMoveAsync( IResource resource, Path targetPath ) {
          if( resource is IFileResource ) {
             IResource newResource = resource.ResourceClass.CreateResource( targetPath, resource.Name, resource.Meta );
             try {
@@ -141,7 +140,7 @@ namespace jsc.commons.hierarchy {
          }
       }
 
-      private async Task FallBackMoveAsyncRecursive( IResource resource, IPath targetPath ) {
+      private async Task FallBackMoveAsyncRecursive( IResource resource, Path targetPath ) {
          if( resource is IFileResource ) {
             await FallBackMoveAsync( resource, targetPath );
             return;

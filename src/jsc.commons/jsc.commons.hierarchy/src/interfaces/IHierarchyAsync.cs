@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using jsc.commons.hierarchy.config;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.interfaces {
@@ -18,15 +18,15 @@ namespace jsc.commons.hierarchy.interfaces {
 
       IHierarchyConfiguration Configuration { get; }
 
-      Task<T> GetAsync<T>( IPath path ) where T : IResource;
+      Task<T> GetAsync<T>( Path path ) where T : IResource;
 
       Task SetAsync( IResource resource );
 
       Task DeleteAsync( IResource resource );
 
-      Task<IEnumerable<string>> GetChildrenResourceNamesAsync( IPath path );
+      Task<IEnumerable<string>> GetChildrenResourceNamesAsync( Path path );
 
-      Task MoveAsync( IResource resource, IPath targetPath );
+      Task MoveAsync( IResource resource, Path targetPath );
 
       event ResourceSetHandler ResourceCreated;
 

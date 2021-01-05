@@ -6,7 +6,6 @@
 
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -14,7 +13,7 @@ namespace jsc.commons.hierarchy {
 
    public static class HierarchyExtensions {
 
-      public static T Get<T>( this IHierarchy hierarchy, IPath path, string resourceName ) where T : IResource {
+      public static T Get<T>( this IHierarchy hierarchy, Path path, string resourceName ) where T : IResource {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );
 
          return hierarchy.Get<T>( path.Append( resourceName ) );
@@ -37,7 +36,7 @@ namespace jsc.commons.hierarchy {
 
       public static bool TryGet<T>(
             this IHierarchy hierarchy,
-            IPath path,
+            Path path,
             string resourceName,
             out IResource resource ) where T : IResource {
          hierarchy.MustNotBeNull( nameof( hierarchy ) );

@@ -1,11 +1,11 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
 using jsc.commons.hierarchy.meta.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 
 namespace jsc.commons.hierarchy.resources.interfaces {
 
@@ -17,7 +17,7 @@ namespace jsc.commons.hierarchy.resources.interfaces {
 
       IResourceClass ResourceClass { get; }
 
-      IPath Path { get; }
+      Path Path { get; }
 
    }
 

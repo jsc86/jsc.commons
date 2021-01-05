@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 
 using jsc.commons.hierarchy.acl.privileges.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 
 namespace jsc.commons.hierarchy.acl.interfaces {
 
@@ -19,7 +19,7 @@ namespace jsc.commons.hierarchy.acl.interfaces {
 
       void Remove( IAccessControlRule acr );
 
-      bool? HasPrivilege( IPath userPath, IList<IPath> groupPaths, IPrivilege privilege );
+      bool? HasPrivilege( Path userPath, IList<Path> groupPaths, IPrivilege privilege );
 
    }
 

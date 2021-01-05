@@ -6,25 +6,13 @@
 
 using System;
 
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.path {
 
    public static class PathExtensions {
 
-      public static IPath Append( this IPath left, IPath right ) {
-         Path pLeft = left as Path??new Path( left );
-         Path pRight = right as Path??new Path( right );
-         return pLeft.Append( pRight );
-      }
-
-      public static IPath Append( this IPath left, string resourceName ) {
-         Path pLeft = left as Path??new Path( left );
-         return pLeft.Append( resourceName );
-      }
-
-      public static IPath RelativeTo( this IPath left, IPath right ) {
+      public static Path RelativeTo( this Path left, Path right ) {
          left.MustNotBeNull( nameof( left ) );
          right.MustNotBeNull( nameof( right ) );
 
@@ -41,7 +29,7 @@ namespace jsc.commons.hierarchy.path {
          return Path.Parse( leftString.Substring( rightString.Length, leftString.Length-rightString.Length ) );
       }
 
-      public static bool IsContainedIn( this IPath left, IPath right ) {
+      public static bool IsContainedIn( this Path left, Path right ) {
          left.MustNotBeNull( nameof( left ) );
          right.MustNotBeNull( nameof( right ) );
 

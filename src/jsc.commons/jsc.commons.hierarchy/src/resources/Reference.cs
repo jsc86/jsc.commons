@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using jsc.commons.behaving;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.classes;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
@@ -19,12 +19,12 @@ namespace jsc.commons.hierarchy.resources {
 
    public class Reference : ResourceBase<ReferenceResourceClass> {
 
-      public Reference( IPath path, string name, IMeta meta = null ) :
+      public Reference( Path path, string name, IMeta meta = null ) :
             base( path, name, ReferenceResourceClass.Instance, meta ) {
          // nop
       }
 
-      public async Task<IResource> LinkToAsync( IPath path, IHierarchyAsync hierarchy ) {
+      public async Task<IResource> LinkToAsync( Path path, IHierarchyAsync hierarchy ) {
          path.MustNotBeNull( nameof(path) );
          hierarchy.MustNotBeNull( nameof(hierarchy) );
 
@@ -37,7 +37,7 @@ namespace jsc.commons.hierarchy.resources {
          return resource;
       }
 
-      public IResource LinkTo( IPath path, IHierarchy hierarchy ) {
+      public IResource LinkTo( Path path, IHierarchy hierarchy ) {
          path.MustNotBeNull( nameof(path) );
          hierarchy.MustNotBeNull( nameof(hierarchy) );
 
@@ -63,7 +63,7 @@ namespace jsc.commons.hierarchy.resources {
          resource.SetBackReference( this );
       }
 
-      public IPath GetLinkedResourcePath( ) {
+      public Path GetLinkedResourcePath( ) {
          if( !Meta.TryGet( out ReferenceMeta referenceMeta ) )
             return null;
 
@@ -76,7 +76,7 @@ namespace jsc.commons.hierarchy.resources {
       public IResource GetLinkedResource( IHierarchy hierarchy ) {
          hierarchy.MustNotBeNull( nameof(hierarchy) );
 
-         IPath path = GetLinkedResourcePath( );
+         Path path = GetLinkedResourcePath( );
 
          return hierarchy.Get<IResource>( path );
       }

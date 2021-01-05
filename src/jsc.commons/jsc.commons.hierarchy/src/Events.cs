@@ -7,7 +7,7 @@
 using System.Threading.Tasks;
 
 using jsc.commons.hierarchy.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -62,7 +62,7 @@ namespace jsc.commons.hierarchy {
 
    public class ResourceMovedEventArgs : ResourceEventArgs {
 
-      public ResourceMovedEventArgs( IHierarchyAsync hierarchyAsync, IResource resource, IPath newPath ) : base(
+      public ResourceMovedEventArgs( IHierarchyAsync hierarchyAsync, IResource resource, Path newPath ) : base(
             hierarchyAsync,
             resource ) {
          newPath.MustNotBeNull( nameof( newPath ) );
@@ -70,7 +70,7 @@ namespace jsc.commons.hierarchy {
          NewPath = newPath;
       }
 
-      public IPath NewPath { get; }
+      public Path NewPath { get; }
 
    }
 

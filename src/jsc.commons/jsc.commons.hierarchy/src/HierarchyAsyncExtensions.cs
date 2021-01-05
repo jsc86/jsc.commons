@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -18,7 +17,7 @@ namespace jsc.commons.hierarchy {
 
       public static async Task<T> GetAsync<T>(
             this IHierarchyAsync hierarchyAsync,
-            IPath path,
+            Path path,
             string resourceName ) where T : IResource {
          hierarchyAsync.MustNotBeNull( nameof( HierarchyAsync ) );
 

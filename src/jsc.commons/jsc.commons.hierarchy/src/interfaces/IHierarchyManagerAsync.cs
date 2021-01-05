@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using jsc.commons.hierarchy.acl.privileges.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.groups;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
 
@@ -22,27 +22,27 @@ namespace jsc.commons.hierarchy.interfaces {
 
       IHierarchyManagerConfiguration Configuration { get; }
 
-      IPath BaseFolderPath { get; }
+      Path BaseFolderPath { get; }
 
-      IPath UsersFolderPath { get; }
+      Path UsersFolderPath { get; }
 
-      IPath GroupsFolderPath { get; }
+      Path GroupsFolderPath { get; }
 
       Task<User> GetSystemUserAsync( );
 
-      Task<T> GetAsync<T>( User user, IPath path ) where T : IResource;
+      Task<T> GetAsync<T>( User user, Path path ) where T : IResource;
 
       Task SetAsync( User user, IResource resource );
 
       Task DeleteAsync( User user, IResource resource );
 
-      Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, IPath path );
+      Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, Path path );
 
-      Task MoveAsync( User user, IResource resource, IPath targetPath );
+      Task MoveAsync( User user, IResource resource, Path targetPath );
 
       Task<IEnumerable<Group>> GetGroupsForUserAsync( User user );
 
-      Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, IPath path );
+      Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, Path path );
 
    }
 

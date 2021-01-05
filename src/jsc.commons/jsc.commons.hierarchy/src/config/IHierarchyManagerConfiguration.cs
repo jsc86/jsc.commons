@@ -11,7 +11,6 @@ using jsc.commons.config;
 using jsc.commons.config.interfaces;
 using jsc.commons.hierarchy.acl.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.users;
 
 namespace jsc.commons.hierarchy.config {
@@ -20,19 +19,19 @@ namespace jsc.commons.hierarchy.config {
    public interface IHierarchyManagerConfiguration : IConfiguration {
 
       [ConfigValue]
-      IPath BaseFolder { get; set; }
+      Path BaseFolder { get; set; }
 
       [ConfigValue]
-      IPath UsersFolder { get; set; }
+      Path UsersFolder { get; set; }
 
       [ConfigValue]
-      IPath GroupsFolder { get; set; }
+      Path GroupsFolder { get; set; }
 
       [ConfigValue( Default = "sysusr" )]
       string SystemUser { get; set; }
 
       [ConfigValue]
-      List<IPath> ExcludePaths { get; set; }
+      List<Path> ExcludePaths { get; set; }
 
       [ConfigValue]
       Action<IAccessControlList, User> BaseFolderAclFactory { get; set; }
@@ -55,7 +54,7 @@ namespace jsc.commons.hierarchy.config {
                               ( ) => new Path( "groups", false ) ),
                         new Tuple<string, Func<object>>(
                               nameof( IHierarchyManagerConfiguration.ExcludePaths ),
-                              ( ) => new List<IPath>( ) )
+                              ( ) => new List<Path>( ) )
                   } ) { }
 
    }

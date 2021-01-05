@@ -11,7 +11,7 @@ using System.Linq;
 using jsc.commons.hierarchy.acl.interfaces;
 using jsc.commons.hierarchy.acl.privileges;
 using jsc.commons.hierarchy.acl.privileges.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.acl {
@@ -38,7 +38,7 @@ namespace jsc.commons.hierarchy.acl {
          _acrs.Remove( acr );
       }
 
-      public bool? HasPrivilege( IPath userPath, IList<IPath> groupPaths, IPrivilege privilege ) {
+      public bool? HasPrivilege( Path userPath, IList<Path> groupPaths, IPrivilege privilege ) {
          foreach( IAccessControlRule acr in _acrs.Reverse( ) )
             switch( acr ) {
                case AcrInherit acrInherit:

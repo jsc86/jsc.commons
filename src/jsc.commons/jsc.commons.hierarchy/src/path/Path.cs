@@ -11,32 +11,22 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.misc;
 
 namespace jsc.commons.hierarchy.path {
 
-   public class Path : IPath, IComparable, IComparable<Path> {
+   public class Path : IComparable, IComparable<Path> {
 
       private static readonly Regex __pathSepRegex = new Regex( "/" );
 
       private readonly string[] _elements;
-      private IPath _basePath;
+      private Path _basePath;
 
       private string _stringRepresentation;
 
       private Path( string[] elements, bool absolute ) {
          _elements = elements;
          Absolute = absolute;
-         Elements = new EnumerableWrapper<string>( _elements );
-      }
-
-      internal Path( IPath path ) {
-         if( path == null )
-            throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
-
-         _elements = path.Elements.ToArray( );
-         Absolute = path.Absolute;
          Elements = new EnumerableWrapper<string>( _elements );
       }
 
@@ -75,19 +65,12 @@ namespace jsc.commons.hierarchy.path {
 
       public static Path RootPath { get; } = new Path( true );
 
-      public int CompareTo( Path other ) {
-         if( other == null )
-            return -1;
-
-         return CompareTo( (IPath)other );
-      }
-
       public bool Absolute { get; }
 
       public IEnumerable<string> Elements { get; }
       public string Name => _elements.Last( );
 
-      public IPath BasePath {
+      public Path BasePath {
          get {
             if( _basePath == null ) {
                if( _elements.Length < 1 )
@@ -106,14 +89,13 @@ namespace jsc.commons.hierarchy.path {
          if( obj == null )
             return -1;
 
-         return obj switch {
-               Path path => CompareTo( (IPath)path ),
-               IPath path => CompareTo( path ),
-               _ => -1
-         };
+         if( !( obj is Path other ) )
+            return -1;
+
+         return CompareTo( other );
       }
 
-      public int CompareTo( IPath other ) {
+      public int CompareTo( Path other ) {
          if( other == null )
             return -1;
 
@@ -208,7 +190,7 @@ namespace jsc.commons.hierarchy.path {
          if( obj == null )
             return false;
 
-         if( !( obj is IPath other ) )
+         if( !( obj is Path other ) )
             return false;
 
          return CompareTo( other ) == 0;

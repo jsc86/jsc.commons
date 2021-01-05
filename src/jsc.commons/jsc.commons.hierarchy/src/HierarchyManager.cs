@@ -1,3 +1,9 @@
+// Licensed under the MIT license.
+// See LICENSE file in the project root directory for full information.
+// Copyright (c) 2021 Jacob Schlesinger
+// File authors (in chronological order):
+//  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,7 +12,7 @@ using jsc.commons.hierarchy.acl.privileges.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
 
@@ -24,13 +30,13 @@ namespace jsc.commons.hierarchy {
 
       public IHierarchy Hierarchy { get; }
 
-      public T Get<T>( User user, IPath path ) where T : IResource {
+      public T Get<T>( User user, Path path ) where T : IResource {
          Task<T> getTask = GetAsync<T>( user, path );
          getTask.Wait( Hierarchy.Timeout );
          return getTask.Result;
       }
 
-      public bool TryGet<T>( User user, IPath path, out T resource ) where T : IResource {
+      public bool TryGet<T>( User user, Path path, out T resource ) where T : IResource {
          try {
             resource = Get<T>( user, path );
          } catch( Exception ) {
@@ -51,18 +57,18 @@ namespace jsc.commons.hierarchy {
          deleteTask.Wait( Hierarchy.Timeout );
       }
 
-      public IEnumerable<string> GetChildrenResourceNames( User user, IPath path ) {
+      public IEnumerable<string> GetChildrenResourceNames( User user, Path path ) {
          Task<IEnumerable<string>> getTask = GetChildrenResourceNamesAsync( user, path );
          getTask.Wait( Hierarchy.Timeout );
          return getTask.Result;
       }
 
-      public void Move( User user, IResource resource, IPath targetPath ) {
+      public void Move( User user, IResource resource, Path targetPath ) {
          Task moveTask = MoveAsync( user, resource, targetPath );
          moveTask.Wait( Hierarchy.Timeout );
       }
 
-      public bool HasPrivilege( User user, IPrivilege privilege, IPath path ) {
+      public bool HasPrivilege( User user, IPrivilege privilege, Path path ) {
          Task<bool> hasPrivilegeTask = HasPrivilegeAsync( user, privilege, path );
          hasPrivilegeTask.Wait( Hierarchy.Timeout );
          return hasPrivilegeTask.Result;

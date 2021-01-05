@@ -7,27 +7,27 @@
 using System;
 
 using jsc.commons.hierarchy.backend.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 
 namespace jsc.commons.hierarchy.backend.exceptions {
 
    public class BackendResourceNotFoundException : BackendExceptionBase {
 
-      public BackendResourceNotFoundException( IHierarchyBackend backend, IPath resourcePath, string message ) :
+      public BackendResourceNotFoundException( IHierarchyBackend backend, Path resourcePath, string message ) :
             base( backend, message ) {
          ResourcePath = resourcePath;
       }
 
       public BackendResourceNotFoundException(
             IHierarchyBackend backend,
-            IPath resourcePath,
+            Path resourcePath,
             string message,
             Exception innerException ) :
             base( backend, message, innerException ) {
          ResourcePath = resourcePath;
       }
 
-      private IPath ResourcePath { get; }
+      private Path ResourcePath { get; }
 
    }
 

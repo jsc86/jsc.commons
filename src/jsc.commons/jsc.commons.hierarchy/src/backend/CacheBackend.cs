@@ -13,7 +13,6 @@ using jsc.commons.async;
 using jsc.commons.hierarchy.backend.interfaces;
 using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.misc;
 
@@ -73,7 +72,7 @@ namespace jsc.commons.hierarchy.backend {
          _ets.Dispose( );
       }
 
-      public async Task<IResource> Get( IPath path ) {
+      public async Task<IResource> Get( Path path ) {
          path.MustNotBeNull( nameof( path ) );
          if( _disposed )
             throw new ObjectDisposedException( nameof( CacheBackend ) );
@@ -91,7 +90,7 @@ namespace jsc.commons.hierarchy.backend {
          return resource;
       }
 
-      public async Task<IEnumerable<string>> List( IPath path ) {
+      public async Task<IEnumerable<string>> List( Path path ) {
          path.MustNotBeNull( nameof( path ) );
          if( _disposed )
             throw new ObjectDisposedException( nameof( CacheBackend ) );
@@ -131,11 +130,11 @@ namespace jsc.commons.hierarchy.backend {
          await _backend.Delete( resource );
       }
 
-      public async Task Move( IResource resource, IPath targetPath ) {
+      public async Task Move( IResource resource, Path targetPath ) {
          if( _backendSupportsMove )
             throw new NotImplementedException( );
 
-         IPath oldPath = resource.Path;
+         Path oldPath = resource.Path;
          await _backend.Move( resource, targetPath );
 
          List<string> toBeRemoved = new List<string>( );
@@ -160,7 +159,7 @@ namespace jsc.commons.hierarchy.backend {
          }
       }
 
-      private static bool IsSubPathOf( IPath sub, IPath path ) {
+      private static bool IsSubPathOf( Path sub, Path path ) {
          IEnumerator<string> pathEnumerator = path.Elements.GetEnumerator( );
          try {
             foreach( string subElement in sub.Elements ) {

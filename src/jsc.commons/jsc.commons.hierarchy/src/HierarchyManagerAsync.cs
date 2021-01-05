@@ -19,7 +19,6 @@ using jsc.commons.hierarchy.exceptions;
 using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.interfaces;
 using jsc.commons.hierarchy.path;
-using jsc.commons.hierarchy.path.interfaces;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
 using jsc.commons.hierarchy.users;
@@ -44,7 +43,7 @@ namespace jsc.commons.hierarchy {
                   nameof( hierarchyManagerConfiguration.GroupsFolder ) );
             hierarchyManagerConfiguration.SystemUser.MustNotBeNull(
                   nameof( hierarchyManagerConfiguration.SystemUser ) );
-            hierarchyManagerConfiguration.ExcludePaths ??= new List<IPath>( 0 );
+            hierarchyManagerConfiguration.ExcludePaths ??= new List<Path>( 0 );
          }
 
          HierarchyAsync = hierarchy;
@@ -57,11 +56,11 @@ namespace jsc.commons.hierarchy {
          BootStrap( ).Wait( ); // timeout?
       }
 
-      public IPath BaseFolderPath => Configuration.BaseFolder;
+      public Path BaseFolderPath => Configuration.BaseFolder;
 
-      public IPath UsersFolderPath => BaseFolderPath.Append( Configuration.UsersFolder );
+      public Path UsersFolderPath => BaseFolderPath.Append( Configuration.UsersFolder );
 
-      public IPath GroupsFolderPath => BaseFolderPath.Append( Configuration.GroupsFolder );
+      public Path GroupsFolderPath => BaseFolderPath.Append( Configuration.GroupsFolder );
 
       public IHierarchyAsync HierarchyAsync { get; }
 
@@ -71,7 +70,7 @@ namespace jsc.commons.hierarchy {
          return await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( Configuration.SystemUser ) );
       }
 
-      public async Task<T> GetAsync<T>( User user, IPath path ) where T : IResource {
+      public async Task<T> GetAsync<T>( User user, Path path ) where T : IResource {
          CheckResponsibility( path );
          await CheckPrivilege( user, path, ReadPrivilege.Instance );
 
@@ -92,14 +91,14 @@ namespace jsc.commons.hierarchy {
          await HierarchyAsync.DeleteAsync( resource );
       }
 
-      public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, IPath path ) {
+      public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, Path path ) {
          CheckResponsibility( path );
          await CheckPrivilege( user, path, ReadPrivilege.Instance );
 
          return await HierarchyAsync.GetChildrenResourceNamesAsync( path );
       }
 
-      public async Task MoveAsync( User user, IResource resource, IPath targetPath ) {
+      public async Task MoveAsync( User user, IResource resource, Path targetPath ) {
          CheckResponsibility( resource.Path );
          CheckResponsibility( targetPath );
          await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
@@ -119,8 +118,8 @@ namespace jsc.commons.hierarchy {
          return groups;
       }
 
-      public async Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, IPath path ) {
-         IList<IPath> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
+      public async Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, Path path ) {
+         IList<Path> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
          do {
             IResource resource = await HierarchyAsync.GetAsync<IResource>( path );
             IAccessControlList acl = resource.GetAccessControlList( HierarchyAsync.Configuration );
@@ -141,7 +140,7 @@ namespace jsc.commons.hierarchy {
          return false;
       }
 
-      private bool CheckResponsibility( IPath path, bool throwException = true ) {
+      private bool CheckResponsibility( Path path, bool throwException = true ) {
          if( BaseFolderPath.IsContainedIn( path ) ) {
             if( throwException )
                throw new PathOutsideOfBoundsException(
@@ -154,7 +153,7 @@ namespace jsc.commons.hierarchy {
             return false;
          }
 
-         foreach( IPath excludedPath in Configuration.ExcludePaths )
+         foreach( Path excludedPath in Configuration.ExcludePaths )
             if( excludedPath.IsContainedIn( path ) ) {
                if( throwException )
                   throw new PathOutsideOfBoundsException(
@@ -169,13 +168,13 @@ namespace jsc.commons.hierarchy {
          return true;
       }
 
-      private async Task CheckPrivilege( User user, IPath path, IPrivilege privilege ) {
+      private async Task CheckPrivilege( User user, Path path, IPrivilege privilege ) {
          if( !await HasPrivilegeAsync( user, privilege, path ) )
             throw new InsufficientPrivilegesException( user, path, privilege );
       }
 
       private async Task<IEnumerable<Group>> GetParentGroupsAsync( Group group ) {
-         IPath parentPath = group.Path.BasePath;
+         Path parentPath = group.Path.BasePath;
          if( parentPath == Path.RootPath )
             return Enumerable.Empty<Group>( );
 
@@ -251,7 +250,7 @@ namespace jsc.commons.hierarchy {
       }
 
 
-      private async Task<Folder> GetOrCreateFolderRecursive( IPath path ) {
+      private async Task<Folder> GetOrCreateFolderRecursive( Path path ) {
          path.MustNotBeNull( nameof( path ) );
 
          if( path.Equals( Path.RootPath ) ) {
@@ -275,10 +274,10 @@ namespace jsc.commons.hierarchy {
             return rootFolder;
          }
 
-         IPath currentPath = new Path( true );
+         Path currentPath = new Path( true );
          Folder folder = null;
          foreach( string pathElement in path.Elements ) {
-            IPath previousPath = currentPath;
+            Path previousPath = currentPath;
             currentPath = currentPath.Append( pathElement );
             try {
                folder = await HierarchyAsync.GetAsync<Folder>( currentPath );

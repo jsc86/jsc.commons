@@ -1,6 +1,6 @@
 // Licensed under the MIT license.
 // See LICENSE file in the project root directory for full information.
-// Copyright (c) 2020 Jacob Schlesinger
+// Copyright (c) 2021 Jacob Schlesinger
 // File authors (in chronological order):
 //  - Jacob Schlesinger <schlesinger.jacob@gmail.com>
 
@@ -11,7 +11,7 @@ using System.Linq;
 
 using jsc.commons.hierarchy.acl.privileges.classes.interfaces;
 using jsc.commons.hierarchy.meta.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy.resources.classes {
@@ -34,7 +34,7 @@ namespace jsc.commons.hierarchy.resources.classes {
       public string Name { get; }
       public ulong Id { get; }
       public IEnumerable<IPrivilegeClass> ApplicablePrivileges { get; }
-      public abstract IResource CreateResource( IPath path, string name, IMeta meta = null );
+      public abstract IResource CreateResource( Path path, string name, IMeta meta = null );
 
       public override string ToString( ) {
          return Name;

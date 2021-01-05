@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 
 using jsc.commons.hierarchy.interfaces;
-using jsc.commons.hierarchy.path.interfaces;
+using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources.interfaces;
 
 namespace jsc.commons.hierarchy {
@@ -21,11 +21,11 @@ namespace jsc.commons.hierarchy {
          _hierarchy = hierarchy;
       }
 
-      public T Get<T>( IPath path ) where T : IResource {
+      public T Get<T>( Path path ) where T : IResource {
          return _hierarchy.Get<T>( path );
       }
 
-      public bool TryGet<T>( IPath path, out T resource ) where T : IResource {
+      public bool TryGet<T>( Path path, out T resource ) where T : IResource {
          return _hierarchy.TryGet( path, out resource );
       }
 
@@ -37,11 +37,11 @@ namespace jsc.commons.hierarchy {
          _hierarchy.Delete( resource );
       }
 
-      public IEnumerable<string> GetChildrenResourceNames( IPath path ) {
+      public IEnumerable<string> GetChildrenResourceNames( Path path ) {
          return _hierarchy.GetChildrenResourceNames( path );
       }
 
-      public void Move( IResource resource, IPath targetPath ) {
+      public void Move( IResource resource, Path targetPath ) {
          _hierarchy.Move( resource, targetPath );
       }
 
