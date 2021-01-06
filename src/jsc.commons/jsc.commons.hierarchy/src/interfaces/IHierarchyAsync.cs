@@ -28,7 +28,7 @@ namespace jsc.commons.hierarchy.interfaces {
 
       Task MoveAsync( IResource resource, Path targetPath );
 
-      event ResourceSetHandler ResourceCreated;
+      event ResourceSetHandler ResourceSet;
 
       event ResourceDeletedHandler ResourceDeleted;
 

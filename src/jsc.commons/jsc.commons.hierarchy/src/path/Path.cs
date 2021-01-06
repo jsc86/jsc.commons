@@ -204,6 +204,25 @@ namespace jsc.commons.hierarchy.path {
          return hashCode;
       }
 
+      public static bool operator ==( Path p1, Path p2 ) {
+         if( (object)p1 == null
+               &&(object)p2 == null )
+            return true;
+
+         if( (object)p1 == null
+               ||(object)p2 == null )
+            return false;
+
+         if( p1.Absolute != p2.Absolute )
+            return false;
+
+         return p1._elements.SequenceEqual( p2._elements );
+      }
+
+      public static bool operator !=( Path p1, Path p2 ) {
+         return !( p1 == p2 );
+      }
+
    }
 
 }

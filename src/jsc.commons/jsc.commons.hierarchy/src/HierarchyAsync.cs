@@ -50,8 +50,8 @@ namespace jsc.commons.hierarchy {
 
          await _backend.Set( resource );
 
-         if( ResourceCreated != null )
-            await ResourceCreated( this, new ResourceSetEventArgs( this, resource ) );
+         if( ResourceSet != null )
+            await ResourceSet( this, new ResourceSetEventArgs( this, resource ) );
       }
 
       public async Task DeleteAsync( IResource resource ) {
@@ -94,7 +94,7 @@ namespace jsc.commons.hierarchy {
             await ResourceMoved( this, new ResourceMovedEventArgs( this, resource, targetPath ) );
       }
 
-      public event ResourceSetHandler ResourceCreated;
+      public event ResourceSetHandler ResourceSet;
       public event ResourceDeletedHandler ResourceDeleted;
       public event ResourceMovedHandler ResourceMoved;
 
@@ -110,7 +110,7 @@ namespace jsc.commons.hierarchy {
       }
 
       private async Task FallBackMoveAsync( IResource resource, Path targetPath ) {
-         if( resource is IFileResource ) {
+         if( !( resource is IFolderResource ) ) {
             IResource newResource = resource.ResourceClass.CreateResource( targetPath, resource.Name, resource.Meta );
             try {
                await _backend.Set( newResource );
@@ -141,7 +141,7 @@ namespace jsc.commons.hierarchy {
       }
 
       private async Task FallBackMoveAsyncRecursive( IResource resource, Path targetPath ) {
-         if( resource is IFileResource ) {
+         if( !( resource is IFolderResource ) ) {
             await FallBackMoveAsync( resource, targetPath );
             return;
          }

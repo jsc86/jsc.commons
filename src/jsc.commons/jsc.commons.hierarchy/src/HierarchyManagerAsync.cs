@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using jsc.commons.behaving;
+using jsc.commons.behaving.interfaces;
 using jsc.commons.config;
 using jsc.commons.hierarchy.acl;
 using jsc.commons.hierarchy.acl.interfaces;
@@ -18,6 +20,8 @@ using jsc.commons.hierarchy.config;
 using jsc.commons.hierarchy.exceptions;
 using jsc.commons.hierarchy.groups;
 using jsc.commons.hierarchy.interfaces;
+using jsc.commons.hierarchy.meta;
+using jsc.commons.hierarchy.meta.interfaces;
 using jsc.commons.hierarchy.path;
 using jsc.commons.hierarchy.resources;
 using jsc.commons.hierarchy.resources.interfaces;
@@ -49,7 +53,7 @@ namespace jsc.commons.hierarchy {
          HierarchyAsync = hierarchy;
          Configuration ??= Config.New<IHierarchyManagerConfiguration>( );
 
-         HierarchyAsync.ResourceCreated += OnHierarchyResourceCreated;
+         HierarchyAsync.ResourceSet += OnHierarchyResourceSet;
          HierarchyAsync.ResourceDeleted += OnHierarchyResourceDeleted;
          HierarchyAsync.ResourceMoved += OnHierarchyResourceMoved;
 
@@ -134,7 +138,7 @@ namespace jsc.commons.hierarchy {
                return false;
 
             path = path.BasePath;
-         } while( BaseFolderPath.IsContainedIn( path )
+         } while( path.IsContainedIn( BaseFolderPath )
                ||BaseFolderPath.Equals( path ) );
 
          return false;
@@ -185,19 +189,22 @@ namespace jsc.commons.hierarchy {
          return new[] {parentGroup}.Union( await GetParentGroupsAsync( parentGroup ) );
       }
 
-      private Task OnHierarchyResourceMoved( object sender, ResourceMovedEventArgs args ) {
-         // TODO: implement
-         return Task.CompletedTask;
+      private async Task OnHierarchyResourceMoved( object sender, ResourceMovedEventArgs args ) {
+         foreach( IBehavior meta in args.Resource.Meta.Objects( ) )
+            if( meta.TryGetAutoModHandler( out IMetaAutoModHandler autoModHandler ) )
+               await autoModHandler.OnMove( args, this );
       }
 
-      private Task OnHierarchyResourceDeleted( object sender, ResourceDeletedEventArgs args ) {
-         // TODO: implement
-         return Task.CompletedTask;
+      private async Task OnHierarchyResourceDeleted( object sender, ResourceDeletedEventArgs args ) {
+         foreach( IBehavior meta in args.Resource.Meta.Objects( ) )
+            if( meta.TryGetAutoModHandler( out IMetaAutoModHandler autoModHandler ) )
+               await autoModHandler.OnDelete( args, this );
       }
 
-      private Task OnHierarchyResourceCreated( object sender, ResourceSetEventArgs args ) {
-         // TODO: implement
-         return Task.CompletedTask;
+      private async Task OnHierarchyResourceSet( object sender, ResourceSetEventArgs args ) {
+         foreach( IBehavior meta in args.Resource.Meta.Objects( ) )
+            if( meta.TryGetAutoModHandler( out IMetaAutoModHandler autoModHandler ) )
+               await autoModHandler.OnSet( args, this );
       }
 
       private async Task BootStrap( ) {

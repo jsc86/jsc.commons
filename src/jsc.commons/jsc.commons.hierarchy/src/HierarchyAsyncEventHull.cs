@@ -25,7 +25,7 @@ namespace jsc.commons.hierarchy {
 
          _hierarchy = hierarchy;
 
-         _hierarchy.ResourceCreated += OnResourceCreated;
+         _hierarchy.ResourceSet += OnResourceSet;
          _hierarchy.ResourceDeleted += OnResourceDeleted;
          _hierarchy.ResourceMoved += OnResourceMoved;
       }
@@ -82,7 +82,7 @@ namespace jsc.commons.hierarchy {
                await ResourceMoved( this, args );
       }
 
-      public event ResourceSetHandler ResourceCreated;
+      public event ResourceSetHandler ResourceSet;
       public event ResourceDeletedHandler ResourceDeleted;
       public event ResourceMovedHandler ResourceMoved;
 
@@ -94,8 +94,8 @@ namespace jsc.commons.hierarchy {
          return ResourceDeleted?.Invoke( this, new ResourceDeletedEventArgs( this, args.Resource ) );
       }
 
-      private Task OnResourceCreated( object sender, ResourceSetEventArgs args ) {
-         return ResourceCreated?.Invoke( sender, new ResourceSetEventArgs( this, args.Resource ) );
+      private Task OnResourceSet( object sender, ResourceSetEventArgs args ) {
+         return ResourceSet?.Invoke( sender, new ResourceSetEventArgs( this, args.Resource ) );
       }
 
       private async Task<IEnumerable<IResource>> TraverseResources( IFolderResource resource ) {
