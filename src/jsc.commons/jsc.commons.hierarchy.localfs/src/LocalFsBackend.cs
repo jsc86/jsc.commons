@@ -32,9 +32,13 @@ namespace jsc.commons.hierarchy.localfs {
 
    public class LocalFsBackend : IHierarchyBackend {
 
+      public const string TraceModule = "LOCAL_FS";
+
       private readonly ILocalFsBackendConfiguration _config;
 
       private readonly IHierarchyConfiguration _hierarchyConfig;
+
+      private readonly TraceHandler _traceHandler;
       private Path _basePath;
 
       public LocalFsBackend(
@@ -54,6 +58,8 @@ namespace jsc.commons.hierarchy.localfs {
                      this,
                      $"base path {_config.BasePath.FullName} does not exist" );
          }
+
+         _traceHandler = config.TraceHandler;
       }
 
       private Path BasePath => _basePath ??= Path.Parse( _config.BasePath.FullName );
@@ -63,103 +69,139 @@ namespace jsc.commons.hierarchy.localfs {
       }
 
       public Task<IResource> Get( Path path ) {
-         path.MustNotBeNull( nameof( path ) );
-
+         _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintBegin, path );
          try {
-            IMeta meta = null;
-            string fullPath = BasePath.Append( path ).ToString( );
-            DirectoryInfo diResource = new DirectoryInfo( fullPath );
-            if( diResource.Exists ) {
-               meta = GetMeta( new FileInfo( BasePath.Append( _config.MetaSuffix ).ToString( ) ) );
-            } else {
-               FileInfo fiResource = new FileInfo( fullPath );
-               if( fiResource.Exists )
-                  meta = GetMeta( new FileInfo( BasePath+_config.MetaSuffix ) );
+            path.MustNotBeNull( nameof( path ) );
+
+            try {
+               IMeta meta = null;
+               string fullPath = BasePath.Append( path ).ToString( );
+               DirectoryInfo diResource = new DirectoryInfo( fullPath );
+               if( diResource.Exists ) {
+                  meta = GetMeta( new FileInfo( BasePath.Append( _config.MetaSuffix ).ToString( ) ) );
+               } else {
+                  FileInfo fiResource = new FileInfo( fullPath );
+                  if( fiResource.Exists )
+                     meta = GetMeta( new FileInfo( BasePath+_config.MetaSuffix ) );
+               }
+
+               if( meta == null )
+                  throw new BackendResourceNotFoundException( this, path, $"no file or folder {path} found" );
+
+               BasicMeta basicMeta;
+               if( !meta.TryGet( out basicMeta ) )
+                  throw new BackendMissingMetaException( this, path, $"missing meta information for path {path}" );
+
+               IResourceClass resourceClass = _hierarchyConfig.KnownResourceClasses.FirstOrDefault(
+                     rc => rc.Id.Equals( basicMeta.ResourceClass ) );
+
+               if( resourceClass == null )
+                  throw new BackendUnknownResourceClassException(
+                        this,
+                        basicMeta.ResourceClass,
+                        $"unknown resource class id {basicMeta.ResourceClass}" );
+
+               Task<IResource> resourceTask = path.Equals( Path.RootPath )
+                     ? Task.FromResult( (IResource)new Folder( Path.RootPath, null, meta ) )
+                     : Task.FromResult( resourceClass.CreateResource( path.BasePath, path.Name, meta ) );
+
+               _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintEnd, path );
+
+               return resourceTask;
+            } catch( BackendExceptionBase ) {
+               throw;
+            } catch( Exception exc ) {
+               throw new BackendReadException( this, path, $"failed to get resource for path {path}", exc );
             }
-
-            if( meta == null )
-               throw new BackendResourceNotFoundException( this, path, $"no file or folder {path} found" );
-
-            BasicMeta basicMeta;
-            if( !meta.TryGet( out basicMeta ) )
-               throw new BackendMissingMetaException( this, path, $"missing meta information for path {path}" );
-
-            IResourceClass resourceClass = _hierarchyConfig.KnownResourceClasses.FirstOrDefault(
-                  rc => rc.Id.Equals( basicMeta.ResourceClass ) );
-
-            if( resourceClass == null )
-               throw new BackendUnknownResourceClassException(
-                     this,
-                     basicMeta.ResourceClass,
-                     $"unknown resource class id {basicMeta.ResourceClass}" );
-
-            return path.Equals( Path.RootPath )
-                  ? Task.FromResult( (IResource)new Folder( Path.RootPath, null, meta ) )
-                  : Task.FromResult( resourceClass.CreateResource( path.BasePath, path.Name, meta ) );
-         } catch( BackendExceptionBase ) {
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintError, path );
             throw;
-         } catch( Exception exc ) {
-            throw new BackendReadException( this, path, $"failed to get resource for path {path}", exc );
          }
       }
 
       public Task<IEnumerable<string>> List( Path path ) {
-         path.MustNotBeNull( nameof( path ) );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintBegin, path );
          try {
-            string fullPath = BasePath.Append( path ).ToString( );
-            DirectoryInfo diResource = new DirectoryInfo( fullPath );
-            if( !diResource.Exists )
-               throw new BackendResourceNotFoundException( this, path, $"no folder {path} found" );
+            path.MustNotBeNull( nameof( path ) );
+            try {
+               string fullPath = BasePath.Append( path ).ToString( );
+               DirectoryInfo diResource = new DirectoryInfo( fullPath );
+               if( !diResource.Exists )
+                  throw new BackendResourceNotFoundException( this, path, $"no folder {path} found" );
 
-            string metaSuffix = _config.MetaSuffix;
-            return Task.FromResult(
-                  (IEnumerable<string>)
-                  diResource.GetDirectories( )
-                        .Select( di => di.Name )
-                        .Union(
-                              diResource.GetFiles( )
-                                    .Where( fi => !fi.Name.EndsWith( metaSuffix ) )
-                                    .Select( fi => fi.Name )
-                        )
-                        .ToList( ) );
-         } catch( BackendExceptionBase ) {
+               string metaSuffix = _config.MetaSuffix;
+               Task<IEnumerable<string>> listTask = Task.FromResult(
+                     (IEnumerable<string>)
+                     diResource.GetDirectories( )
+                           .Select( di => di.Name )
+                           .Union(
+                                 diResource.GetFiles( )
+                                       .Where( fi => !fi.Name.EndsWith( metaSuffix ) )
+                                       .Select( fi => fi.Name )
+                           )
+                           .ToList( ) );
+
+               _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintEnd, path );
+
+               return listTask;
+            } catch( BackendExceptionBase ) {
+               throw;
+            } catch( Exception exc ) {
+               throw new BackendReadException( this, path, $"failed to list resources for path {path}", exc );
+            }
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintError, path );
             throw;
-         } catch( Exception exc ) {
-            throw new BackendReadException( this, path, $"failed to list resources for path {path}", exc );
          }
       }
 
       public Task Set( IResource resource ) {
-         resource.MustNotBeNull( nameof( resource ) );
-
+         _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintBegin, resource?.Path );
          try {
-            if( resource is FolderResourceBase )
-               SetFolder( resource );
-            else
-               SetFile( resource );
+            resource.MustNotBeNull( nameof( resource ) );
 
-            return Task.CompletedTask;
-         } catch( BackendExceptionBase ) {
+            try {
+               if( resource is FolderResourceBase )
+                  SetFolder( resource );
+               else
+                  SetFile( resource );
+
+               _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintEnd, resource?.Path );
+
+               return Task.CompletedTask;
+            } catch( BackendExceptionBase ) {
+               throw;
+            } catch( Exception exc ) {
+               throw new BackendWriteException( this, resource, $"failed to write resource {resource}", exc );
+            }
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintError, resource?.Path );
             throw;
-         } catch( Exception exc ) {
-            throw new BackendWriteException( this, resource, $"failed to write resource {resource}", exc );
          }
       }
 
       public Task Delete( IResource resource ) {
-         resource.MustNotBeNull( nameof( resource ) );
-
+         _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintBegin, resource?.Path );
          try {
-            if( resource is FolderResourceBase )
-               DeleteFolder( resource );
-            else
-               DeleteFile( resource );
+            resource.MustNotBeNull( nameof( resource ) );
 
-            return Task.CompletedTask;
-         } catch( BackendExceptionBase ) {
+            try {
+               if( resource is FolderResourceBase )
+                  DeleteFolder( resource );
+               else
+                  DeleteFile( resource );
+
+               _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintEnd, resource?.Path );
+
+               return Task.CompletedTask;
+            } catch( BackendExceptionBase ) {
+               throw;
+            } catch( Exception exc ) {
+               throw new BackendDeleteException( this, resource, $"failed to delete resource {resource}", exc );
+            }
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintError, resource?.Path );
             throw;
-         } catch( Exception exc ) {
-            throw new BackendDeleteException( this, resource, $"failed to delete resource {resource}", exc );
          }
       }
 

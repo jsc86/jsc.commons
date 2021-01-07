@@ -21,6 +21,9 @@ namespace jsc.commons.hierarchy.config {
       [ConfigValue]
       Func<IHierarchyConfiguration, IBackendConfiguration, IHierarchyBackend> BackendFactory { get; set; }
 
+      [ConfigValue]
+      TraceHandler TraceHandler { get; set; }
+
    }
 
 }

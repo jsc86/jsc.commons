@@ -33,6 +33,9 @@ namespace jsc.commons.hierarchy.config {
       [ConfigValue( Default = false )]
       bool AllowUseOfMoveFallback { get; set; }
 
+      [ConfigValue]
+      TraceHandler TraceHandler { get; set; }
+
    }
 
    public class HierarchyConfigurationDefaultsProvider : DefaultsProviderBase {

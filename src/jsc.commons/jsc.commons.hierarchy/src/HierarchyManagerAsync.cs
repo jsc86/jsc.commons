@@ -34,6 +34,15 @@ namespace jsc.commons.hierarchy {
 
    public class HierarchyManagerAsync : IHierarchyManagerAsync {
 
+      public const string TraceModule = "HIER_MGR";
+
+      public const string TraceActionGetSysUser = "GSU";
+      public const string TraceActionCheckResponsibility = "RES";
+      public const string TraceActionCheckPrivileges = "ACL";
+      public const string TraceActionBootStrap = "BST";
+
+      private readonly TraceHandler _traceHandler;
+
       public HierarchyManagerAsync(
             IHierarchyAsync hierarchy,
             IHierarchyManagerConfiguration hierarchyManagerConfiguration = null ) {
@@ -51,7 +60,9 @@ namespace jsc.commons.hierarchy {
          }
 
          HierarchyAsync = hierarchy;
-         Configuration ??= Config.New<IHierarchyManagerConfiguration>( );
+         Configuration = hierarchyManagerConfiguration??Config.New<IHierarchyManagerConfiguration>( );
+
+         _traceHandler = Configuration.TraceHandler;
 
          HierarchyAsync.ResourceSet += OnHierarchyResourceSet;
          HierarchyAsync.ResourceDeleted += OnHierarchyResourceDeleted;
@@ -71,44 +82,109 @@ namespace jsc.commons.hierarchy {
       public IHierarchyManagerConfiguration Configuration { get; }
 
       public async Task<User> GetSystemUserAsync( ) {
-         return await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( Configuration.SystemUser ) );
+         _traceHandler?.Invoke( TraceModule, TraceActionGetSysUser, Trace.HintBegin );
+         try {
+            User systemUser = await HierarchyAsync.GetAsync<User>( UsersFolderPath.Append( Configuration.SystemUser ) );
+
+            _traceHandler?.Invoke( TraceModule, TraceActionGetSysUser, Trace.HintEnd );
+
+            return systemUser;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, TraceActionGetSysUser, Trace.HintError );
+            throw;
+         }
       }
 
       public async Task<T> GetAsync<T>( User user, Path path ) where T : IResource {
-         CheckResponsibility( path );
-         await CheckPrivilege( user, path, ReadPrivilege.Instance );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintBegin, user.Path, path );
 
-         return await HierarchyAsync.GetAsync<T>( path );
+         try {
+            CheckResponsibility( path );
+            await CheckPrivilege( user, path, ReadPrivilege.Instance );
+
+            T resource = await HierarchyAsync.GetAsync<T>( path );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintEnd, user.Path, path );
+
+            return resource;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintError, user.Path, path );
+            throw;
+         }
       }
 
       public async Task SetAsync( User user, IResource resource ) {
-         CheckResponsibility( resource.Path );
-         await CheckPrivilege( user, resource.Path.BasePath, CreatePrivilege.Instance );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintBegin, user.Path, resource?.Path );
 
-         await HierarchyAsync.SetAsync( resource );
+         try {
+            CheckResponsibility( resource.Path );
+            await CheckPrivilege( user, resource.Path.BasePath, CreatePrivilege.Instance );
+
+            await HierarchyAsync.SetAsync( resource );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintEnd, user.Path, resource.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintError, user.Path, resource?.Path );
+            throw;
+         }
       }
 
       public async Task DeleteAsync( User user, IResource resource ) {
-         CheckResponsibility( resource.Path );
-         await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintBegin, user.Path, resource?.Path );
 
-         await HierarchyAsync.DeleteAsync( resource );
+         try {
+            CheckResponsibility( resource.Path );
+            await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
+
+            await HierarchyAsync.DeleteAsync( resource );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintEnd, user.Path, resource?.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintError, user.Path, resource?.Path );
+            throw;
+         }
       }
 
       public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( User user, Path path ) {
-         CheckResponsibility( path );
-         await CheckPrivilege( user, path, ReadPrivilege.Instance );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintBegin, user.Path, path );
 
-         return await HierarchyAsync.GetChildrenResourceNamesAsync( path );
+         try {
+            CheckResponsibility( path );
+            await CheckPrivilege( user, path, ReadPrivilege.Instance );
+
+            IEnumerable<string> list = await HierarchyAsync.GetChildrenResourceNamesAsync( path );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintEnd, user.Path, path );
+
+            return list;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintError, user.Path, path );
+            throw;
+         }
       }
 
       public async Task MoveAsync( User user, IResource resource, Path targetPath ) {
-         CheckResponsibility( resource.Path );
-         CheckResponsibility( targetPath );
-         await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
-         await CheckPrivilege( user, targetPath, CreatePrivilege.Instance ); // write privilege?
+         _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintBegin, user.Path, resource?.Path, targetPath );
 
-         await HierarchyAsync.MoveAsync( resource, targetPath );
+         try {
+            CheckResponsibility( resource.Path );
+            CheckResponsibility( targetPath );
+            await CheckPrivilege( user, resource.Path, DeletePrivilege.Instance );
+            await CheckPrivilege( user, targetPath, CreatePrivilege.Instance ); // write privilege?
+
+            await HierarchyAsync.MoveAsync( resource, targetPath );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintEnd, user.Path, resource.Path, targetPath );
+         } catch( Exception ) {
+            _traceHandler?.Invoke(
+                  TraceModule,
+                  Trace.ActionMove,
+                  Trace.HintError,
+                  user.Path,
+                  resource?.Path,
+                  targetPath );
+            throw;
+         }
       }
 
       public async Task<IEnumerable<Group>> GetGroupsForUserAsync( User user ) {
@@ -123,53 +199,75 @@ namespace jsc.commons.hierarchy {
       }
 
       public async Task<bool> HasPrivilegeAsync( User user, IPrivilege privilege, Path path ) {
-         IList<Path> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
-         do {
-            IResource resource = await HierarchyAsync.GetAsync<IResource>( path );
-            IAccessControlList acl = resource.GetAccessControlList( HierarchyAsync.Configuration );
-            bool? hasPrivilege = acl.HasPrivilege( user.Path, groupPaths, privilege );
+         _traceHandler?.Invoke( TraceModule, TraceActionCheckPrivileges, Trace.HintBegin, user?.Path, path );
 
-            if( hasPrivilege.HasValue ) // if null, the ACL check is not conclusive
-               return hasPrivilege.Value;
+         try {
+            IList<Path> groupPaths = ( await GetGroupsForUserAsync( user ) ).Select( g => g.Path ).ToList( );
+            do {
+               IResource resource = await HierarchyAsync.GetAsync<IResource>( path );
+               IAccessControlList acl = resource.GetAccessControlList( HierarchyAsync.Configuration );
+               bool? hasPrivilege = acl.HasPrivilege( user.Path, groupPaths, privilege );
 
-            if( acl.AccessControlRules.Any( ) // on empty, Inherit is assumed
-                  // if the first ACR is explicitly not Inherit, we're done: disallow by default
-                  &&acl.AccessControlRules.First( ).Action != EnAccessControlAction.Inherit )
-               return false;
+               if( hasPrivilege.HasValue ) { // if null, the ACL check is not conclusive
+                  _traceHandler?.Invoke( TraceModule, TraceActionCheckPrivileges, Trace.HintEnd, user.Path, path );
+                  return hasPrivilege.Value;
+               }
 
-            path = path.BasePath;
-         } while( path.IsContainedIn( BaseFolderPath )
-               ||BaseFolderPath.Equals( path ) );
+               if( acl.AccessControlRules.Any( ) // on empty, Inherit is assumed
+                     // if the first ACR is explicitly not Inherit, we're done: disallow by default
+                     &&acl.AccessControlRules.First( ).Action != EnAccessControlAction.Inherit ) {
+                  _traceHandler?.Invoke( TraceModule, TraceActionCheckPrivileges, Trace.HintEnd, user.Path, path );
+                  return false;
+               }
 
-         return false;
+               path = path.BasePath;
+            } while( path.IsContainedIn( BaseFolderPath )
+                  ||BaseFolderPath.Equals( path ) );
+
+            _traceHandler?.Invoke( TraceModule, TraceActionCheckPrivileges, Trace.HintEnd, user.Path, path );
+            return false;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, TraceActionCheckPrivileges, Trace.HintError, user?.Path, path );
+            throw;
+         }
       }
 
-      private bool CheckResponsibility( Path path, bool throwException = true ) {
-         if( BaseFolderPath.IsContainedIn( path ) ) {
-            if( throwException )
-               throw new PathOutsideOfBoundsException(
-                     this,
-                     path,
-                     $"base path {BaseFolderPath}",
-                     BaseFolderPath,
-                     Configuration.ExcludePaths );
+      private void CheckResponsibility( Path path, bool throwException = true ) {
+         _traceHandler?.Invoke( TraceModule, TraceActionCheckResponsibility, Trace.HintBegin, path );
 
-            return false;
-         }
-
-         foreach( Path excludedPath in Configuration.ExcludePaths )
-            if( excludedPath.IsContainedIn( path ) ) {
+         try {
+            if( BaseFolderPath.IsContainedIn( path ) ) {
                if( throwException )
                   throw new PathOutsideOfBoundsException(
                         this,
                         path,
-                        $"excluded path {excludedPath}",
+                        $"base path {BaseFolderPath}",
                         BaseFolderPath,
                         Configuration.ExcludePaths );
-               return false;
+
+               _traceHandler?.Invoke( TraceModule, TraceActionCheckResponsibility, Trace.HintEnd, path );
+               return;
             }
 
-         return true;
+            foreach( Path excludedPath in Configuration.ExcludePaths )
+               if( excludedPath.IsContainedIn( path ) ) {
+                  if( throwException )
+                     throw new PathOutsideOfBoundsException(
+                           this,
+                           path,
+                           $"excluded path {excludedPath}",
+                           BaseFolderPath,
+                           Configuration.ExcludePaths );
+
+                  _traceHandler?.Invoke( TraceModule, TraceActionCheckResponsibility, Trace.HintEnd, path );
+                  return;
+               }
+
+            _traceHandler?.Invoke( TraceModule, TraceActionCheckResponsibility, Trace.HintEnd, path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, TraceActionCheckResponsibility, Trace.HintError, path );
+            throw;
+         }
       }
 
       private async Task CheckPrivilege( User user, Path path, IPrivilege privilege ) {
@@ -208,31 +306,41 @@ namespace jsc.commons.hierarchy {
       }
 
       private async Task BootStrap( ) {
+         _traceHandler?.Invoke( TraceModule, TraceActionBootStrap, Trace.HintBegin );
          try {
-            Folder baseFolder = await GetOrCreateFolderRecursive( BaseFolderPath );
-            await GetOrCreateFolderRecursive( UsersFolderPath );
-            await GetOrCreateFolderRecursive( GroupsFolderPath );
-
-            User systemUser = await GetOrCreateSystemUser( );
-
             try {
-               IAccessControlList acl = baseFolder.GetAccessControlList( HierarchyAsync.Configuration );
-               if( !acl.AccessControlRules.Any( ) ) {
-                  if( Configuration.BaseFolderAclFactory != null ) {
-                     Configuration.BaseFolderAclFactory( acl, systemUser );
-                  } else {
-                     acl.Add( AcrBuilder.ToEveryone( ).Deny( new AllPrivilege( ) ) );
-                     acl.Add( AcrBuilder.To( systemUser ).Allow( new AllPrivilege( ) ) );
-                  }
+               Folder baseFolder = await GetOrCreateFolderRecursive( BaseFolderPath );
+               await GetOrCreateFolderRecursive( UsersFolderPath );
+               await GetOrCreateFolderRecursive( GroupsFolderPath );
 
-                  baseFolder.SetAccessControlList( acl );
-                  await HierarchyAsync.SetAsync( baseFolder );
+               User systemUser = await GetOrCreateSystemUser( );
+
+               try {
+                  IAccessControlList acl = baseFolder.GetAccessControlList( HierarchyAsync.Configuration );
+                  if( !acl.AccessControlRules.Any( ) ) {
+                     if( Configuration.BaseFolderAclFactory != null ) {
+                        Configuration.BaseFolderAclFactory( acl, systemUser );
+                     } else {
+                        acl.Add( AcrBuilder.ToEveryone( ).Deny( new AllPrivilege( ) ) );
+                        acl.Add( AcrBuilder.To( systemUser ).Allow( new AllPrivilege( ) ) );
+                     }
+
+                     baseFolder.SetAccessControlList( acl );
+                     await HierarchyAsync.SetAsync( baseFolder );
+                  }
+               } catch( Exception exc ) {
+                  throw new Exception( $"failed to set ACL for base folder: {exc.Message}", exc );
                }
             } catch( Exception exc ) {
-               throw new Exception( $"failed to set ACL for base folder: {exc.Message}", exc );
+               throw new Exception(
+                     $"failed to bootstrap hierarchy in base folder {BaseFolderPath}: {exc.Message}",
+                     exc );
             }
-         } catch( Exception exc ) {
-            throw new Exception( $"failed to bootstrap hierarchy in base folder {BaseFolderPath}: {exc.Message}", exc );
+
+            _traceHandler?.Invoke( TraceModule, TraceActionBootStrap, Trace.HintEnd );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, TraceActionBootStrap, Trace.HintError );
+            throw;
          }
       }
 

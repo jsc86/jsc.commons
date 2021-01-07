@@ -36,6 +36,9 @@ namespace jsc.commons.hierarchy.config {
       [ConfigValue]
       Action<IAccessControlList, User> BaseFolderAclFactory { get; set; }
 
+      [ConfigValue]
+      TraceHandler TraceHandler { get; set; }
+
    }
 
    public class HierarchyManagerConfigurationDefaultsProvider : DefaultsProviderBase {

@@ -19,7 +19,11 @@ namespace jsc.commons.hierarchy {
 
    public class HierarchyAsync : IHierarchyAsync {
 
+      public const string TraceModule = "HIERARCHY";
+
       private readonly IHierarchyBackend _backend;
+
+      private readonly TraceHandler _traceHandler;
       private volatile bool _disposed;
       private volatile bool _disposing;
 
@@ -31,67 +35,118 @@ namespace jsc.commons.hierarchy {
          _backend = configuration.BackendConfiguration.BackendFactory(
                configuration,
                configuration.BackendConfiguration );
+
+         _traceHandler = configuration.TraceHandler;
       }
 
       public IHierarchyConfiguration Configuration { get; }
 
       public async Task<T> GetAsync<T>( Path path ) where T : IResource {
          CheckDisposed( );
-         if( path == null )
-            throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
 
-         return (T)await _backend.Get( path );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintBegin, path );
+         try {
+            if( path == null )
+               throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
+
+            T resource = (T)await _backend.Get( path );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintEnd, path );
+
+            return resource;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintError, path );
+            throw;
+         }
       }
 
       public async Task SetAsync( IResource resource ) {
          CheckDisposed( );
-         if( resource == null )
-            throw new ArgumentNullException( nameof( resource ), $"{nameof( resource )} must not be null" );
 
-         await _backend.Set( resource );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintBegin, resource?.Path );
+         try {
+            if( resource == null )
+               throw new ArgumentNullException( nameof( resource ), $"{nameof( resource )} must not be null" );
 
-         if( ResourceSet != null )
-            await ResourceSet( this, new ResourceSetEventArgs( this, resource ) );
+            await _backend.Set( resource );
+
+            if( ResourceSet != null )
+               await ResourceSet( this, new ResourceSetEventArgs( this, resource ) );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintEnd, resource.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintError, resource?.Path );
+            throw;
+         }
       }
 
       public async Task DeleteAsync( IResource resource ) {
          CheckDisposed( );
-         resource.MustNotBeNull( nameof( resource ) );
 
-         await _backend.Delete( resource );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintBegin, resource?.Path );
+         try {
+            resource.MustNotBeNull( nameof( resource ) );
 
-         if( ResourceDeleted != null )
-            await ResourceDeleted( this, new ResourceDeletedEventArgs( this, resource ) );
+            await _backend.Delete( resource );
+
+            if( ResourceDeleted != null )
+               await ResourceDeleted( this, new ResourceDeletedEventArgs( this, resource ) );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintEnd, resource?.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintError, resource?.Path );
+            throw;
+         }
       }
 
       public async Task<IEnumerable<string>> GetChildrenResourceNamesAsync( Path path ) {
          CheckDisposed( );
-         if( path == null )
-            throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
 
-         return await _backend.List( path );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintBegin, path );
+         try {
+            if( path == null )
+               throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
+
+            IEnumerable<string> list = await _backend.List( path );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintEnd, path );
+
+            return list;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintError, path );
+            throw;
+         }
       }
 
       public async Task MoveAsync( IResource resource, Path targetPath ) {
          CheckDisposed( );
-         resource.MustNotBeNull( nameof( resource ) );
-         targetPath.MustNotBeNull( nameof( resource ) );
 
+         _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintBegin, resource?.Path, targetPath );
          try {
-            await _backend.Move( resource, targetPath );
-         } catch( NotImplementedException ) {
-            if( !Configuration.AllowUseOfMoveFallback )
-               throw new Exception(
-                     $"The provided backend does not implement the {nameof( IHierarchyBackend.Move )} method. "
-                     +$"The {nameof( HierarchyAsync )} implementation can leave the system in an undefined state "
-                     +$"when encountering an error! If you want to use it, set {nameof( IHierarchyConfiguration )}."
-                     +$"{nameof( IHierarchyConfiguration.AllowUseOfMoveFallback )} property to {true}." );
+            resource.MustNotBeNull( nameof( resource ) );
+            targetPath.MustNotBeNull( nameof( resource ) );
 
-            await FallBackMoveAsync( resource, targetPath );
+            try {
+               await _backend.Move( resource, targetPath );
+            } catch( NotImplementedException ) {
+               if( !Configuration.AllowUseOfMoveFallback )
+                  throw new Exception(
+                        $"The provided backend does not implement the {nameof( IHierarchyBackend.Move )} method. "
+                        +$"The {nameof( HierarchyAsync )} implementation can leave the system in an undefined state "
+                        +$"when encountering an error! If you want to use it, set {nameof( IHierarchyConfiguration )}."
+                        +$"{nameof( IHierarchyConfiguration.AllowUseOfMoveFallback )} property to {true}." );
+
+               await FallBackMoveAsync( resource, targetPath );
+            }
+
+            if( ResourceMoved != null )
+               await ResourceMoved( this, new ResourceMovedEventArgs( this, resource, targetPath ) );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintEnd, resource?.Path, targetPath );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintError, resource?.Path, targetPath );
+            throw;
          }
-
-         if( ResourceMoved != null )
-            await ResourceMoved( this, new ResourceMovedEventArgs( this, resource, targetPath ) );
       }
 
       public event ResourceSetHandler ResourceSet;

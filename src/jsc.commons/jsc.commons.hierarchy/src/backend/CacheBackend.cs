@@ -20,6 +20,10 @@ namespace jsc.commons.hierarchy.backend {
 
    public class CacheBackend : IHierarchyBackend {
 
+      public const string TraceModule = "MEMCACHE";
+      public const string TraceHintCacheHit = "HIT";
+      public const string TraceHintCacheMiss = "MIS";
+
       private readonly IHierarchyBackend _backend;
 
       private readonly bool _backendSupportsMove;
@@ -29,6 +33,8 @@ namespace jsc.commons.hierarchy.backend {
       private readonly CacheItemPolicy _cacheItemPolicy;
 
       private readonly ExecutionTokenSpool _ets = new ExecutionTokenSpool( );
+
+      private readonly TraceHandler _traceHandler;
 
       private bool _disposed;
 
@@ -54,6 +60,8 @@ namespace jsc.commons.hierarchy.backend {
          } catch( Exception exc ) {
             _backendSupportsMove = !( exc is NotImplementedException );
          }
+
+         _traceHandler = configuration.TraceHandler;
       }
 
       public void Dispose( ) {
@@ -73,89 +81,134 @@ namespace jsc.commons.hierarchy.backend {
       }
 
       public async Task<IResource> Get( Path path ) {
-         path.MustNotBeNull( nameof( path ) );
-         if( _disposed )
-            throw new ObjectDisposedException( nameof( CacheBackend ) );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintBegin, path );
+         try {
+            path.MustNotBeNull( nameof( path ) );
+            if( _disposed )
+               throw new ObjectDisposedException( nameof( CacheBackend ) );
 
-         string pathStr = path.ToString( );
+            string pathStr = path.ToString( );
 
-         IResource resource = (IResource)_cache.Get( pathStr );
-         if( resource == null ) {
-            resource = await _backend.Get( path );
-            using( await _ets.GetExecutionToken( ) ) {
-               _cache.Set( pathStr, resource, _cacheItemPolicy );
+            IResource resource = (IResource)_cache.Get( pathStr );
+            if( resource == null ) {
+               _traceHandler?.Invoke( TraceModule, Trace.ActionGet, TraceHintCacheMiss );
+               resource = await _backend.Get( path );
+               using( await _ets.GetExecutionToken( ) ) {
+                  _cache.Set( pathStr, resource, _cacheItemPolicy );
+               }
+            } else {
+               _traceHandler?.Invoke( TraceModule, Trace.ActionGet, TraceHintCacheHit );
             }
-         }
 
-         return resource;
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintEnd, path );
+
+            return resource;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionGet, Trace.HintError, path );
+            throw;
+         }
       }
 
       public async Task<IEnumerable<string>> List( Path path ) {
-         path.MustNotBeNull( nameof( path ) );
-         if( _disposed )
-            throw new ObjectDisposedException( nameof( CacheBackend ) );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintBegin, path );
+         try {
+            path.MustNotBeNull( nameof( path ) );
+            if( _disposed )
+               throw new ObjectDisposedException( nameof( CacheBackend ) );
 
-         return await _backend.List( path );
+            IEnumerable<string> list = await _backend.List( path );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintEnd, path );
+
+            return list;
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionList, Trace.HintError, path );
+            throw;
+         }
       }
 
       public async Task Set( IResource resource ) {
-         resource.MustNotBeNull( nameof( resource ) );
-         if( _disposed )
-            throw new ObjectDisposedException( nameof( CacheBackend ) );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintBegin, resource?.Path );
+         try {
+            resource.MustNotBeNull( nameof( resource ) );
+            if( _disposed )
+               throw new ObjectDisposedException( nameof( CacheBackend ) );
 
-         using( await _ets.GetExecutionToken( ) ) {
-            _cache.Set( resource.Path.ToString( ), resource, _cacheItemPolicy );
+            using( await _ets.GetExecutionToken( ) ) {
+               _cache.Set( resource.Path.ToString( ), resource, _cacheItemPolicy );
+            }
+
+            await _backend.Set( resource );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintEnd, resource.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionSet, Trace.HintError, resource?.Path );
+            throw;
          }
-
-         await _backend.Set( resource );
       }
 
       public async Task Delete( IResource resource ) {
-         resource.MustNotBeNull( nameof( resource ) );
-         if( _disposed )
-            throw new ObjectDisposedException( nameof( CacheBackend ) );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintBegin, resource?.Path );
+         try {
+            resource.MustNotBeNull( nameof( resource ) );
+            if( _disposed )
+               throw new ObjectDisposedException( nameof( CacheBackend ) );
 
-         using( await _ets.GetExecutionToken( ) ) {
-            _cache.Remove( resource.Path.ToString( ) );
+            using( await _ets.GetExecutionToken( ) ) {
+               _cache.Remove( resource.Path.ToString( ) );
 
-            List<string> toBeRemoved = new List<string>( );
-            foreach( KeyValuePair<string, object> kvp in _cache )
-               if( IsSubPathOf( resource.Path, ( (IResource)kvp.Value ).Path ) )
-                  toBeRemoved.Add( kvp.Key );
+               List<string> toBeRemoved = new List<string>( );
+               foreach( KeyValuePair<string, object> kvp in _cache )
+                  if( IsSubPathOf( resource.Path, ( (IResource)kvp.Value ).Path ) )
+                     toBeRemoved.Add( kvp.Key );
 
-            foreach( string key in toBeRemoved )
-               _cache.Remove( key );
+               foreach( string key in toBeRemoved )
+                  _cache.Remove( key );
+            }
+
+            await _backend.Delete( resource );
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintEnd, resource.Path );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionDelete, Trace.HintError, resource?.Path );
+            throw;
          }
-
-         await _backend.Delete( resource );
       }
 
       public async Task Move( IResource resource, Path targetPath ) {
-         if( _backendSupportsMove )
-            throw new NotImplementedException( );
+         _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintBegin, resource?.Path, targetPath );
+         try {
+            if( _backendSupportsMove )
+               throw new NotImplementedException( );
 
-         Path oldPath = resource.Path;
-         await _backend.Move( resource, targetPath );
+            Path oldPath = resource.Path;
+            await _backend.Move( resource, targetPath );
 
-         List<string> toBeRemoved = new List<string>( );
-         List<IResource> toBeAdded = new List<IResource>( );
-         using( await _ets.GetExecutionToken( ) ) {
-            foreach( KeyValuePair<string, object> kvp in _cache )
-               if( IsSubPathOf( oldPath, Path.Parse( kvp.Key ) ) ) {
-                  toBeRemoved.Add( kvp.Key );
-                  IResource r = (IResource)kvp.Value;
-                  toBeAdded.Add(
-                        r.ResourceClass.CreateResource(
-                              targetPath.Append( r.Path.RelativeTo( resource.Path ) ).BasePath,
-                              r.Name,
-                              r.Meta ) );
-               }
+            List<string> toBeRemoved = new List<string>( );
+            List<IResource> toBeAdded = new List<IResource>( );
+            using( await _ets.GetExecutionToken( ) ) {
+               foreach( KeyValuePair<string, object> kvp in _cache )
+                  if( IsSubPathOf( oldPath, Path.Parse( kvp.Key ) ) ) {
+                     toBeRemoved.Add( kvp.Key );
+                     IResource r = (IResource)kvp.Value;
+                     toBeAdded.Add(
+                           r.ResourceClass.CreateResource(
+                                 targetPath.Append( r.Path.RelativeTo( resource.Path ) ).BasePath,
+                                 r.Name,
+                                 r.Meta ) );
+                  }
 
-            foreach( string key in toBeRemoved )
-               _cache.Remove( key );
+               foreach( string key in toBeRemoved )
+                  _cache.Remove( key );
 
-            foreach( IResource r in toBeAdded )
-               _cache[ r.Path.ToString( ) ] = r;
+               foreach( IResource r in toBeAdded )
+                  _cache[ r.Path.ToString( ) ] = r;
+            }
+
+            _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintEnd, resource.Path, targetPath );
+         } catch( Exception ) {
+            _traceHandler?.Invoke( TraceModule, Trace.ActionMove, Trace.HintError, resource?.Path, targetPath );
+            throw;
          }
       }
 
