@@ -34,7 +34,8 @@ namespace jsc.commons.hierarchy.users {
                ||backReferences.BackReferences.Count == 0 )
             return Enumerable.Empty<Path>( );
 
-         return backReferences.BackReferences.Select( Path.Parse );
+         return backReferences.BackReferences.Select(
+               backReferencePathString => Path.Parse( backReferencePathString ).BasePath );
       }
 
       public IEnumerable<Group> GetGroups( IHierarchy hierarchy ) {
