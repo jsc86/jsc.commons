@@ -58,7 +58,8 @@ namespace jsc.commons.hierarchy.config {
                               FolderResourceClass.Instance,
                               FileResourceClass.Instance,
                               GroupResourceClass.Instance,
-                              UserResourceClass.Instance
+                              UserResourceClass.Instance,
+                              ReferenceResourceClass.Instance
                         } )
             } ) { }
 
