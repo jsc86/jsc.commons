@@ -153,6 +153,9 @@ namespace jsc.commons.hierarchy.path {
          if( path == null )
             throw new ArgumentNullException( nameof( path ), $"{nameof( path )} must not be null" );
 
+         if( path == "/" )
+            return RootPath;
+
          string[] resourceNames = __pathSepRegex.Split( path );
 
          bool absolute = path.StartsWith( "/" );
