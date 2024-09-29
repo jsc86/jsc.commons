@@ -22,6 +22,7 @@ using jsc.commons.rc.generic.rules;
 using jsc.commons.rc.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.arguments {
 
@@ -32,8 +33,8 @@ namespace jsc.commons.cli.tests.arguments {
       public void ArgDerivedAsFileInfoArg( ) {
          InterfaceSpecBoilerPlateHelper<ICli> isbph = new InterfaceSpecBoilerPlateHelper<ICli>( new string[0] );
          IArgument arg = isbph.CliSpecification.Arguments.FirstOrDefault( );
-         Assert.IsNotNull( arg );
-         Assert.IsInstanceOf<FileArgument>( arg );
+         ClassicAssert.IsNotNull( arg );
+         ClassicAssert.IsInstanceOf<FileArgument>( arg );
       }
 
       [Test]
@@ -43,9 +44,9 @@ namespace jsc.commons.cli.tests.arguments {
                      Path.Combine( "a", "s", "d.f" )
                } );
          ICli cli = isbph.CliConfigObject;
-         Assert.IsNotNull( cli.FileArg );
-         Assert.AreEqual( new DirectoryInfo( "a/s" ), cli.FileArg.Directory );
-         Assert.AreEqual( "d.f", cli.FileArg.Name );
+         ClassicAssert.IsNotNull( cli.FileArg );
+         ClassicAssert.AreEqual( new DirectoryInfo( "a/s" ), cli.FileArg.Directory );
+         ClassicAssert.AreEqual( "d.f", cli.FileArg.Name );
       }
 
       [Test]
@@ -73,9 +74,9 @@ namespace jsc.commons.cli.tests.arguments {
             exc = exc2;
          }
 
-         Assert.IsNotNull( solutions );
-         Assert.IsNotNull( exc );
-         Assert.AreEqual( "unresolved conflicts", exc.Message );
+         ClassicAssert.IsNotNull( solutions );
+         ClassicAssert.IsNotNull( exc );
+         ClassicAssert.AreEqual( "unresolved conflicts", exc.Message );
       }
 
       [Test]
@@ -111,11 +112,11 @@ namespace jsc.commons.cli.tests.arguments {
                exc = exc2;
             }
 
-            Assert.IsNull( solutions );
-            Assert.IsNull( exc );
-            Assert.IsNotNull( cli );
-            Assert.IsNotNull( cli.FileArg );
-            Assert.IsTrue( cli.FileArg.Exists );
+            ClassicAssert.IsNull( solutions );
+            ClassicAssert.IsNull( exc );
+            ClassicAssert.IsNotNull( cli );
+            ClassicAssert.IsNotNull( cli.FileArg );
+            ClassicAssert.IsTrue( cli.FileArg.Exists );
          } finally {
             fi.Delete( );
          }

@@ -7,6 +7,7 @@
 using jsc.commons.naming.styles;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.naming.tests {
 
@@ -26,32 +27,32 @@ namespace jsc.commons.naming.tests {
 
       [Test]
       public void CamelCaseFromString( ) {
-         Assert.AreEqual( NamingStyles.camelCase.FromString( "shortTestNameFTW" ).ToString( ), "short.test.name.FTW" );
+         ClassicAssert.AreEqual( NamingStyles.camelCase.FromString( "shortTestNameFTW" ).ToString( ), "short.test.name.FTW" );
       }
 
       [Test]
       public void CamelCaseToString( ) {
-         Assert.AreEqual( NamingStyles.camelCase.ToString( _un ), "shortTestNameFTW" );
+         ClassicAssert.AreEqual( NamingStyles.camelCase.ToString( _un ), "shortTestNameFTW" );
       }
 
       [Test]
       public void PascalCaseFromString( ) {
-         Assert.AreEqual( NamingStyles.PascalCase.FromString( "ShortTestNameFTW" ).ToString( ), "short.test.name.FTW" );
+         ClassicAssert.AreEqual( NamingStyles.PascalCase.FromString( "ShortTestNameFTW" ).ToString( ), "short.test.name.FTW" );
       }
 
       [Test]
       public void PascalCaseToString( ) {
-         Assert.AreEqual( NamingStyles.PascalCase.ToString( _un ), "ShortTestNameFTW" );
+         ClassicAssert.AreEqual( NamingStyles.PascalCase.ToString( _un ), "ShortTestNameFTW" );
       }
 
       [Test]
       public void SnakeCaseToString( ) {
-         Assert.AreEqual( NamingStyles.snake_case.ToString( _un ), "short_test_name_ftw" );
+         ClassicAssert.AreEqual( NamingStyles.snake_case.ToString( _un ), "short_test_name_ftw" );
       }
 
       [Test]
       public void SnakeCaseUpperToString( ) {
-         Assert.AreEqual( NamingStyles.SNAKE_CASE.ToString( _un ), "SHORT_TEST_NAME_FTW" );
+         ClassicAssert.AreEqual( NamingStyles.SNAKE_CASE.ToString( _un ), "SHORT_TEST_NAME_FTW" );
       }
 
    }

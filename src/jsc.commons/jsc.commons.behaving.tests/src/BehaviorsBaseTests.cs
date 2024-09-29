@@ -9,6 +9,7 @@ using System;
 using jsc.commons.behaving.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.behaving.tests {
 
@@ -27,8 +28,8 @@ namespace jsc.commons.behaving.tests {
             exc = exc2;
          }
 
-         Assert.IsNotNull( behavior );
-         Assert.IsNull( exc );
+         ClassicAssert.IsNotNull( behavior );
+         ClassicAssert.IsNull( exc );
       }
 
       [Test]
@@ -42,9 +43,9 @@ namespace jsc.commons.behaving.tests {
             exc = exc2;
          }
 
-         Assert.IsNull( behavior );
-         Assert.IsNotNull( exc );
-         Assert.IsInstanceOf<ArgumentException>( exc );
+         ClassicAssert.IsNull( behavior );
+         ClassicAssert.IsNotNull( exc );
+         ClassicAssert.IsInstanceOf<ArgumentException>( exc );
       }
 
       [Test]
@@ -56,8 +57,8 @@ namespace jsc.commons.behaving.tests {
          behaviors.Set( behavior2 );
          TestBehavior behavior = behaviors.Get<TestBehavior>( );
 
-         Assert.IsNotNull( behavior );
-         Assert.AreSame( behavior2, behavior );
+         ClassicAssert.IsNotNull( behavior );
+         ClassicAssert.AreSame( behavior2, behavior );
       }
 
       [Test]
@@ -66,8 +67,8 @@ namespace jsc.commons.behaving.tests {
          behaviors.Set( new TestBehavior( ) );
          bool found = behaviors.TryGet( out TestBehavior behavior );
 
-         Assert.IsTrue( found );
-         Assert.IsNotNull( behavior );
+         ClassicAssert.IsTrue( found );
+         ClassicAssert.IsNotNull( behavior );
       }
 
       [Test]
@@ -75,8 +76,8 @@ namespace jsc.commons.behaving.tests {
          IBehaviors behaviors = new BehaviorsBase( );
          bool found = behaviors.TryGet( out TestBehavior behavior );
 
-         Assert.IsFalse( found );
-         Assert.IsNull( behavior );
+         ClassicAssert.IsFalse( found );
+         ClassicAssert.IsNull( behavior );
       }
 
    }

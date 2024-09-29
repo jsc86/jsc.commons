@@ -16,6 +16,7 @@ using jsc.commons.config.interfaces;
 using jsc.commons.rc.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.ispec.constraints {
 
@@ -112,8 +113,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICli1 cli = isbph.CliConfigObject;
 
-         Assert.IsNull( solutions );
-         Assert.AreEqual( Value, cli.Arg );
+         ClassicAssert.IsNull( solutions );
+         ClassicAssert.AreEqual( Value, cli.Arg );
       }
 
       [Test]
@@ -133,8 +134,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICli2 cli = isbph.CliConfigObject;
 
-         Assert.IsNull( solutions );
-         Assert.AreEqual( Value, cli.Arg );
+         ClassicAssert.IsNull( solutions );
+         ClassicAssert.AreEqual( Value, cli.Arg );
       }
 
       [Test]
@@ -154,8 +155,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICli3 cli = isbph.CliConfigObject;
 
-         Assert.IsNull( solutions );
-         Assert.AreEqual( Value, cli.Option );
+         ClassicAssert.IsNull( solutions );
+         ClassicAssert.AreEqual( Value, cli.Option );
       }
 
       [Test]
@@ -175,8 +176,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICli4 cli = isbph.CliConfigObject;
 
-         Assert.IsNull( solutions );
-         Assert.AreEqual( Value, cli.Option );
+         ClassicAssert.IsNull( solutions );
+         ClassicAssert.AreEqual( Value, cli.Option );
       }
 
    }

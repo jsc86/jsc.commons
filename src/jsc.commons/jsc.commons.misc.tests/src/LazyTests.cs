@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.misc.tests {
 
@@ -20,22 +21,22 @@ namespace jsc.commons.misc.tests {
 
       [Test]
       public void ExplicitSpawner( ) {
-         Assert.AreEqual( 0, TestClass.Instances.Count );
+         ClassicAssert.AreEqual( 0, TestClass.Instances.Count );
          Lazy<TestClass> l = new Lazy<TestClass>( ( ) => new TestClass( ) );
-         Assert.AreEqual( 0, TestClass.Instances.Count );
-         Assert.False( l.IsInitialized );
-         Assert.IsNotNull( l.Instance );
-         Assert.AreEqual( 1, TestClass.Instances.Count );
+         ClassicAssert.AreEqual( 0, TestClass.Instances.Count );
+         ClassicAssert.False( l.IsInitialized );
+         ClassicAssert.IsNotNull( l.Instance );
+         ClassicAssert.AreEqual( 1, TestClass.Instances.Count );
       }
 
       [Test]
       public void ImplicitSpawner( ) {
-         Assert.AreEqual( 0, TestClass.Instances.Count );
+         ClassicAssert.AreEqual( 0, TestClass.Instances.Count );
          Lazy<TestClass> l = new Lazy<TestClass>( );
-         Assert.AreEqual( 0, TestClass.Instances.Count );
-         Assert.False( l.IsInitialized );
-         Assert.IsNotNull( l.Instance );
-         Assert.AreEqual( 1, TestClass.Instances.Count );
+         ClassicAssert.AreEqual( 0, TestClass.Instances.Count );
+         ClassicAssert.False( l.IsInitialized );
+         ClassicAssert.IsNotNull( l.Instance );
+         ClassicAssert.AreEqual( 1, TestClass.Instances.Count );
       }
 
    }

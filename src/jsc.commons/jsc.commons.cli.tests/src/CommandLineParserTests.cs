@@ -16,6 +16,7 @@ using jsc.commons.config;
 using jsc.commons.naming;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests {
 
@@ -50,14 +51,14 @@ namespace jsc.commons.cli.tests {
 
          IParserResult pr = clp.Parse( args );
 
-         Assert.AreEqual( arg1ShouldBeSet, pr.IsSet( arg1 ) );
-         Assert.AreEqual( arg2ShouldBeSet, pr.IsSet( arg2 ) );
-         Assert.AreEqual( optShouldBeSet, pr.IsSet( opt ) );
-         Assert.AreEqual( flagShouldBeSet, pr.IsSet( flag ) );
+         ClassicAssert.AreEqual( arg1ShouldBeSet, pr.IsSet( arg1 ) );
+         ClassicAssert.AreEqual( arg2ShouldBeSet, pr.IsSet( arg2 ) );
+         ClassicAssert.AreEqual( optShouldBeSet, pr.IsSet( opt ) );
+         ClassicAssert.AreEqual( flagShouldBeSet, pr.IsSet( flag ) );
          if( arg1ShouldBe != null )
-            Assert.AreEqual( arg1ShouldBe, pr.GetValue( arg1 ) );
+            ClassicAssert.AreEqual( arg1ShouldBe, pr.GetValue( arg1 ) );
          if( arg2ShouldBe != null )
-            Assert.AreEqual( arg2ShouldBe, pr.GetValue( arg2 ) );
+            ClassicAssert.AreEqual( arg2ShouldBe, pr.GetValue( arg2 ) );
       }
 
       [Test]
@@ -66,8 +67,8 @@ namespace jsc.commons.cli.tests {
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new string[0] );
 
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsFalse( pr.IsSet( spec.HelpOption ) );
+         ClassicAssert.IsNotNull( spec.HelpOption );
+         ClassicAssert.IsFalse( pr.IsSet( spec.HelpOption ) );
       }
 
       [Test]
@@ -76,8 +77,8 @@ namespace jsc.commons.cli.tests {
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"--help"} );
 
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
+         ClassicAssert.IsNotNull( spec.HelpOption );
+         ClassicAssert.IsTrue( pr.IsSet( spec.HelpOption ) );
       }
 
       [Test]
@@ -86,8 +87,8 @@ namespace jsc.commons.cli.tests {
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-h"} );
 
-         Assert.IsNotNull( spec.HelpOption );
-         Assert.IsTrue( pr.IsSet( spec.HelpOption ) );
+         ClassicAssert.IsNotNull( spec.HelpOption );
+         ClassicAssert.IsTrue( pr.IsSet( spec.HelpOption ) );
       }
 
       [Test]
@@ -110,10 +111,10 @@ namespace jsc.commons.cli.tests {
 
          List<string> dynArgValues = pr.GetDynamicValues( dynStringArg ).ToList( );
 
-         Assert.AreEqual( 3, dynArgValues.Count );
-         Assert.AreEqual( "arg1", dynArgValues[ 0 ] );
-         Assert.AreEqual( "arg2", dynArgValues[ 1 ] );
-         Assert.AreEqual( "arg3", dynArgValues[ 2 ] );
+         ClassicAssert.AreEqual( 3, dynArgValues.Count );
+         ClassicAssert.AreEqual( "arg1", dynArgValues[ 0 ] );
+         ClassicAssert.AreEqual( "arg2", dynArgValues[ 1 ] );
+         ClassicAssert.AreEqual( "arg3", dynArgValues[ 2 ] );
       }
 
       [Test]
@@ -148,15 +149,15 @@ namespace jsc.commons.cli.tests {
 
          List<string> dynArgValues = pr.GetDynamicValues( dynStringArg ).ToList( );
 
-         Assert.AreEqual( 2, dynArgValues.Count );
-         Assert.AreEqual( "arg1", dynArgValues[ 0 ] );
-         Assert.AreEqual( "arg2", dynArgValues[ 1 ] );
+         ClassicAssert.AreEqual( 2, dynArgValues.Count );
+         ClassicAssert.AreEqual( "arg1", dynArgValues[ 0 ] );
+         ClassicAssert.AreEqual( "arg2", dynArgValues[ 1 ] );
 
          List<int> dynIntArgValues = pr.GetDynamicValues( dynIntArg ).ToList( );
 
-         Assert.AreEqual( 2, dynIntArgValues.Count );
-         Assert.AreEqual( 23, dynIntArgValues[ 0 ] );
-         Assert.AreEqual( 42, dynIntArgValues[ 1 ] );
+         ClassicAssert.AreEqual( 2, dynIntArgValues.Count );
+         ClassicAssert.AreEqual( 23, dynIntArgValues[ 0 ] );
+         ClassicAssert.AreEqual( 42, dynIntArgValues[ 1 ] );
       }
 
 
@@ -167,7 +168,7 @@ namespace jsc.commons.cli.tests {
          spec.Flags.Add( flag );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-f"} );
-         Assert.IsTrue( pr.IsSet( flag ) );
+         ClassicAssert.IsTrue( pr.IsSet( flag ) );
       }
 
       [Test]
@@ -183,8 +184,8 @@ namespace jsc.commons.cli.tests {
             exc = ex;
          }
 
-         Assert.IsNotNull( exc );
-         Assert.IsTrue( exc.Message.StartsWith( "unknown flag" ) );
+         ClassicAssert.IsNotNull( exc );
+         ClassicAssert.IsTrue( exc.Message.StartsWith( "unknown flag" ) );
       }
 
       [Test]
@@ -194,7 +195,7 @@ namespace jsc.commons.cli.tests {
          spec.Options.Add( opt );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"--opt"} );
-         Assert.IsTrue( pr.IsSet( opt ) );
+         ClassicAssert.IsTrue( pr.IsSet( opt ) );
       }
 
       [Test]
@@ -206,7 +207,7 @@ namespace jsc.commons.cli.tests {
          spec.Options.Add( opt );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"--opt"} );
-         Assert.IsTrue( pr.IsSet( opt ) );
+         ClassicAssert.IsTrue( pr.IsSet( opt ) );
       }
 
       [Test]
@@ -218,7 +219,7 @@ namespace jsc.commons.cli.tests {
          spec.Flags.Add( flag );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-f"} );
-         Assert.IsTrue( pr.IsSet( flag ) );
+         ClassicAssert.IsTrue( pr.IsSet( flag ) );
       }
 
       [Test]
@@ -230,7 +231,7 @@ namespace jsc.commons.cli.tests {
          spec.Flags.Add( flag );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-F"} );
-         Assert.IsTrue( pr.IsSet( flag ) );
+         ClassicAssert.IsTrue( pr.IsSet( flag ) );
       }
 
       [Test]
@@ -242,7 +243,7 @@ namespace jsc.commons.cli.tests {
          spec.Options.Add( opt );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"--Opt"} );
-         Assert.IsTrue( pr.IsSet( opt ) );
+         ClassicAssert.IsTrue( pr.IsSet( opt ) );
       }
 
       [Test]
@@ -254,7 +255,7 @@ namespace jsc.commons.cli.tests {
          spec.Options.Add( opt );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"--OPT"} );
-         Assert.IsTrue( pr.IsSet( opt ) );
+         ClassicAssert.IsTrue( pr.IsSet( opt ) );
       }
 
       [Test]
@@ -266,7 +267,7 @@ namespace jsc.commons.cli.tests {
          spec.Flags.Add( flag );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-f"} );
-         Assert.IsTrue( pr.IsSet( flag ) );
+         ClassicAssert.IsTrue( pr.IsSet( flag ) );
       }
 
       [Test]
@@ -278,7 +279,7 @@ namespace jsc.commons.cli.tests {
          spec.Flags.Add( flag );
          CommandLineParser clp = new CommandLineParser( spec );
          IParserResult pr = clp.Parse( new[] {"-F"} );
-         Assert.IsTrue( pr.IsSet( flag ) );
+         ClassicAssert.IsTrue( pr.IsSet( flag ) );
       }
 
       [Test]
@@ -294,8 +295,8 @@ namespace jsc.commons.cli.tests {
             exc = ex;
          }
 
-         Assert.IsNotNull( exc );
-         Assert.IsTrue( exc.Message.StartsWith( "unknown option" ) );
+         ClassicAssert.IsNotNull( exc );
+         ClassicAssert.IsTrue( exc.Message.StartsWith( "unknown option" ) );
       }
 
       [Test]

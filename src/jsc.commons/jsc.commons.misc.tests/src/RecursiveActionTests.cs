@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.misc.tests {
 
@@ -349,7 +350,7 @@ namespace jsc.commons.misc.tests {
                l = args.Length;
                i < l;
                i++ )
-            Assert.AreEqual( i-1, ( (object[])args[ i ] )[ 0 ] );
+            ClassicAssert.AreEqual( i-1, ( (object[])args[ i ] )[ 0 ] );
       }
 
       [Test]
@@ -379,7 +380,7 @@ namespace jsc.commons.misc.tests {
                l = args.Length;
                i < l;
                i++ )
-            Assert.AreEqual( i, ( (object[])args[ i ] )[ 0 ] );
+            ClassicAssert.AreEqual( i, ( (object[])args[ i ] )[ 0 ] );
       }
 
    }

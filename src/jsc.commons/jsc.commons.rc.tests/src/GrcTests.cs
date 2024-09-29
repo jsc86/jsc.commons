@@ -13,6 +13,7 @@ using jsc.commons.rc.listsubject.actions;
 using jsc.commons.rc.listsubject.rules;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.rc.tests {
 
@@ -22,10 +23,10 @@ namespace jsc.commons.rc.tests {
       [Test]
       public void GrcApplyNoViolation( ) {
          GenericRuleChecker<IList<string>> grc = new GenericRuleChecker<IList<string>>( subject: new CList<string>( ) );
-         Assert.AreEqual( 0, grc.Subject.Count );
+         ClassicAssert.AreEqual( 0, grc.Subject.Count );
          grc.Apply( new Add<string>( "hello" ) ).Accept( );
-         Assert.AreEqual( 1, grc.Subject.Count );
-         Assert.AreEqual( "hello", grc.Subject[ 0 ] );
+         ClassicAssert.AreEqual( 1, grc.Subject.Count );
+         ClassicAssert.AreEqual( "hello", grc.Subject[ 0 ] );
       }
 
       [Test]
@@ -35,14 +36,14 @@ namespace jsc.commons.rc.tests {
                      new Implies<IList<string>>( new Contains<string>( "hello" ), new Contains<string>( "world" ) )
                },
                new CList<string>( ) );
-         Assert.AreEqual( 0, grc.Subject.Count );
+         ClassicAssert.AreEqual( 0, grc.Subject.Count );
          ApplicationResult<IList<string>> ar = grc.Apply( new Add<string>( "hello" ) );
-         Assert.IsNotNull( ar );
-         Assert.IsTrue( ar.Successful );
+         ClassicAssert.IsNotNull( ar );
+         ClassicAssert.IsTrue( ar.Successful );
          ar.Accept( );
-         Assert.AreEqual( 2, grc.Subject.Count );
-         Assert.IsTrue( grc.Subject.Contains( "hello" ) );
-         Assert.IsTrue( grc.Subject.Contains( "world" ) );
+         ClassicAssert.AreEqual( 2, grc.Subject.Count );
+         ClassicAssert.IsTrue( grc.Subject.Contains( "hello" ) );
+         ClassicAssert.IsTrue( grc.Subject.Contains( "world" ) );
       }
 
       [Test]
@@ -52,12 +53,12 @@ namespace jsc.commons.rc.tests {
             IList<string> list = new CList<string>( );
             IList<IRule<IList<string>>> rules = new List<IRule<IList<string>>>( );
             GenericRuleChecker<IList<string>> grc = new GenericRuleChecker<IList<string>>( rules, list );
-            Assert.AreEqual( 0, grc.Subject.Count );
+            ClassicAssert.AreEqual( 0, grc.Subject.Count );
          } catch( Exception e ) {
             exc = e;
          }
 
-         Assert.IsNull( exc );
+         ClassicAssert.IsNull( exc );
       }
 
       [Test]
@@ -73,7 +74,7 @@ namespace jsc.commons.rc.tests {
             exc = e;
          }
 
-         Assert.IsNotNull( exc );
+         ClassicAssert.IsNotNull( exc );
       }
 
       [Test]
@@ -89,13 +90,13 @@ namespace jsc.commons.rc.tests {
                         rules,
                         list,
                         true );
-            Assert.AreEqual( 1, grc.Subject.Count );
-            Assert.AreEqual( "hello", grc.Subject[ 0 ] );
+            ClassicAssert.AreEqual( 1, grc.Subject.Count );
+            ClassicAssert.AreEqual( "hello", grc.Subject[ 0 ] );
          } catch( Exception e ) {
             exc = e;
          }
 
-         Assert.IsNull( exc );
+         ClassicAssert.IsNull( exc );
       }
 
    }

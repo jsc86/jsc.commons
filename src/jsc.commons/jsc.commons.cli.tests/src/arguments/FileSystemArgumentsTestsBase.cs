@@ -7,6 +7,7 @@
 using System.IO;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.arguments {
 
@@ -44,7 +45,7 @@ namespace jsc.commons.cli.tests.arguments {
       [Test]
       [Order( int.MinValue )]
       public void TestSetupWorks( ) {
-         Assert.IsTrue( __tempBaseDirDI.Exists );
+         ClassicAssert.IsTrue( __tempBaseDirDI.Exists );
       }
 
    }

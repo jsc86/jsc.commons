@@ -15,6 +15,7 @@ using jsc.commons.config.interfaces;
 using jsc.commons.rc.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.ispec.value_constraints {
 
@@ -74,7 +75,7 @@ namespace jsc.commons.cli.tests.ispec.value_constraints {
 
          isbph.Config.UserPrompt = AutoSolve;
 
-         Assert.AreEqual( DoubleMinVal, isbph.CliConfigObject.DoubleArg );
+         ClassicAssert.AreEqual( DoubleMinVal, isbph.CliConfigObject.DoubleArg );
       }
 
       [Test]
@@ -85,7 +86,7 @@ namespace jsc.commons.cli.tests.ispec.value_constraints {
 
          isbph.Config.UserPrompt = AutoSolve;
 
-         Assert.AreEqual( FloatMinVal, isbph.CliConfigObject.FloatArg );
+         ClassicAssert.AreEqual( FloatMinVal, isbph.CliConfigObject.FloatArg );
       }
 
       [Test]
@@ -96,7 +97,7 @@ namespace jsc.commons.cli.tests.ispec.value_constraints {
 
          isbph.Config.UserPrompt = AutoSolve;
 
-         Assert.AreEqual( IntMinVal, isbph.CliConfigObject.IntArg );
+         ClassicAssert.AreEqual( IntMinVal, isbph.CliConfigObject.IntArg );
       }
 
       [Test]
@@ -107,7 +108,7 @@ namespace jsc.commons.cli.tests.ispec.value_constraints {
 
          isbph.Config.UserPrompt = AutoSolve;
 
-         Assert.AreEqual( LongMinVal, isbph.CliConfigObject.LongArg );
+         ClassicAssert.AreEqual( LongMinVal, isbph.CliConfigObject.LongArg );
       }
 
    }

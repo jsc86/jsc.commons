@@ -17,6 +17,7 @@ using jsc.commons.config.interfaces;
 using jsc.commons.rc.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.ispec.constraints {
 
@@ -58,8 +59,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICliAnd cli = isbph.CliConfigObject;
 
-         Assert.IsNotNull( solutions );
-         Assert.IsTrue( cli.Flag&&cli.Option );
+         ClassicAssert.IsNotNull( solutions );
+         ClassicAssert.IsTrue( cli.Flag&&cli.Option );
       }
 
       [Test]
@@ -77,8 +78,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICliAnd cli = isbph.CliConfigObject;
 
-         Assert.IsNotNull( solutions );
-         Assert.IsTrue( cli.Flag&&cli.Option );
+         ClassicAssert.IsNotNull( solutions );
+         ClassicAssert.IsTrue( cli.Flag&&cli.Option );
       }
 
       [Test]
@@ -96,8 +97,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICliAnd cli = isbph.CliConfigObject;
 
-         Assert.IsNotNull( solutions );
-         Assert.IsTrue( cli.Flag&&cli.Option );
+         ClassicAssert.IsNotNull( solutions );
+         ClassicAssert.IsTrue( cli.Flag&&cli.Option );
       }
 
       [Test]
@@ -115,8 +116,8 @@ namespace jsc.commons.cli.tests.ispec.constraints {
 
          ICliAnd cli = isbph.CliConfigObject;
 
-         Assert.IsNull( solutions );
-         Assert.IsTrue( cli.Flag&&cli.Option );
+         ClassicAssert.IsNull( solutions );
+         ClassicAssert.IsTrue( cli.Flag&&cli.Option );
       }
 
    }

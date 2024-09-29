@@ -12,6 +12,7 @@ using System.Linq;
 using jsc.commons.config.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.config.tests {
 
@@ -26,9 +27,9 @@ namespace jsc.commons.config.tests {
          ITestConfig conf = Config.New<ITestConfig>( );
          conf.Backend = backend;
          conf.Read( );
-         Assert.AreEqual( "read string", conf.StringProp1 );
-         Assert.AreEqual( 12345, conf.IntProp );
-         Assert.AreEqual( "Hello World!", conf.StringProp2 );
+         ClassicAssert.AreEqual( "read string", conf.StringProp1 );
+         ClassicAssert.AreEqual( 12345, conf.IntProp );
+         ClassicAssert.AreEqual( "Hello World!", conf.StringProp2 );
       }
 
       [Test]
@@ -39,46 +40,46 @@ namespace jsc.commons.config.tests {
          conf.StringProp1 = "saved string";
          conf.IntProp = 12345;
          conf.Save( );
-         Assert.AreEqual( "saved string", backend.Values[ "StringProp1" ] );
-         Assert.AreEqual( 12345, backend.Values[ "IntProp" ] );
-         Assert.AreEqual( conf.Keys.Count( ), backend.Values.Count );
+         ClassicAssert.AreEqual( "saved string", backend.Values[ "StringProp1" ] );
+         ClassicAssert.AreEqual( 12345, backend.Values[ "IntProp" ] );
+         ClassicAssert.AreEqual( conf.Keys.Count( ), backend.Values.Count );
       }
 
       [Test]
       public void HasDefaultFromDefaultProvider( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
-         Assert.AreEqual( CultureInfo.InvariantCulture, conf.Culture );
+         ClassicAssert.AreEqual( CultureInfo.InvariantCulture, conf.Culture );
       }
 
       [Test]
       public void HasDefaultIntValue( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
-         Assert.AreEqual( 42, conf.IntProp );
+         ClassicAssert.AreEqual( 42, conf.IntProp );
       }
 
       [Test]
       public void HasDefaultValue( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
-         Assert.AreEqual( "Hello World!", conf.StringProp2 );
+         ClassicAssert.AreEqual( "Hello World!", conf.StringProp2 );
       }
 
       [Test]
       public void HasNoDefaultValue( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
-         Assert.IsNull( conf.StringProp1 );
+         ClassicAssert.IsNull( conf.StringProp1 );
       }
 
       [Test]
       public void SetAndReadValue( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
          conf.StringProp1 = "test value";
-         Assert.AreEqual( "test value", conf.StringProp1 );
+         ClassicAssert.AreEqual( "test value", conf.StringProp1 );
       }
 
       [Test]
       public void ValidInterface( ) {
          ITestConfig conf = Config.New<ITestConfig>( );
-         Assert.IsNotNull( conf );
+         ClassicAssert.IsNotNull( conf );
       }
 
       public class DefaultsPerInstanceDefaultsProvider : DefaultsProviderBase {
@@ -106,12 +107,12 @@ namespace jsc.commons.config.tests {
          IDefaultsPerInstanceConf conf2 = Config.New<IDefaultsPerInstanceConf>( );
          conf1.MyList.Add( "asdf" );
 
-         Assert.AreEqual( 1, conf1.MyList.Count );
-         Assert.AreEqual( 0, conf2.MyList.Count );
+         ClassicAssert.AreEqual( 1, conf1.MyList.Count );
+         ClassicAssert.AreEqual( 0, conf2.MyList.Count );
 
          IDefaultsPerInstanceConf conf3 = Config.New<IDefaultsPerInstanceConf>( );
 
-         Assert.AreEqual( 0, conf3.MyList.Count );
+         ClassicAssert.AreEqual( 0, conf3.MyList.Count );
       }
 
    }

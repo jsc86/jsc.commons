@@ -7,6 +7,7 @@
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.async.tests {
 
@@ -19,7 +20,7 @@ namespace jsc.commons.async.tests {
          await ThreadPoolEx.InvokeAsync(
                ( ) => { wasInvoked = true; } );
 
-         Assert.IsTrue( wasInvoked );
+         ClassicAssert.IsTrue( wasInvoked );
       }
 
       [Test]
@@ -31,8 +32,8 @@ namespace jsc.commons.async.tests {
                   return 42;
                } );
 
-         Assert.IsTrue( wasInvoked );
-         Assert.AreEqual( 42, n );
+         ClassicAssert.IsTrue( wasInvoked );
+         ClassicAssert.AreEqual( 42, n );
       }
 
       [Test]
@@ -43,7 +44,7 @@ namespace jsc.commons.async.tests {
                   await ThreadPoolEx.InvokeAsync(
                         ( ) => { wasInvoked = true; } );
                } );
-         Assert.IsTrue( wasInvoked );
+         ClassicAssert.IsTrue( wasInvoked );
       }
 
       [Test]
@@ -55,8 +56,8 @@ namespace jsc.commons.async.tests {
                         wasInvoked = true;
                         return 42;
                      } ) );
-         Assert.IsTrue( wasInvoked );
-         Assert.AreEqual( 42, n );
+         ClassicAssert.IsTrue( wasInvoked );
+         ClassicAssert.AreEqual( 42, n );
       }
 
    }

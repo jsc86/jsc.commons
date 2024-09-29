@@ -12,8 +12,6 @@
       <ProjectReference Include="..\jsc.commons.behaving\jsc.commons.behaving.csproj" />
       <ProjectReference Include="..\jsc.commons.cli\jsc.commons.cli.csproj" />
       <ProjectReference Include="..\jsc.commons.config\jsc.commons.config.csproj" />
-      <ProjectReference Include="..\jsc.commons.hierarchy.localfs\jsc.commons.hierarchy.localfs.csproj" />
-      <ProjectReference Include="..\jsc.commons.hierarchy\jsc.commons.hierarchy.csproj" />
       <ProjectReference Include="..\jsc.commons.misc\jsc.commons.misc.csproj" />
       <ProjectReference Include="..\jsc.commons.naming\jsc.commons.naming.csproj" />
       <ProjectReference Include="..\jsc.commons.rc\jsc.commons.rc.csproj" />

@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.async.tests {
 
@@ -77,9 +78,9 @@ namespace jsc.commons.async.tests {
             exc = exc2;
          }
 
-         Assert.NotNull( exc );
-         Assert.AreEqual( 1, exc.InnerExceptions.Count );
-         Assert.AreEqual( typeof( ExecutionTokenSpoolDisposedException ), exc.InnerExceptions.First( ).GetType( ) );
+         ClassicAssert.NotNull( exc );
+         ClassicAssert.AreEqual( 1, exc.InnerExceptions.Count );
+         ClassicAssert.AreEqual( typeof( ExecutionTokenSpoolDisposedException ), exc.InnerExceptions.First( ).GetType( ) );
       }
 
       [Test]
@@ -105,8 +106,8 @@ namespace jsc.commons.async.tests {
 
          Task.WaitAll( tasks.ToArray( ) );
 
-         Assert.AreEqual( 5, spans.Count );
-         Assert.False( spans.Any( s1 => spans.Any( s2 => s1 != s2&&s1.Intersects( s2 ) ) ) );
+         ClassicAssert.AreEqual( 5, spans.Count );
+         ClassicAssert.False( spans.Any( s1 => spans.Any( s2 => s1 != s2&&s1.Intersects( s2 ) ) ) );
       }
 
       [Test]

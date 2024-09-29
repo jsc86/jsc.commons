@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.misc.tests {
 
@@ -282,7 +283,7 @@ namespace jsc.commons.misc.tests {
 
          int n = (int)rf.DynamicInvoke( args );
 
-         Assert.AreEqual( ( typeof( T ).GenericTypeArguments.Length-2 )*3, n );
+         ClassicAssert.AreEqual( ( typeof( T ).GenericTypeArguments.Length-2 )*3, n );
       }
 
       [Test]
@@ -308,7 +309,7 @@ namespace jsc.commons.misc.tests {
 
          int n = (int)func.DynamicInvoke( args );
 
-         Assert.AreEqual( ( rfTypeArgs.Length-2 )*3, n );
+         ClassicAssert.AreEqual( ( rfTypeArgs.Length-2 )*3, n );
       }
 
    }

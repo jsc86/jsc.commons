@@ -7,6 +7,7 @@
 using jsc.commons.unidto.core.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.unidto.tests {
 
@@ -24,8 +25,8 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 42;
          dto.AcceptChanges( );
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsFalse( dto.HasChanges );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
       }
 
       [Test]
@@ -35,8 +36,8 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 42;
          dto.RevertChanges( );
 
-         Assert.IsFalse( dto.HasChanges );
-         Assert.IsNull( dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
+         ClassicAssert.IsNull( dto.Prop );
       }
 
       [Test]
@@ -47,39 +48,39 @@ namespace jsc.commons.unidto.tests {
          dto.AcceptChanges( );
          dto.Prop = 23;
 
-         Assert.AreEqual( 23, dto.Prop );
-         Assert.IsTrue( dto.HasChanges );
+         ClassicAssert.AreEqual( 23, dto.Prop );
+         ClassicAssert.IsTrue( dto.HasChanges );
 
          dto.RevertChanges( );
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsFalse( dto.HasChanges );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
       }
 
       [Test]
       public void AdvancedDataCoreTest( ) {
          TAdc dto = DtoCreator.New<TAdc>( );
 
-         Assert.IsFalse( dto.HasChanges );
-         Assert.IsNull( dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
+         ClassicAssert.IsNull( dto.Prop );
 
          dto.Prop = 42;
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsTrue( dto.HasChanges );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsTrue( dto.HasChanges );
       }
 
       [Test]
       public void SimpleDataCoreTest( ) {
          TSdc dto = DtoCreator.New<TSdc>( );
 
-         Assert.IsFalse( dto.IsDirty );
-         Assert.IsNull( dto.Prop );
+         ClassicAssert.IsFalse( dto.IsDirty );
+         ClassicAssert.IsNull( dto.Prop );
 
          dto.Prop = 42;
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsTrue( dto.IsDirty );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsTrue( dto.IsDirty );
       }
 
       [Test]
@@ -96,9 +97,9 @@ namespace jsc.commons.unidto.tests {
 
          dto.ResetToSquashed( );
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsFalse( dto.HasChanges );
-         Assert.AreEqual( 2, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
+         ClassicAssert.AreEqual( 2, dto.CurrentVersion );
       }
 
       [Test]
@@ -110,13 +111,13 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 2;
          dto.Prop = 3;
 
-         Assert.AreEqual( 4, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 4, dto.CurrentVersion );
 
          dto.ResetToVersion( 2 );
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsTrue( dto.HasChanges );
-         Assert.AreEqual( 2, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsTrue( dto.HasChanges );
+         ClassicAssert.AreEqual( 2, dto.CurrentVersion );
       }
 
       [Test]
@@ -128,30 +129,30 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 3;
          dto.Prop = 42;
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsTrue( dto.HasChanges );
-         Assert.AreEqual( 4, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsTrue( dto.HasChanges );
+         ClassicAssert.AreEqual( 4, dto.CurrentVersion );
 
          dto.SquashChanges( );
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsFalse( dto.HasChanges );
-         Assert.AreEqual( 4, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
+         ClassicAssert.AreEqual( 4, dto.CurrentVersion );
       }
 
       [Test]
       public void VersionedDataCoreTest( ) {
          TVdc dto = DtoCreator.New<TVdc>( );
 
-         Assert.IsNull( dto.Prop );
-         Assert.IsFalse( dto.HasChanges );
-         Assert.AreEqual( 0, dto.CurrentVersion );
+         ClassicAssert.IsNull( dto.Prop );
+         ClassicAssert.IsFalse( dto.HasChanges );
+         ClassicAssert.AreEqual( 0, dto.CurrentVersion );
 
          dto.Prop = 42;
 
-         Assert.AreEqual( 42, dto.Prop );
-         Assert.IsTrue( dto.HasChanges );
-         Assert.AreEqual( 1, dto.CurrentVersion );
+         ClassicAssert.AreEqual( 42, dto.Prop );
+         ClassicAssert.IsTrue( dto.HasChanges );
+         ClassicAssert.AreEqual( 1, dto.CurrentVersion );
       }
 
    }

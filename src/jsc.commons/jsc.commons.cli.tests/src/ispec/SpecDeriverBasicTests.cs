@@ -14,6 +14,7 @@ using jsc.commons.cli.ispec.attrib;
 using jsc.commons.config.interfaces;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.cli.tests.ispec {
 
@@ -101,14 +102,14 @@ namespace jsc.commons.cli.tests.ispec {
                      3.ToString( )
                } ).CliConfigObject;
 
-         Assert.IsNotNull( cli.Arg );
+         ClassicAssert.IsNotNull( cli.Arg );
 
          List<int> argValues = cli.Arg.ToList( );
 
-         Assert.AreEqual( 3, argValues.Count );
-         Assert.AreEqual( 1, argValues[ 0 ] );
-         Assert.AreEqual( 2, argValues[ 1 ] );
-         Assert.AreEqual( 3, argValues[ 2 ] );
+         ClassicAssert.AreEqual( 3, argValues.Count );
+         ClassicAssert.AreEqual( 1, argValues[ 0 ] );
+         ClassicAssert.AreEqual( 2, argValues[ 1 ] );
+         ClassicAssert.AreEqual( 3, argValues[ 2 ] );
       }
 
       [Test]
@@ -116,11 +117,11 @@ namespace jsc.commons.cli.tests.ispec {
          ICliDynArg cli = new InterfaceSpecBoilerPlateHelper<ICliDynArg>(
                new string[0] ).CliConfigObject;
 
-         Assert.IsNotNull( cli.Arg );
+         ClassicAssert.IsNotNull( cli.Arg );
 
          List<int> argValues = cli.Arg.ToList( );
 
-         Assert.AreEqual( 0, argValues.Count );
+         ClassicAssert.AreEqual( 0, argValues.Count );
       }
 
       [Test]
@@ -133,14 +134,14 @@ namespace jsc.commons.cli.tests.ispec {
                      3.ToString( )
                } ).CliConfigObject;
 
-         Assert.IsNotNull( cli.Arg );
+         ClassicAssert.IsNotNull( cli.Arg );
 
          List<int> argValues = cli.Arg.ToList( );
 
-         Assert.AreEqual( 3, argValues.Count );
-         Assert.AreEqual( 1, argValues[ 0 ] );
-         Assert.AreEqual( 2, argValues[ 1 ] );
-         Assert.AreEqual( 3, argValues[ 2 ] );
+         ClassicAssert.AreEqual( 3, argValues.Count );
+         ClassicAssert.AreEqual( 1, argValues[ 0 ] );
+         ClassicAssert.AreEqual( 2, argValues[ 1 ] );
+         ClassicAssert.AreEqual( 3, argValues[ 2 ] );
       }
 
       [Test]
@@ -150,7 +151,7 @@ namespace jsc.commons.cli.tests.ispec {
                      MyEnum.Value1.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( MyEnum.Value1, cli.Arg );
+         ClassicAssert.AreEqual( MyEnum.Value1, cli.Arg );
       }
 
       [Test]
@@ -160,7 +161,7 @@ namespace jsc.commons.cli.tests.ispec {
                      MyEnum.Value2.ToString( ).ToLower( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( MyEnum.Value2, cli.Arg );
+         ClassicAssert.AreEqual( MyEnum.Value2, cli.Arg );
       }
 
       [Test]
@@ -171,7 +172,7 @@ namespace jsc.commons.cli.tests.ispec {
                      f.ToString( CultureInfo.InvariantCulture )
                } ).CliConfigObject;
 
-         Assert.True( Math.Abs( f-cli.Arg ) < 0.0001 );
+         ClassicAssert.True( Math.Abs( f-cli.Arg ) < 0.0001 );
       }
 
       [Test]
@@ -182,7 +183,7 @@ namespace jsc.commons.cli.tests.ispec {
                      f.ToString( CultureInfo.InvariantCulture )
                } ).CliConfigObject;
 
-         Assert.True( Math.Abs( f-cli.Arg ) < 0.0001 );
+         ClassicAssert.True( Math.Abs( f-cli.Arg ) < 0.0001 );
       }
 
       [Test]
@@ -192,7 +193,7 @@ namespace jsc.commons.cli.tests.ispec {
                      0f.ToString( CultureInfo.InvariantCulture )
                } ).CliConfigObject;
 
-         Assert.AreEqual( 0f, cli.Arg );
+         ClassicAssert.AreEqual( 0f, cli.Arg );
       }
 
       [Test]
@@ -202,7 +203,7 @@ namespace jsc.commons.cli.tests.ispec {
                      int.MaxValue.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( int.MaxValue, cli.Arg );
+         ClassicAssert.AreEqual( int.MaxValue, cli.Arg );
       }
 
       [Test]
@@ -212,7 +213,7 @@ namespace jsc.commons.cli.tests.ispec {
                      int.MinValue.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( int.MinValue, cli.Arg );
+         ClassicAssert.AreEqual( int.MinValue, cli.Arg );
       }
 
       [Test]
@@ -222,7 +223,7 @@ namespace jsc.commons.cli.tests.ispec {
                      0.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( 0, cli.Arg );
+         ClassicAssert.AreEqual( 0, cli.Arg );
       }
 
       [Test]
@@ -232,7 +233,7 @@ namespace jsc.commons.cli.tests.ispec {
                      long.MaxValue.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( long.MaxValue, cli.Arg );
+         ClassicAssert.AreEqual( long.MaxValue, cli.Arg );
       }
 
       [Test]
@@ -242,7 +243,7 @@ namespace jsc.commons.cli.tests.ispec {
                      long.MinValue.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( long.MinValue, cli.Arg );
+         ClassicAssert.AreEqual( long.MinValue, cli.Arg );
       }
 
       [Test]
@@ -252,7 +253,7 @@ namespace jsc.commons.cli.tests.ispec {
                      0.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( 0, cli.Arg );
+         ClassicAssert.AreEqual( 0, cli.Arg );
       }
 
       [Test]
@@ -270,13 +271,13 @@ namespace jsc.commons.cli.tests.ispec {
                      "-m"
                } ).CliConfigObject;
 
-         Assert.AreEqual( "a string", cli.StringOptionOne );
-         Assert.AreEqual( "another string", cli.StringOptionTwo );
-         Assert.AreEqual( 42, cli.StringOptionTwoCount );
-         Assert.AreEqual( true, cli.MyFlag );
-         Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Count( ) );
-         Assert.AreEqual( 1, cli.StringOptionOneDynIntArg.First( ) );
-         Assert.AreEqual( 3, cli.StringOptionOneDynIntArg.Last( ) );
+         ClassicAssert.AreEqual( "a string", cli.StringOptionOne );
+         ClassicAssert.AreEqual( "another string", cli.StringOptionTwo );
+         ClassicAssert.AreEqual( 42, cli.StringOptionTwoCount );
+         ClassicAssert.AreEqual( true, cli.MyFlag );
+         ClassicAssert.AreEqual( 3, cli.StringOptionOneDynIntArg.Count( ) );
+         ClassicAssert.AreEqual( 1, cli.StringOptionOneDynIntArg.First( ) );
+         ClassicAssert.AreEqual( 3, cli.StringOptionOneDynIntArg.Last( ) );
       }
 
       [Test]
@@ -284,7 +285,7 @@ namespace jsc.commons.cli.tests.ispec {
          ICliNullableEnumArg cli = new InterfaceSpecBoilerPlateHelper<ICliNullableEnumArg>(
                new string[0] ).CliConfigObject;
 
-         Assert.IsFalse( cli.Arg.HasValue );
+         ClassicAssert.IsFalse( cli.Arg.HasValue );
       }
 
       [Test]
@@ -294,7 +295,7 @@ namespace jsc.commons.cli.tests.ispec {
                      MyEnum.Value2.ToString( )
                } ).CliConfigObject;
 
-         Assert.AreEqual( MyEnum.Value2, cli.Arg );
+         ClassicAssert.AreEqual( MyEnum.Value2, cli.Arg );
       }
 
       [Test]
@@ -302,7 +303,7 @@ namespace jsc.commons.cli.tests.ispec {
          ICliNullableInt cli = new InterfaceSpecBoilerPlateHelper<ICliNullableInt>(
                new string[0] ).CliConfigObject;
 
-         Assert.IsFalse( cli.Arg.HasValue );
+         ClassicAssert.IsFalse( cli.Arg.HasValue );
       }
 
       [Test]
@@ -312,8 +313,8 @@ namespace jsc.commons.cli.tests.ispec {
                      42.ToString( )
                } ).CliConfigObject;
 
-         Assert.IsTrue( cli.Arg.HasValue );
-         Assert.AreEqual( 42, cli.Arg );
+         ClassicAssert.IsTrue( cli.Arg.HasValue );
+         ClassicAssert.AreEqual( 42, cli.Arg );
       }
 
    }

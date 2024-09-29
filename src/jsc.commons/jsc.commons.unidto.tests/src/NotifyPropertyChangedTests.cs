@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.unidto.tests {
 
@@ -55,23 +56,23 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.AcceptChanges( );
 
-         Assert.AreEqual( 4, changes.Count );
+         ClassicAssert.AreEqual( 4, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
       }
 
       [Test]
@@ -87,27 +88,27 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.RevertChanges( );
 
-         Assert.AreEqual( 5, changes.Count );
+         ClassicAssert.AreEqual( 5, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( null, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( null, change.Value );
       }
 
       [Test]
@@ -124,35 +125,35 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.RevertChanges( );
 
-         Assert.AreEqual( 7, changes.Count );
+         ClassicAssert.AreEqual( 7, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceAdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
       }
 
       [Test]
@@ -168,23 +169,23 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.MarkNotDirty( );
 
-         Assert.AreEqual( 4, changes.Count );
+         ClassicAssert.AreEqual( 4, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceSdcNpc.IsDirty ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceSdcNpc.IsDirty ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceSdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceSdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceSdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceSdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceSdcNpc.IsDirty ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceSdcNpc.IsDirty ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
       }
 
       [Test]
@@ -200,39 +201,39 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.ResetToSquashed( );
 
-         Assert.AreEqual( 8, changes.Count );
+         ClassicAssert.AreEqual( 8, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 1, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 1, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 2, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 2, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 0, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 0, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( null, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( null, change.Value );
       }
 
       [Test]
@@ -248,35 +249,35 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.ResetToVersion( 1 );
 
-         Assert.AreEqual( 7, changes.Count );
+         ClassicAssert.AreEqual( 7, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 1, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 1, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 2, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 2, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 1, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 1, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
       }
 
       [Test]
@@ -292,31 +293,31 @@ namespace jsc.commons.unidto.tests {
          dto.Prop = 23;
          dto.SquashChanges( );
 
-         Assert.AreEqual( 6, changes.Count );
+         ClassicAssert.AreEqual( 6, changes.Count );
 
          Change change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 1, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 1, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( true, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( true, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 42, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 42, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
-         Assert.AreEqual( 2, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.CurrentVersion ), change.PropertyName );
+         ClassicAssert.AreEqual( 2, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
-         Assert.AreEqual( 23, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.Prop ), change.PropertyName );
+         ClassicAssert.AreEqual( 23, change.Value );
 
          change = changes.Dequeue( );
-         Assert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
-         Assert.AreEqual( false, change.Value );
+         ClassicAssert.AreEqual( nameof( ITestInterfaceVdcNpc.HasChanges ), change.PropertyName );
+         ClassicAssert.AreEqual( false, change.Value );
       }
 
    }

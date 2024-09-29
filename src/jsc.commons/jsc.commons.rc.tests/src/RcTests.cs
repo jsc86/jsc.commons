@@ -13,6 +13,7 @@ using jsc.commons.rc.listsubject.actions;
 using jsc.commons.rc.listsubject.rules;
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 
 namespace jsc.commons.rc.tests {
 
@@ -20,15 +21,15 @@ namespace jsc.commons.rc.tests {
    public class RcTests {
 
       private void AssertAndViolation( IViolation<IList<string>> violation, IList<string> subject ) {
-         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
-         Assert.AreEqual( 1, violation.Solutions.Count( ) );
-         Assert.AreEqual( 2-subject.Count, violation.Solutions.First( ).Actions.Count( ) );
+         ClassicAssert.IsInstanceOf<Violation<IList<string>>>( violation );
+         ClassicAssert.AreEqual( 1, violation.Solutions.Count( ) );
+         ClassicAssert.AreEqual( 2-subject.Count, violation.Solutions.First( ).Actions.Count( ) );
          if( subject.Contains( "world" ) ) {
             Add<string> addA =
                   violation.Solutions.First( )
                               .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "hello" ) as
                         Add<string>;
-            Assert.NotNull( addA );
+            ClassicAssert.NotNull( addA );
          }
 
          if( subject.Contains( "hello" ) ) {
@@ -36,7 +37,7 @@ namespace jsc.commons.rc.tests {
                   violation.Solutions.First( )
                               .Actions.FirstOrDefault( a => a is Add<string>&&( (Add<string>)a ).Target == "world" ) as
                         Add<string>;
-            Assert.NotNull( addB );
+            ClassicAssert.NotNull( addB );
          }
       }
 
@@ -46,9 +47,9 @@ namespace jsc.commons.rc.tests {
          IList<string> list = args.Where( arg => arg != null ).ToList( );
          IViolation<IList<string>> violation = rc.Check( list );
          if( args.Length == args.Count( arg => arg != null ) )
-            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
          else
-            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       private void OrN( Or<IList<string>> rule, params string[] args ) {
@@ -57,9 +58,9 @@ namespace jsc.commons.rc.tests {
          IList<string> list = args.Where( arg => arg != null ).ToList( );
          IViolation<IList<string>> violation = rc.Check( list );
          if( args.Count( arg => arg != null ) > 0 )
-            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
          else
-            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       private void XorN( Xor<IList<string>> rule, params string[] args ) {
@@ -68,9 +69,9 @@ namespace jsc.commons.rc.tests {
          IList<string> list = args.Where( arg => arg != null ).ToList( );
          IViolation<IList<string>> violation = rc.Check( list );
          if( args.Count( arg => arg != null ) == 1 )
-            Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
          else
-            Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+            ClassicAssert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       [Test]
@@ -128,7 +129,7 @@ namespace jsc.commons.rc.tests {
 
          list.Add( "hello" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       [Test]
@@ -138,7 +139,7 @@ namespace jsc.commons.rc.tests {
          IList<string> list = new List<string> {
                "hello"
          };
-         Assert.AreEqual( rc.Check( list ), NonViolation<IList<string>>.Instance );
+         ClassicAssert.AreEqual( rc.Check( list ), NonViolation<IList<string>>.Instance );
       }
 
       [Test]
@@ -148,11 +149,11 @@ namespace jsc.commons.rc.tests {
          IList<string> list = new List<string>( );
          IViolation<IList<string>> violation = rc.Check( list );
 
-         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
-         Assert.AreEqual( 1, violation.Solutions.Count( ) );
-         Assert.AreEqual( 1, violation.Solutions.First( ).Actions.Count( ) );
-         Assert.IsInstanceOf<Add<string>>( violation.Solutions.First( ).Actions.First( ) );
-         Assert.AreEqual( "hello", ( violation.Solutions.First( ).Actions.First( ) as Add<string> )?.Target );
+         ClassicAssert.IsInstanceOf<Violation<IList<string>>>( violation );
+         ClassicAssert.AreEqual( 1, violation.Solutions.Count( ) );
+         ClassicAssert.AreEqual( 1, violation.Solutions.First( ).Actions.Count( ) );
+         ClassicAssert.IsInstanceOf<Add<string>>( violation.Solutions.First( ).Actions.First( ) );
+         ClassicAssert.AreEqual( "hello", ( violation.Solutions.First( ).Actions.First( ) as Add<string> )?.Target );
       }
 
       [Test]
@@ -164,15 +165,15 @@ namespace jsc.commons.rc.tests {
                      new Contains<string>( "world" ) ) );
          IList<string> list = new List<string>( );
          IViolation<IList<string>> violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
 
          list.Add( "world" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
 
          list.Add( "hello" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       [Test]
@@ -187,22 +188,22 @@ namespace jsc.commons.rc.tests {
          };
          IViolation<IList<string>> violation = rc.Check( list );
 
-         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
-         Assert.AreEqual( 2, violation.Solutions.Count( ) );
+         ClassicAssert.IsInstanceOf<Violation<IList<string>>>( violation );
+         ClassicAssert.AreEqual( 2, violation.Solutions.Count( ) );
 
          ISolution<IList<string>> solRemA =
                violation.Solutions.FirstOrDefault( s => s.Actions.FirstOrDefault( ) is Remove<string> );
-         Assert.NotNull( solRemA );
-         Assert.AreEqual( 1, solRemA.Actions.Count( ) );
-         Assert.AreEqual( "hello", ( solRemA.Actions.FirstOrDefault( ) as Remove<string> )?.Target );
+         ClassicAssert.NotNull( solRemA );
+         ClassicAssert.AreEqual( 1, solRemA.Actions.Count( ) );
+         ClassicAssert.AreEqual( "hello", ( solRemA.Actions.FirstOrDefault( ) as Remove<string> )?.Target );
 
          ISolution<IList<string>> solAddB =
                violation.Solutions.FirstOrDefault( s => s.Actions.FirstOrDefault( ) is Add<string> );
-         Assert.NotNull( solAddB );
-         Assert.AreEqual( 1, solAddB.Actions.Count( ) );
-         Assert.AreEqual( "world", ( solAddB.Actions.FirstOrDefault( ) as Add<string> )?.Target );
+         ClassicAssert.NotNull( solAddB );
+         ClassicAssert.AreEqual( 1, solAddB.Actions.Count( ) );
+         ClassicAssert.AreEqual( "world", ( solAddB.Actions.FirstOrDefault( ) as Add<string> )?.Target );
 
-         Assert.AreEqual( solAddB, violation.Solutions.FirstOrDefault( ) );
+         ClassicAssert.AreEqual( solAddB, violation.Solutions.FirstOrDefault( ) );
       }
 
       [Test]
@@ -212,33 +213,33 @@ namespace jsc.commons.rc.tests {
          IList<string> list = new List<string>( );
 
          IViolation<IList<string>> violation = rc.Check( list );
-         Assert.IsInstanceOf<Violation<IList<string>>>( violation );
-         Assert.AreEqual( 2, violation.Solutions.Count( ) );
+         ClassicAssert.IsInstanceOf<Violation<IList<string>>>( violation );
+         ClassicAssert.AreEqual( 2, violation.Solutions.Count( ) );
          ISolution<IList<string>> solAddA = violation.Solutions
                .FirstOrDefault(
                      s => s.Actions.FirstOrDefault( ) is Add<string>&&
                            ( s.Actions.FirstOrDefault( ) as Add<string> )?.Target == "hello" );
-         Assert.IsNotNull( solAddA );
-         Assert.AreEqual( 1, solAddA.Actions.Count( ) );
+         ClassicAssert.IsNotNull( solAddA );
+         ClassicAssert.AreEqual( 1, solAddA.Actions.Count( ) );
          ISolution<IList<string>> solAddB = violation.Solutions
                .FirstOrDefault(
                      s => s.Actions.FirstOrDefault( ) is Add<string>&&
                            ( s.Actions.FirstOrDefault( ) as Add<string> )?.Target == "world" );
-         Assert.IsNotNull( solAddB );
-         Assert.AreEqual( 1, solAddB.Actions.Count( ) );
+         ClassicAssert.IsNotNull( solAddB );
+         ClassicAssert.AreEqual( 1, solAddB.Actions.Count( ) );
 
          list.Add( "hello" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
 
          list.Remove( "hello" );
          list.Add( "world" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
 
          list.Add( "hello" );
          violation = rc.Check( list );
-         Assert.IsInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsInstanceOf<NonViolation<IList<string>>>( violation );
       }
 
       [Test]
@@ -322,28 +323,28 @@ namespace jsc.commons.rc.tests {
          IList<string> list = new CList<string>( );
          IViolation<IList<string>> violation = rc.Check( list );
 
-         Assert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
+         ClassicAssert.IsNotInstanceOf<NonViolation<IList<string>>>( violation );
 
          ISolution<IList<string>>[] solutions = violation.Solutions.ToArray( );
 
-         Assert.AreEqual( 2, solutions.Length );
+         ClassicAssert.AreEqual( 2, solutions.Length );
 
          IAction<IList<string>>[] actions1 = solutions[ 0 ].Actions.ToArray( );
          IAction<IList<string>>[] actions2 = solutions[ 1 ].Actions.ToArray( );
 
-         Assert.AreEqual( 1, actions1.Length );
-         Assert.AreEqual( 1, actions2.Length );
-         Assert.AreEqual( 1, actions1.Count( a => a is Add<string> ) );
-         Assert.AreEqual( 0, actions1.Count( a => a is Remove<string> ) );
-         Assert.AreEqual( 1, actions2.Count( a => a is Add<string> ) );
-         Assert.AreEqual( 0, actions2.Count( a => a is Remove<string> ) );
+         ClassicAssert.AreEqual( 1, actions1.Length );
+         ClassicAssert.AreEqual( 1, actions2.Length );
+         ClassicAssert.AreEqual( 1, actions1.Count( a => a is Add<string> ) );
+         ClassicAssert.AreEqual( 0, actions1.Count( a => a is Remove<string> ) );
+         ClassicAssert.AreEqual( 1, actions2.Count( a => a is Add<string> ) );
+         ClassicAssert.AreEqual( 0, actions2.Count( a => a is Remove<string> ) );
 
          IAction<IList<string>>[] allActions = actions1.Union( actions2 ).ToArray( );
 
-         Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "a" ) );
-         Assert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "b" ) );
-         Assert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "a" ) );
-         Assert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "b" ) );
+         ClassicAssert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "a" ) );
+         ClassicAssert.AreEqual( 1, allActions.Count( a => a is Add<string> add&&add.Target == "b" ) );
+         ClassicAssert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "a" ) );
+         ClassicAssert.AreEqual( 0, allActions.Count( a => a is Remove<string> rem&&rem.Target == "b" ) );
       }
 
    }
