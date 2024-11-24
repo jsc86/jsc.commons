@@ -11,7 +11,7 @@
         <PackageLicenseUrl></PackageLicenseUrl>
         <PackageProjectUrl></PackageProjectUrl>
         <PackageIconUrl></PackageIconUrl>
-        <LangVersion>8</LangVersion>
+        <LangVersion>latestmajor</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
